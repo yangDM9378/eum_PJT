@@ -7,3 +7,5 @@
 :speech_balloon: : 서비스에 de-age, age 기능 넣는 것이 애매함 -> 추가적인 회의 필요
 
 :speech_balloon: : 가족과 여행 등을 하며 사진으로 소통할 수 있는 서비스!!
+
+:speech_balloon: : Idea Fix!!! 가족과 사진으로 소통하는 서비스!!(프레임, GPS 등)
