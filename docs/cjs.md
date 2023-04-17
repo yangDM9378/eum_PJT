@@ -9,3 +9,5 @@
 :speech_balloon: : 가족과 여행 등을 하며 사진으로 소통할 수 있는 서비스!!
 
 :speech_balloon: : Idea Fix!!! 가족과 사진으로 소통하는 서비스!!(프레임, GPS 등)
+
+:speech_balloon: : ERD 설계 및 화면 컨셉 설계
