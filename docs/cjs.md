@@ -13,3 +13,5 @@
 :speech_balloon: : ERD 설계 및 화면 컨셉 설계
 
 :speech_balloon: : API 설계!!
+
+:speech_balloon: : 아키텍처 설계!!
