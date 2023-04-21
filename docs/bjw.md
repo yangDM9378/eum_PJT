@@ -116,3 +116,6 @@ API 설계 GEOFENCE 조사
 
 0420
 대본작성 암기
+
+0421
+발표 및 Geofence map api 안드로이드 조사
