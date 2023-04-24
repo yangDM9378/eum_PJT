@@ -1,4 +1,4 @@
-### :boom: 아이디어
+### :boom: 일정
 
 :speech_balloon: : 본인이 할 일을 미리 설정하면 자동으로 소요 시간을 계산 -> 얼마나 여유롭게 할 일을 처리했는지에 따라서 포인트 지급 -> 포인트로 캐릭터를 키우거나 마일리지 지급
 
@@ -15,3 +15,7 @@
 :speech_balloon: : API 설계!!
 
 :speech_balloon: : 아키텍처 설계!!
+
+:speech_balloon: : 아키텍처 설계!!
+
+:speech_balloon: : javascript에서 mediapipe를 통한 pose detection
