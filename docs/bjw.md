@@ -119,3 +119,6 @@ API 설계 GEOFENCE 조사
 
 0421
 발표 및 Geofence map api 안드로이드 조사
+
+0424
+Geofence 조사
