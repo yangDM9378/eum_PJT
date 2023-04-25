@@ -1,5 +1,9 @@
-import React from "react";
+import AddCamera from "@/components/addCamera/addCamera";
 
 export default function AddCameraPage() {
-  return <div>카메라 추가 페이지입니당!</div>;
+  return (
+    <>
+      <AddCamera />
+    </>
+  );
 }
