@@ -32,7 +32,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo oAuth2UserInfo = null;
         String provider = userRequest.getClientRegistration().getRegistrationId();
 
-        if(provider.equals(AuthProvider.kakao.toString())){
+        if(provider.equals(AuthProvider.KAKAO.getProviderName())){
             oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
         }
         log.info(oAuth2UserInfo.getName());

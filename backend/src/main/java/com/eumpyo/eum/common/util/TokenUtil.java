@@ -35,7 +35,7 @@ public class TokenUtil {
                 .setClaims(createClaims(user))                       // Payload - Claims 구성
                 .setSubject(String.valueOf(user.getEmail()))        // Payload - Subject 구성, JWT 토큰의 주체를 설정하는 메서드
                 .signWith(SignatureAlgorithm.HS256, createSignature(type))  // Signature 구성
-                .setExpiration(createExpiredDate(TOKEN_VALIDATION_SECOND));                    // Expired Date 구성
+                .setExpiration(createExpiredDate(type));                    // Expired Date 구성
         return builder.compact();
     }
 
@@ -56,16 +56,8 @@ public class TokenUtil {
     private Map<String, Object> createClaims(UserResponse user) {
         // 공개 클레임에 사용자의 이름과 이메일을 설정하여 정보를 조회할 수 있다.
         Map<String, Object> claims = new HashMap<>();
-
         log.info("userId :" + user.getEmail());
-        log.info("userNm :" + user.getName());
-        log.info("userGender :" + user.getGender());
-        log.info("userBirthYear :" + user.getBirthYear());
-
         claims.put("userId", user.getEmail());
-        claims.put("userNm", user.getName());
-        claims.put("userGender", user.getGender());
-        claims.put("userBirthYear", user.getBirthYear());
         return claims;
     }
 
@@ -89,8 +81,12 @@ public class TokenUtil {
      *
      * @return Calendar
      */
-    private Date createExpiredDate(long expireTime) {
-        return new Date(System.currentTimeMillis() + expireTime);
+    private Date createExpiredDate(String type) {
+        if (type.equals(ACCESS_TOKEN_NAME)) {
+            return new Date(System.currentTimeMillis() + TOKEN_VALIDATION_SECOND);
+        } else { // // REFRESH_TOKEN_NAME
+            return new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDATION_SECOND);
+        }
     }
 
 }
