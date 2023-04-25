@@ -1,12 +1,8 @@
-'use client'
-import React from 'react'
+"use client";
+import React from "react";
 
 const GroupModal = () => {
-  return (
-    <div>
-      csr
-    </div>
-  )
-}
+  return <div>csr</div>;
+};
 
-export default GroupModal
+export default GroupModal;

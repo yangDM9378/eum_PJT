@@ -1,5 +1,12 @@
+import GroupInfo from "@/components/map/groupInfo";
+import Map from "@/components/map/map";
 import React from "react";
 
 export default function MapPage() {
-  return <div>지도페이지입니당</div>;
+  return (
+    <div>
+      <GroupInfo />
+      <Map />
+    </div>
+  );
 }
