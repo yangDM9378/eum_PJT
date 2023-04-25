@@ -1,6 +1,8 @@
 package com.eumpyo.eum.config;
 
+import com.eumpyo.eum.common.util.TokenUtil;
 import com.eumpyo.eum.config.oauth2.CustomOAuth2UserService;
+import com.eumpyo.eum.config.oauth2.filter.JwtAuthenticationFilter;
 import com.eumpyo.eum.config.oauth2.handler.CustomAuthSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 // 스프링 시큐리티를 사용하여 보안 구성을 정의
@@ -23,6 +26,9 @@ public class SecurityConfig {
     @Autowired
     private CustomAuthSuccessHandler customAuthSuccessHandler;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // CORS를 활성화하면, 다른 도메인에서의 리소스 요청을 처리할 수 있도록 서버의 응답 헤더에 Access-Control-Allow-Origin 헤더를 추가합니다.
@@ -31,14 +37,17 @@ public class SecurityConfig {
             .and()
             // 이 기능은 CSRF 공격을 방지하기 위해 CSRF 토큰을 사용하여 요청을 검증합니다.
             .csrf().disable()
-            // 토큰을 활용하는 경우 모든 요청에 대해 '인가'에 대해서 적용
-//            .authorizeHttpRequests(authz -> authz.anyRequest().permitAll())
-
             // [STEP3] Spring Security JWT Filter Load
 //            .addFilterBefore(jwtAuthorizationFilter(), BasicAuthenticationFilter.class)
+            .addFilterBefore(new JwtAuthenticationFilter(tokenUtil), BasicAuthenticationFilter.class)
             // session stateless로 설정하여 Rest API에 적합한 상태 없는 인증을 적용합니다.
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
+//            // 권한 설정
+//            .authorizeRequests()
+//            .antMatchers("/oauth2**", "/home**", "/api").permitAll()
+//            .anyRequest().authenticated()
+//            .and()
         // .form 기반의 로그인에 대해 비 활성화하며 커스텀으로 구성한 필터를 사용한다.
             .formLogin().disable()
         // authorizeRequests() 메서드는 antMatchers() 메서드와 함께 사용하여, 다양한 URL 경로나 리소스에 대한 접근 권한을 설정할 수 있습니다.
@@ -62,15 +71,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    @Bean
-    AuthenticationManager authenticationManager(
-            // AuthenticationConfiguration은 Spring Security에서 제공하는 인증 구성을 설정하는 인터페이스
-            AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        // AuthenticationConfiguration에서 설정한 인증 구성을 바탕으로 AuthenticationManager를 생성
-        // UserSecurityService와 PasswordEncoder가 자동으로 설정
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-
 }

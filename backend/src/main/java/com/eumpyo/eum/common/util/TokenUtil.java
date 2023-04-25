@@ -1,11 +1,11 @@
 package com.eumpyo.eum.common.util;
 
 import com.eumpyo.eum.api.response.UserResponse;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -57,7 +57,15 @@ public class TokenUtil {
         // 공개 클레임에 사용자의 이름과 이메일을 설정하여 정보를 조회할 수 있다.
         Map<String, Object> claims = new HashMap<>();
         log.info("userId :" + user.getEmail());
+        log.info("userName :" + user.getName());
+        log.info("userBirthYear :" + user.getBirthYear());
+        log.info("userGender :" + user.getGender());
+
         claims.put("userId", user.getEmail());
+        claims.put("userName", user.getName());
+        claims.put("userBirthYear", user.getBirthYear());
+        claims.put("userGender", user.getGender());
+
         return claims;
     }
 
@@ -89,4 +97,59 @@ public class TokenUtil {
         }
     }
 
+    /**
+     * 토큰 정보를 기반으로 Claims 정보를 반환받는 메서드
+     *
+     * @param token : 토큰
+     * @return Claims : Claims
+     */
+    private Claims getClaimsFromToken(String token) {
+        try {
+            return Jwts.parserBuilder().setSigningKey(DatatypeConverter.parseBase64Binary(ACCESS_TOKEN_SECRET_KEY)).build()
+                    .parseClaimsJws(token).getBody();
+        } catch (Exception e) {
+            log.debug("클레임을 가져오는 중 에러 발생");
+
+            e.printStackTrace();
+
+            return null;
+        }
+    }
+
+    // 토큰 유효성 검사
+    public boolean validateToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder().setSigningKey(ACCESS_TOKEN_SECRET_KEY).build().parseClaimsJws(token).getBody();
+            return true;
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.info("잘못된 JWT 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            log.info("만료된 JWT 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            log.info("JWT 토큰이 잘못되었습니다.");
+        }
+        return false;
+    }
+
+    // 토큰을 받아 클레임을 만들고 권한정보를 빼서 시큐리티 유저객체를 만들어 Authentication 객체 반환
+    public Authentication getAuthentication(String token) {
+        Claims claims = Jwts
+                .parserBuilder()
+                .setSigningKey(ACCESS_TOKEN_SECRET_KEY)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        UserResponse userResponse = UserResponse
+                .builder()
+                .name((String) claims.get("userName"))
+                .birthYear((Integer) claims.get("userBirthYear"))
+                .email((String) claims.get("userId"))
+                .gender((Integer) claims.get("userGender"))
+                .build();
+
+        return new UsernamePasswordAuthenticationToken(userResponse, token);
+    }
 }
