@@ -9,6 +9,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.webkit.JavascriptInterface
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,6 +30,10 @@ class MainActivity : ComponentActivity() {
     private val CHANNEL_ID = "com.example.ieum"
     private var notificationManager: NotificationManager? = null
     private val KEY_REPLY="key_reply"
+    inner class WebAppInterface(private val mContext: Context) {
+        @JavascriptInterface
+        fun test(){}
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -36,6 +44,24 @@ class MainActivity : ComponentActivity() {
         button.setOnClickListener(){
             displayNotification()
         }
+        var web= findViewById<WebView>(R.id.web)
+        web.apply {
+            webViewClient = WebViewClient()
+            settings.javaScriptEnabled = true
+            settings.domStorageEnabled = true
+            settings.setSupportMultipleWindows(true)
+            settings.javaScriptCanOpenWindowsAutomatically = true
+            settings.loadWithOverviewMode = true
+            settings.useWideViewPort = true
+            settings.setSupportZoom(false)
+            settings.builtInZoomControls = false
+            settings.databaseEnabled = true
+            settings.setGeolocationEnabled(true)
+            settings.allowFileAccess = true
+            // JavaScript 인터페이스 활성화
+            addJavascriptInterface(WebAppInterface(this@MainActivity),"WebAppInterface")
+        }
+        web.loadUrl("https://www.naver.com/")
     }
     private fun displayNotification(){
         //알람 콘텐츠 설정
