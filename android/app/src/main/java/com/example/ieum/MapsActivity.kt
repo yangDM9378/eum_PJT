@@ -1,7 +1,22 @@
 package com.example.ieum
 
+import android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.LocationManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.ui.graphics.Color
+import androidx.constraintlayout.motion.widget.Debug.getLocation
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -10,24 +25,40 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.ieum.databinding.ActivityMapsBinding
+import com.google.android.gms.location.GeofencingClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.CircleOptions
 
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener{
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
 
+    private lateinit var geofencingClient: GeofencingClient
+    private lateinit var markingOptions: MarkerOptions
+    private lateinit var locationManager: LocationManager
+
+    private final val locationCode=2000
+    private final val locationCode1 = 2001
+
+    private lateinit var geofenceHelper: GeofenceHelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M && !notificationManager.isNotificationPolicyAccessGranted){
+            val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+            startActivity(intent)
+        }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map_fragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
-
+        geofencingClient = LocationServices.getGeofencingClient(this)
+        geofenceHelper = GeofenceHelper(this)
     }
 
     // ...
@@ -53,16 +84,115 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        markingOptions = MarkerOptions().position(sydney).title("Marker in Sydney").snippet("good city")
+        mMap.addMarker(markingOptions)
+        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(sydney,12f)
+        mMap.animateCamera(cameraUpdate)
 
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        getMyLocation()
         // Add more markers and move the camera
-        val tokyo = LatLng(35.6895, 139.6917)
-        mMap.addMarker(MarkerOptions().position(tokyo).title("Marker in Tokyo"))
-        val newYork = LatLng(40.7128, -74.0060)
-        mMap.addMarker(MarkerOptions().position(newYork).title("Marker in New York"))
-        if (mMap != null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 2f))
+
+    }
+
+    private fun getMyLocation() {
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if(ContextCompat.checkSelfPermission(this,ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
+            mMap.isMyLocationEnabled=true
+        }else{
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)){
+                ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION),locationCode)
+            }else{
+                ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION),locationCode)
+            }
+
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode==locationCode){
+            if(grantResults.isNotEmpty()&& grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                if((ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED)&&(ActivityCompat.checkSelfPermission(
+                    this, android.Manifest.permission.ACCESS_COARSE_LOCATION
+                )!=PackageManager.PERMISSION_GRANTED)){
+                    return
+                }
+                mMap.isMyLocationEnabled=true
+            }
+
+        }
+        if(requestCode==locationCode1){
+            if(grantResults.isNotEmpty()&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                if(ActivityCompat.checkSelfPermission(
+                        this, ACCESS_BACKGROUND_LOCATION
+                )!=PackageManager.PERMISSION_GRANTED && (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED)){
+                    return
+                }
+                Toast.makeText(this,"You can add Geofences",Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun onMapLongClick(p0: LatLng) {
+        if(Build.VERSION.SDK_INT>=29){
+            if(ContextCompat.checkSelfPermission(this,ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
+                handleMapLongClick(p0)
+            }else{
+                if(ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)){
+                    ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION),locationCode1)
+                    Toast.makeText(this,"For Triggering Geofences We need your Background Location Permission", Toast.LENGTH_SHORT).show()
+                }else{
+                    ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION),locationCode1)
+                }
+
+            }
+        }else{
+            handleMapLongClick(p0)
+        }
+
+    }
+
+    private fun handleMapLongClick(p0: LatLng) {
+        mMap.clear()
+        addMarker(p0)
+        addCircle(p0)
+        addGeofence(p0)
+    }
+
+    private fun addGeofence(p0: LatLng) {
+        val geofence = geofenceHelper.getGeofence("ID", Pair(p0.latitude,p0.longitude),100f)
+        val geofenceRequest = geofence?.let{geofenceHelper.getGeofencingRequest(it)}
+        val pendingIntent = geofenceHelper.geofencePendingIntent
+        if(ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+            return
+        }
+        geofencingClient.addGeofences(geofenceRequest!!,pendingIntent).run{
+            addOnSuccessListener{
+                Log.d("Success","Geofence added")
+            }
+            addOnFailureListener{
+                Log.d("Failure","Geofence Not added")
+            }
+
+        }
+    }
+
+    private fun addCircle(p0: LatLng?) {
+        val circleOptions = CircleOptions()
+        circleOptions.center(p0)
+        circleOptions.radius(100.00)
+        circleOptions.strokeColor(255)
+        circleOptions.strokeWidth(4f)
+        mMap.addCircle(circleOptions)
+    }
+
+    private fun addMarker(p0: LatLng){
+        markingOptions = MarkerOptions().position(p0)
+        mMap.addMarker(markingOptions)
     }
 }
