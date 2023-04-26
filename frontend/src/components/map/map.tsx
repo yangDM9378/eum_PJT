@@ -19,8 +19,11 @@ function Map() {
   //   map.fitBounds(bounds);
   // };
 
-  const clickMarker = () => {
-    console.log("hi");
+  const clickMarker = (marker: {
+    id: number;
+    position: { lat: number; lng: number };
+  }) => {
+    alert(marker.id);
   };
 
   const options = {
@@ -48,7 +51,7 @@ function Map() {
                   key={marker.id}
                   position={marker.position}
                   clusterer={clusterer}
-                  onClick={clickMarker}
+                  onClick={() => clickMarker(marker)}
                 />
               ))}
             </>

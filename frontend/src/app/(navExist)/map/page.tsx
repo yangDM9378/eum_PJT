@@ -1,5 +1,5 @@
-import GroupInfo from "@/components/map/groupInfo";
-import MapUpper from "@/components/map/mapUpper";
+import GroupInfo from "@/components/map/GroupInfo";
+import MapUpper from "@/components/map/MapUpper";
 import React from "react";
 
 export default function MapPage() {
