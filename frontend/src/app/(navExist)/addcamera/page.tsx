@@ -1,4 +1,4 @@
-import AddCamera from "@/components/addCamera/addCamera";
+import AddCamera from "@/components/addcamera/AddCamera";
 
 export default function AddCameraPage() {
   return (
