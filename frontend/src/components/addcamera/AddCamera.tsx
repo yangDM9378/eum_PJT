@@ -31,7 +31,6 @@ const AddCamera = () => {
 
   //사진 찰영 버튼 클릭 시
   const handleTakePicture = async () => {
-    console.log*()
     // 현재 비디오에서 width, height을 지정하여 파일 저장
     if (videoRef.current) {
       const canvas = document.createElement("canvas");
@@ -59,8 +58,7 @@ const AddCamera = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            "ailabapi-api-key":
-              "",
+            "ailabapi-api-key": process.env.NEXT_PUBLIC_AILAB_API_KEY,
           },
         }
       );
