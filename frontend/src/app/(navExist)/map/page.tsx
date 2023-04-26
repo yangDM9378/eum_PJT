@@ -1,12 +1,12 @@
 import GroupInfo from "@/components/map/groupInfo";
-import Map from "@/components/map/map";
+import MapUpper from "@/components/map/mapUpper";
 import React from "react";
 
 export default function MapPage() {
   return (
     <>
       <GroupInfo />
-      <Map />
+      <MapUpper />
     </>
   );
 }
