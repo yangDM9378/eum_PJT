@@ -7,7 +7,8 @@ import com.eumpyo.eum.db.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -18,24 +19,17 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-public class CustomAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class Oauth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     @Autowired
     TokenUtil tokenUtil;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
-        PrincipalDetails oAuth2User = (PrincipalDetails) authentication.getPrincipal();
-        User user = oAuth2User.getUser();
-        UserResponse userResponse = user.UserToDto();
-        String token = tokenUtil.generateJwtToken(userResponse, "access");
-
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         String targetUrl = UriComponentsBuilder
-                .fromUriString("/home")
-                .queryParam("accessToken","Bearer " + token)
+                .fromUriString("/login")
+                .queryParam("error", exception.getLocalizedMessage())
                 .build()
                 .toUriString();
-
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }

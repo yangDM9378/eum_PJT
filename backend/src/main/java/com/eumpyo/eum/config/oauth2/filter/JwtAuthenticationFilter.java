@@ -1,7 +1,9 @@
 package com.eumpyo.eum.config.oauth2.filter;
 
 import com.eumpyo.eum.common.util.TokenUtil;
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -17,14 +19,11 @@ import java.net.URLDecoder;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final TokenUtil tokenUtil;
-
-    public JwtAuthenticationFilter(TokenUtil tokenUtil) {
-        this.tokenUtil = tokenUtil;
-    }
+    @Autowired
+    private TokenUtil tokenUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, JwtException {
         String token = getAuthenticationToken(request);
 
         if (tokenUtil.validateToken(token)) {
@@ -32,11 +31,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = (Authentication) tokenUtil.getAuthentication(token);
             // 해당 스프링 시큐리티 유저를 시큐리티 건텍스트에 저장, 즉 디비를 거치지 않음
             SecurityContextHolder.getContext().setAuthentication(authentication);
+        } else {
+            throw new JwtException("잘못된 토큰입니다.");
         }
+
         filterChain.doFilter(request, response);
     }
 
-    private String getAuthenticationToken(HttpServletRequest request)  {
+    private String getAuthenticationToken(HttpServletRequest request) throws JwtException {
         // Read the Authorization header, where the JWT Token should be
         String token = request.getHeader("Authorization");
 
@@ -48,6 +50,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     String encodedToken = parts[1];
                     return encodedToken;
                 }
+
+                return null;
             } catch (UnsupportedEncodingException e) {
                 log.error(e.getMessage(), e);
             }

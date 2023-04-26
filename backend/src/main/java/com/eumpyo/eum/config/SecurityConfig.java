@@ -1,14 +1,14 @@
 package com.eumpyo.eum.config;
 
-import com.eumpyo.eum.common.util.TokenUtil;
 import com.eumpyo.eum.config.oauth2.CustomOAuth2UserService;
 import com.eumpyo.eum.config.oauth2.filter.JwtAuthenticationFilter;
-import com.eumpyo.eum.config.oauth2.handler.CustomAuthSuccessHandler;
+import com.eumpyo.eum.config.oauth2.filter.JwtExceptionFilter;
+import com.eumpyo.eum.config.oauth2.handler.Oauth2AuthenticationFailureHandler;
+import com.eumpyo.eum.config.oauth2.handler.Oauth2AuthenticationSuccessHandler;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,10 +24,10 @@ public class SecurityConfig {
     private CustomOAuth2UserService customOAuth2UserService;
 
     @Autowired
-    private CustomAuthSuccessHandler customAuthSuccessHandler;
+    private Oauth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler;
 
     @Autowired
-    private TokenUtil tokenUtil;
+    private Oauth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,17 +37,18 @@ public class SecurityConfig {
             .and()
             // 이 기능은 CSRF 공격을 방지하기 위해 CSRF 토큰을 사용하여 요청을 검증합니다.
             .csrf().disable()
-            // [STEP3] Spring Security JWT Filter Load
-//            .addFilterBefore(jwtAuthorizationFilter(), BasicAuthenticationFilter.class)
-            .addFilterBefore(new JwtAuthenticationFilter(tokenUtil), BasicAuthenticationFilter.class)
+            // 권한 설정
+//            .authorizeRequests()
+//            .antMatchers("/oauth2**", "/home**").permitAll()
+//            .anyRequest().authenticated()
+//            .and()
+            // Spring Security JWT Filter Load
+            .addFilterBefore(jwtAuthorizationFilter(), BasicAuthenticationFilter.class)
+            // JwtExceptionFilter
+            .addFilterBefore(jwtExceptionFilter(), JwtAuthenticationFilter.class)
             // session stateless로 설정하여 Rest API에 적합한 상태 없는 인증을 적용합니다.
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-//            // 권한 설정
-//            .authorizeRequests()
-//            .antMatchers("/oauth2**", "/home**", "/api").permitAll()
-//            .anyRequest().authenticated()
-//            .and()
         // .form 기반의 로그인에 대해 비 활성화하며 커스텀으로 구성한 필터를 사용한다.
             .formLogin().disable()
         // authorizeRequests() 메서드는 antMatchers() 메서드와 함께 사용하여, 다양한 URL 경로나 리소스에 대한 접근 권한을 설정할 수 있습니다.
@@ -65,10 +66,29 @@ public class SecurityConfig {
                 .userInfoEndpoint()			// 로그인 성공 후 사용자정보를 가져온다
                 .userService(customOAuth2UserService)	//사용자정보를 처리할 때 사용한다
                 .and()
-                .successHandler(customAuthSuccessHandler);
-//                .failureHandler()
-
+                .successHandler(oauth2AuthenticationSuccessHandler)
+                .failureHandler(oauth2AuthenticationFailureHandler);
 
         return http.build();
+    }
+
+    /**
+     * JWT 토큰을 통하여서 사용자를 인증합니다.
+     *
+     * @return JwtAuthorizationFilter
+     */
+    @Bean
+    public JwtAuthenticationFilter jwtAuthorizationFilter() {
+        return new JwtAuthenticationFilter();
+    }
+
+    /**
+     * JwtAuthenticationFilter에서 발생하는 exception를 처리합니다.
+     *
+     * @return JwtExceptionFilter
+     */
+    @Bean
+    public JwtExceptionFilter jwtExceptionFilter() {
+        return new JwtExceptionFilter(new ObjectMapper());
     }
 }
