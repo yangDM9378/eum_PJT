@@ -24,18 +24,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, JwtException {
-        String token = getAuthenticationToken(request);
 
-        if (tokenUtil.validateToken(token)) {
+        String token = getAuthenticationToken(request);
+        // OAuth2 로그인
+        if (token == null) {
+            filterChain.doFilter(request, response);
+        // Token을 통한 권한 인증
+        } else if (tokenUtil.validateToken(token)) {
             // 토큰에서 유저네임, 권한을 뽑아 스프링 시큐리티 유저를 만들어 Authentication 반환
             Authentication authentication = (Authentication) tokenUtil.getAuthentication(token);
             // 해당 스프링 시큐리티 유저를 시큐리티 건텍스트에 저장, 즉 디비를 거치지 않음
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            filterChain.doFilter(request, response);
         } else {
             throw new JwtException("잘못된 토큰입니다.");
         }
-
-        filterChain.doFilter(request, response);
     }
 
     private String getAuthenticationToken(HttpServletRequest request) throws JwtException {
