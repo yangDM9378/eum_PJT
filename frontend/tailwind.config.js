@@ -14,7 +14,15 @@ module.exports = {
       },
     },
     fontFamily: {
-      gmarketsans: ["GmarketSansMedium"],
+      'brand-gmarketsans': ["GmarketSans"],
+      'brand-poppins': ['Poppins','sans-serif']
+    },
+    backgroundColor: {
+      'brand-baige': '#F8F9F3',
+      'brand-red':'#D3A48D',
+      'brand-green':'#77BC9E',
+      'brand-pink': '#E9D1C6',
+
     },
   },
   plugins: [],
