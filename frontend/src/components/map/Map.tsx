@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 
 import { GoogleMap, MarkerF, MarkerClustererF } from "@react-google-maps/api";
 
@@ -23,13 +23,22 @@ const GoogleMapOptions: google.maps.MapOptions = {
 };
 
 function Map() {
-  const mapCenter = useMemo(() => ({ lat: 35.205331, lng: 126.811123 }), []);
+  const [curCenter, setCurCenter] = useState({
+    lat: 35.205331,
+    lng: 126.811123,
+  });
+
+  const mapCenter = useMemo(
+    () => ({ lat: 35.221305123331, lng: 126.811123 }),
+    []
+  );
   const [mapref, setMapRef] = useState<google.maps.Map | null>(null);
   const [changeCenter, setChangeCenter] = useState({
     lat: 35.205331,
     lng: 126.811123,
   });
 
+  //지도가 로드되면 매핑합니다.
   const handleOnLoad = (map: google.maps.Map) => {
     setMapRef(map);
   };
@@ -45,6 +54,7 @@ function Map() {
     }
   };
 
+  // 메시지 마커 클릭 이벤트입니다.
   const clickMarker = (marker: {
     id: number;
     position: { lat: number; lng: number };
@@ -57,9 +67,26 @@ function Map() {
   //     "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m1.png", // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
   // };
 
+  // 메시지 추가 이벤트입니다.
   const addLetter = () => {
     alert(`추가버튼을 누르셨습니다. ${changeCenter.lat} ${changeCenter.lng}`);
   };
+
+  const getUserGps = () => {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      if (position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        setCurCenter({ lat, lng });
+      }
+      console.log("Latitude is :", position.coords.latitude);
+      console.log("Longitude is :", position.coords.longitude);
+    });
+  };
+
+  useEffect(() => {
+    getUserGps();
+  }, []);
 
   return (
     <section className="h-[75%] relative flex justify-center items-center">
