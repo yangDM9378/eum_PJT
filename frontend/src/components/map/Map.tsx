@@ -8,6 +8,8 @@ import { GoogleMap, MarkerF, MarkerClustererF } from "@react-google-maps/api";
 const GoogleMapOptions: google.maps.MapOptions = {
   tilt: 0,
   zoomControl: false,
+  minZoom: 3,
+  maxZoom: 19,
   streetViewControl: false,
   disableDefaultUI: true,
   gestureHandling: "greedy",
@@ -77,7 +79,7 @@ function Map() {
           alt="center"
         />
         {/* 좌표 클러스터링 */}
-        <MarkerClustererF>
+        <MarkerClustererF minimumClusterSize={3}>
           {(clusterer) => (
             <>
               {markers.map((marker) => (
