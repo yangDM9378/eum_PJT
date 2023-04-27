@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
 /* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -67,4 +70,5 @@ body {
   font-display: swap;
 } 
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+ 
