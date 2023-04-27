@@ -12,10 +12,7 @@ const RemoveBg = () => {
   >(undefined);
   const [removebgImageUrl, setRemovebgImageUrl] = useState<
     string | undefined | null
-  >(
-    "https://ai-result-rapidapi.ailabtools.com/cutout/segmentCommonImage/2023-04-27/051401-cb8fe351-83fb-9f58-11aa-6e6da2e929a1-1682572441.png"
-  );
-  // >(undefined);
+  >(undefined);
   const router = useRouter();
 
   useEffect(() => {
