@@ -4,7 +4,7 @@ import React from "react";
 import {AiOutlineCamera} from 'react-icons/ai'
 
 
-type ClickModalType = () => void;
+
 
 const GroupModal = (props: { clickModal: ClickModalType }) => {
   const { clickModal } = props;

@@ -1,14 +1,16 @@
 "use client";
 
-import GroupModal from "@/components/modals/GroupModal";
+
+
 import React from "react";
 import { useState } from "react";
-
+import ModalTest from "@/components/modals/ModalTest";
 
 const MakeButton = () => {
-    const [showModal, setShowModal] = useState<boolean>(false)
-    const clickMaodal = () => setShowModal(!showModal)
+    const [modalIsopen, setModalIsOpen] = useState<boolean>(false)
+    const clickMaodal = () => setModalIsOpen(!modalIsopen)
 
+    const closeModal = () => setModalIsOpen(false);
 
   return (
     <div className="font-brand-gmarketsans">
@@ -16,7 +18,7 @@ const MakeButton = () => {
       onClick={clickMaodal}>
         그룹 만들기
       </button>
-      {showModal && <GroupModal clickModal={clickMaodal}/>}
+      {modalIsopen && <ModalTest isOpen={modalIsopen} onRequestClose={closeModal}/>}
     </div>
   );
 };
