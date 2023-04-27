@@ -12,7 +12,10 @@ const RemoveBg = () => {
   >(undefined);
   const [removebgImageUrl, setRemovebgImageUrl] = useState<
     string | undefined | null
-  >(undefined);
+  >(
+    "https://ai-result-rapidapi.ailabtools.com/cutout/segmentCommonImage/2023-04-27/051401-cb8fe351-83fb-9f58-11aa-6e6da2e929a1-1682572441.png"
+  );
+  // >(undefined);
   const router = useRouter();
 
   useEffect(() => {
@@ -41,7 +44,6 @@ const RemoveBg = () => {
         },
       }
     );
-    console.log(response.data);
     setRemovebgImageUrl(response.data.data.image_url);
   };
 
@@ -52,36 +54,52 @@ const RemoveBg = () => {
 
   return (
     <>
-      <div>
+      <div className="flex items-center justify-center">
         {originImageUrl ? (
           <Image
+            className="rounded-lg drop-shadow-2xl"
             src={originImageUrl}
             alt="originimage"
-            width={300}
-            height={300}
+            width={320}
+            height={260}
           />
         ) : (
           <div>사진을 다시 찍어주세요</div>
         )}
       </div>
-      <button type="button" onClick={removebgclick}>
-        누끼지우기
-      </button>
-      <div>
+      <div className="flex items-center justify-center">
+        <button
+          className="my-[4vh] py-[1vh] px-[6vw] rounded-full border border-black border-spacing-2 shadow-xl font-brand-gmarketsans"
+          type="button"
+          onClick={removebgclick}
+        >
+          배경지우기
+        </button>
+      </div>
+      <div className="flex items-center justify-center">
         {removebgImageUrl ? (
-          <Image
-            src={removebgImageUrl}
-            alt="removebgimage"
-            width={300}
-            height={300}
-          />
+          <div>
+            <Image
+              className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
+              src={removebgImageUrl}
+              alt="removebgimage"
+              width={320}
+              height={260}
+            />
+            <div className="flex items-center justify-center">
+              <button
+                className="my-[4vh] py-[1vh] px-[6vw] rounded-md bg-brand-blue shadow-xl font-brand-gmarketsans text-white"
+                type="button"
+                onClick={goAging}
+              >
+                에이징 필터로
+              </button>
+            </div>
+          </div>
         ) : (
           <div>사진이 맘에 드시면 누끼 따기 버튼을 눌러 주세요</div>
         )}
       </div>
-      <button type="button" onClick={goAging}>
-        에이징 필터로
-      </button>
     </>
   );
 };
