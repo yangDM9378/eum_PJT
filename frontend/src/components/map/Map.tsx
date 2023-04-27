@@ -1,23 +1,47 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 import { GoogleMap, MarkerF, MarkerClustererF } from "@react-google-maps/api";
 
+// 지도 옵션입니다.
 const GoogleMapOptions: google.maps.MapOptions = {
   tilt: 0,
   zoomControl: false,
   streetViewControl: false,
   disableDefaultUI: true,
   gestureHandling: "greedy",
+  styles: [
+    {
+      featureType: "poi",
+      elementType: "all",
+      stylers: [{ visibility: "off" }],
+    },
+  ],
 };
 
 function Map() {
-  // const handleOnLoad = (map: google.maps.Map) => {
-  //   const bounds = new google.maps.LatLngBounds();
-  //   markers.forEach(({ position }) => bounds.extend(position));
-  //   map.fitBounds(bounds);
-  // };
+  const mapCenter = useMemo(() => ({ lat: 35.205331, lng: 126.811123 }), []);
+  const [mapref, setMapRef] = useState<google.maps.Map | null>(null);
+  const [changeCenter, setChangeCenter] = useState({
+    lat: 35.205331,
+    lng: 126.811123,
+  });
+
+  const handleOnLoad = (map: google.maps.Map) => {
+    setMapRef(map);
+  };
+
+  // 지도를 움직일때 지도 중간 지점의 좌표입니다.
+  const handleCenterChanged = () => {
+    if (mapref) {
+      const newCenter = mapref.getCenter();
+      if (newCenter) {
+        const center = { lat: newCenter.lat(), lng: newCenter.lng() };
+        setChangeCenter(center);
+      }
+    }
+  };
 
   const clickMarker = (marker: {
     id: number;
@@ -26,23 +50,33 @@ function Map() {
     alert(marker.id);
   };
 
-  const options = {
-    imagePath:
-      "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m1.png", // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
+  // const options = {
+  //   imagePath:
+  //     "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m1.png", // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
+  // };
+
+  const addLetter = () => {
+    alert(`추가버튼을 누르셨습니다. ${changeCenter.lat} ${changeCenter.lng}`);
   };
 
-  const mapCenter = useMemo(() => ({ lat: 35.205331, lng: 126.811123 }), []);
-
   return (
-    <section className="h-[75%] flex justify-center items-center">
+    <section className="h-[75%] relative flex justify-center items-center">
       <GoogleMap
-        // onLoad={handleOnLoad}
+        onLoad={handleOnLoad}
         center={mapCenter}
-        zoom={14}
+        zoom={16}
         mapContainerStyle={{ width: "90%", height: "90%" }}
         options={GoogleMapOptions}
+        onCenterChanged={handleCenterChanged}
       >
-        {/* <MarkerF position={{ lat: 53, lng: 9 }} /> */}
+        {/* 지도의 센터 좌표 이미지입니다. */}
+        <img
+          className="absolute top-[50%] left-[50%] w-[10vh]"
+          style={{ transform: "translate(-50%, -50%)" }}
+          src="/map/centerTarget.png"
+          alt="center"
+        />
+        {/* 좌표 클러스터링 */}
         <MarkerClustererF>
           {(clusterer) => (
             <>
@@ -57,6 +91,14 @@ function Map() {
             </>
           )}
         </MarkerClustererF>
+        {/* 지도에 메시지 추가하기. */}
+        <img
+          className="absolute top-[90%] left-[85%] w-[13vh]"
+          style={{ transform: "translate(-50%, -50%)" }}
+          src="/map/plus.png"
+          alt="center"
+          onClick={addLetter}
+        />
       </GoogleMap>
     </section>
   );
