@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 import { GoogleMap, MarkerF, MarkerClustererF } from "@react-google-maps/api";
 
@@ -10,14 +10,37 @@ const GoogleMapOptions: google.maps.MapOptions = {
   streetViewControl: false,
   disableDefaultUI: true,
   gestureHandling: "greedy",
+  styles: [
+    {
+      featureType: "poi",
+      elementType: "all",
+      stylers: [{ visibility: "off" }],
+    },
+  ],
 };
 
 function Map() {
-  // const handleOnLoad = (map: google.maps.Map) => {
-  //   const bounds = new google.maps.LatLngBounds();
-  //   markers.forEach(({ position }) => bounds.extend(position));
-  //   map.fitBounds(bounds);
-  // };
+  const mapCenter = useMemo(() => ({ lat: 35.205331, lng: 126.811123 }), []);
+  // const mapRef = useRef(null);
+  const [mapref, setMapRef] = useState<google.maps.Map | null>(null);
+  const [changeCenter, setChangeCenter] = useState({
+    lat: 35.205331,
+    lng: 126.811123,
+  });
+
+  const handleOnLoad = (map: google.maps.Map) => {
+    setMapRef(map);
+  };
+
+  const handleCenterChanged = () => {
+    if (mapref) {
+      const newCenter = mapref.getCenter();
+      if (newCenter) {
+        const center = { lat: newCenter.lat(), lng: newCenter.lng() };
+        setChangeCenter(center);
+      }
+    }
+  };
 
   const clickMarker = (marker: {
     id: number;
@@ -26,23 +49,22 @@ function Map() {
     alert(marker.id);
   };
 
-  const options = {
-    imagePath:
-      "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m1.png", // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
-  };
-
-  const mapCenter = useMemo(() => ({ lat: 35.205331, lng: 126.811123 }), []);
+  // const options = {
+  //   imagePath:
+  //     "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m1.png", // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
+  // };
 
   return (
     <section className="h-[75%] flex justify-center items-center">
       <GoogleMap
-        // onLoad={handleOnLoad}
+        onLoad={handleOnLoad}
         center={mapCenter}
         zoom={14}
         mapContainerStyle={{ width: "90%", height: "90%" }}
         options={GoogleMapOptions}
+        onCenterChanged={handleCenterChanged}
       >
-        {/* <MarkerF position={{ lat: 53, lng: 9 }} /> */}
+        {/* <MarkerF position={changeCenter} /> */}
         <MarkerClustererF>
           {(clusterer) => (
             <>
