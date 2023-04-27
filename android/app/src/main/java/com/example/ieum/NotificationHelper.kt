@@ -19,7 +19,7 @@ class NotificationHelper (context: Context): ContextWrapper(context){
     private val CHANNEL_NAME = "메시지 알람"
 
     fun displayNotification(reqId: Int, title: String, body : String, activityName : Class<*>){
-        Log.d(ContentValues.TAG, "display notification!")
+        Log.d(ContentValues.TAG, "display notification!!")
 
         //알람 콘텐츠 설정
         val intent = Intent(this, activityName)
@@ -40,6 +40,8 @@ class NotificationHelper (context: Context): ContextWrapper(context){
         notificationManager?.notify(reqId, notification) //노티실행
     }
     fun createNotificationChannel(){
+        Log.d(ContentValues.TAG, "create notification!!")
+
         if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance).apply{

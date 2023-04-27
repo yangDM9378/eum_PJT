@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <!--권한 획득-->
+    <!--    웹뷰 -->
     <uses-permission android:name="android.permission.INTERNET" />
+<!--    시스템 부팅 후 broadcast를 수신하도록 허용-->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+<!--    대략적인 위치 접근할 수 있도록 허용-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<!--    정확한 위치 접근할 수 있도록 허용-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<!--    앱이 알람을 게시하도록 허용-->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+<!--    백그라운드에서 위치 접근 / ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION 을 같이 선언해야함-->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+<!--    스크린 꺼짐 방지-->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+<!--    시스템이 백그라운드에서 돌아가고 있음을 알림-->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<!--    알림 정책에 접근-->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
 
 

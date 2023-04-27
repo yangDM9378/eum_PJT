@@ -2,21 +2,15 @@ package com.example.ieum
 
 import android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
-import android.nfc.Tag
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
-import androidx.compose.ui.graphics.Color
-import androidx.constraintlayout.motion.widget.Debug.getLocation
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
@@ -68,7 +62,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         button.setOnClickListener(){
             val notificationHelper = NotificationHelper(this)
             notificationHelper.createNotificationChannel()
-            notificationHelper.displayNotification(Random.nextInt(),"button test","test",MapsActivity().javaClass)
+            notificationHelper.displayNotification(Random.nextInt(),"button test","test",
+                MainActivity().javaClass)
         }
     }
 
@@ -175,26 +170,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         mMap.clear()
         addMarker(p0)
         addCircle(p0)
-        addGeofence(p0)
+//        addGeofence(p0)
     }
 
-    private fun addGeofence(p0: LatLng) {
-        val geofence = geofenceHelper.getGeofence("ID", Pair(p0.latitude,p0.longitude),100f)
-        val geofenceRequest = geofence?.let{geofenceHelper.getGeofencingRequest(it)}
-        val pendingIntent = geofenceHelper.geofencePendingIntent
-        if(ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
-            return
-        }
-        geofencingClient.addGeofences(geofenceRequest!!,pendingIntent).run{
-            addOnSuccessListener{
-                Log.d("Success","Geofence added")
-            }
-            addOnFailureListener{
-                Log.d("Failure","Geofence Not added")
-            }
-
-        }
-    }
+//    private fun addGeofence(p0: LatLng) {
+//        val geofence = geofenceHelper.getGeofence("ID", Pair(p0.latitude,p0.longitude),100f)
+//        val geofenceRequest = geofence?.let{geofenceHelper.getGeofencingRequest(it)}
+//        val pendingIntent = geofenceHelper.geofencePendingIntent
+//        if(ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+//            return
+//        }
+//        geofencingClient.addGeofences(geofenceRequest!!,pendingIntent).run{
+//            addOnSuccessListener{
+//                Log.d("Success","Geofence added")
+//            }
+//            addOnFailureListener{
+//                Log.d("Failure","Geofence Not added")
+//            }
+//
+//        }
+//    }
 
     private fun addCircle(p0: LatLng?) {
         val circleOptions = CircleOptions()
