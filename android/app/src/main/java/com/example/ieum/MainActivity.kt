@@ -52,6 +52,8 @@ class MainActivity : ComponentActivity() {
         var button = findViewById<Button>(R.id.button)
 
         button.setOnClickListener(){
+            val intent = Intent(this,MapsActivity::class.java)
+            startActivity(intent)
 //            displayNotification()
         }
         var web= findViewById<WebView>(R.id.web)
