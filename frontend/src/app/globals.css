@@ -3,8 +3,6 @@
 @tailwind utilities;
 
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
-
 /* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -29,15 +27,8 @@ body {
     rgb(var(--background-start-rgb));
 } */
 
-/* @font-face {
-  font-family: 'GmarketSansMedium';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-} */
-
 @font-face {
-  font-family: 'GmarketSans';
+  font-family: 'GmarketSansthin';
   font-weight: 300;
   font-style: normal;
   src: url('https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansLight.eot');
@@ -47,8 +38,9 @@ body {
        url('https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansLight.ttf') format("truetype");
   font-display: swap;
 } 
+
 @font-face {
-  font-family: 'GmarketSans';
+  font-family: 'GmarketSansMedium';
   font-weight: 500;
   font-style: normal;
   src: url('https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansMedium.eot');
@@ -58,8 +50,9 @@ body {
        url('https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansMedium.ttf') format("truetype");
   font-display: swap;
 } 
+
 @font-face {
-  font-family: 'GmarketSans';
+  font-family: 'GmarketSansBold';
   font-weight: 700;
   font-style: normal;
   src: url('https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansBold.eot');
@@ -69,6 +62,5 @@ body {
        url('https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansBold.ttf') format("truetype");
   font-display: swap;
 } 
-
 
  

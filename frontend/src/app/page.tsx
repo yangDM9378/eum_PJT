@@ -12,10 +12,10 @@ export default function Home() {
       style={{
         backgroundImage: "url(/images/main.png)",
         backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
+        backgroundSize: "contain",
       }}
     >
-      <p className="font-brand-gmarketsans text-[35px] pt-[20vh] pl-[5vh]">이음</p>
+      <p className="text-[35px] pt-[20vh] pl-[5vh]">이음</p>
       <LoginButton />
     </div>
   );
