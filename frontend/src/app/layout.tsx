@@ -1,4 +1,9 @@
 import "./globals.css";
+import { Poppins } from "next/font/google";
+
+// 폰트 지정
+
+const poppins = Poppins({ weight: "600", subsets: ["latin"] });
 
 export const metadata = {
   title: "Create Next App",
@@ -11,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={poppins.className}>
       <body className="w-[100vw] h-[100vh] bg-brand-baige">{children}</body>
     </html>
   );
