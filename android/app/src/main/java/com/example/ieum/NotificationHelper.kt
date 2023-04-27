@@ -18,9 +18,8 @@ class NotificationHelper (context: Context): ContextWrapper(context){
     private val CHANNEL_ID = "com.example.ieum"
     private val CHANNEL_NAME = "메시지 알람"
 
-
     fun displayNotification(reqId: Int, title: String, body : String, activityName : Class<*>){
-        Log.d(ContentValues.TAG, "display notification")
+        Log.d(ContentValues.TAG, "display notification!")
 
         //알람 콘텐츠 설정
         val intent = Intent(this, activityName)
@@ -40,13 +39,12 @@ class NotificationHelper (context: Context): ContextWrapper(context){
         // 알림을 업데이트하거나 삭제하려면 나중에 필요하기 때문입니다.
         notificationManager?.notify(reqId, notification) //노티실행
     }
-    private fun createNotificationChannel(){
+    fun createNotificationChannel(){
         if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance).apply{
                 description="This is the description of the channel"
                 enableLights(true)
-                lightColor= Color.Blue as Int
                 lockscreenVisibility=Notification.VISIBILITY_PUBLIC
 
             }
@@ -56,5 +54,8 @@ class NotificationHelper (context: Context): ContextWrapper(context){
         }else{
 
         }
+    }
+    init{
+        createNotificationChannel()
     }
 }

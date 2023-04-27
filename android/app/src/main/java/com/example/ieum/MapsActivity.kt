@@ -7,11 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.nfc.Tag
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
 import androidx.constraintlayout.motion.widget.Debug.getLocation
@@ -28,6 +30,7 @@ import com.example.ieum.databinding.ActivityMapsBinding
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CircleOptions
+import kotlin.random.Random
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener{
@@ -47,18 +50,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         super.onCreate(savedInstanceState)
         binding= ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M && !notificationManager.isNotificationPolicyAccessGranted){
-            val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
-            startActivity(intent)
-        }
+        val notificationHelper = NotificationHelper(this)
+        notificationHelper.createNotificationChannel()
+//        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+//        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M && !notificationManager.isNotificationPolicyAccessGranted){
+//            val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+//            startActivity(intent)
+//        }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map_fragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
         geofencingClient = LocationServices.getGeofencingClient(this)
         geofenceHelper = GeofenceHelper(this)
+        var button = findViewById<Button>(R.id.button2)
+
+        button.setOnClickListener(){
+            val notificationHelper = NotificationHelper(this)
+            notificationHelper.createNotificationChannel()
+            notificationHelper.displayNotification(Random.nextInt(),"button test","test",MapsActivity().javaClass)
+        }
     }
 
     // ...
@@ -84,15 +95,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
-        markingOptions = MarkerOptions().position(sydney).title("Marker in Sydney").snippet("good city")
+        val samsung = LatLng(35.205234,126.811794)
+        markingOptions = MarkerOptions().position(samsung).title("Marker in Sydney").snippet("good city")
         mMap.addMarker(markingOptions)
-        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(sydney,12f)
+        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(samsung,12f)
         mMap.animateCamera(cameraUpdate)
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(samsung))
+
         getMyLocation()
         // Add more markers and move the camera
-
+        handleMapLongClick(samsung)
     }
 
     private fun getMyLocation() {
@@ -158,6 +171,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     }
 
     private fun handleMapLongClick(p0: LatLng) {
+        Log.d("map","handleMapLongClick")
         mMap.clear()
         addMarker(p0)
         addCircle(p0)

@@ -48,7 +48,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mContext = this
-//        createNotificationChannel(CHANNEL_ID,"메시지 알람","this is a test channel")
         var button = findViewById<Button>(R.id.button)
 
         button.setOnClickListener(){
