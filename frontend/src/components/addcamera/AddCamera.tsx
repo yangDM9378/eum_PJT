@@ -2,13 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
-import axios from "axios";
 
 const AddCamera = () => {
   const [isCameraReady, setIsCameraReady] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
-
   useEffect(() => {
     // 페이지 랜더시 자동으로 camera 켜지게 하기
     const startCamera = async () => {
@@ -41,36 +39,21 @@ const AddCamera = () => {
         ?.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
       // 카메라 끄기
-      // const stream = videoRef.current.srcObject as MediaStream;
-      // const tracks = stream.getTracks();
-      // tracks.forEach((track) => track.stop());
-
-      // FormData 생성
-      const formData = new FormData();
+      const stream = videoRef.current.srcObject as MediaStream;
+      if (stream) {
+        const tracks = stream.getTracks();
+        tracks.forEach((track) => track.stop());
+      }
+      // 이미지 localStorage를 통해 removebg로 이동시키기
       const dataURL = canvas.toDataURL("image/png");
-      const blob = await (await fetch(dataURL)).blob();
-      formData.append("image", blob, "image.png");
+      localStorage.setItem("Imagepath", dataURL);
 
-      // POST 요청 보내기
-      const response = await axios.post(
-        "https://www.ailabapi.com/api/cutout/general/universal-background-removal",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            "ailabapi-api-key": process.env.NEXT_PUBLIC_AILAB_API_KEY,
-          },
-        }
-      );
-
-      // log response data
-      console.log(response.data);
-      // await router.push("/addcamera/removeBg");
+      await router.push(`/addcamera/removeBg`);
     }
   };
 
   return (
-    <div>
+    <>
       <div>
         <video
           ref={videoRef}
@@ -80,7 +63,7 @@ const AddCamera = () => {
       <div>
         <button onClick={handleTakePicture}>사진 촬영</button>
       </div>
-    </div>
+    </>
   );
 };
 
