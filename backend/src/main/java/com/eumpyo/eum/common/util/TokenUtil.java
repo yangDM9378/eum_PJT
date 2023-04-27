@@ -6,14 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -123,12 +123,16 @@ public class TokenUtil {
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
+            log.error(e.getMessage());
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다.");
+            log.error(e.getMessage());
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰입니다.");
+            log.error(e.getMessage());
         } catch (IllegalArgumentException e) {
             log.info("JWT 토큰이 잘못되었습니다.");
+            log.error(e.getMessage());
         }
         return false;
     }
@@ -149,7 +153,9 @@ public class TokenUtil {
                 .email((String) claims.get("userId"))
                 .gender((Integer) claims.get("userGender"))
                 .build();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-        return new UsernamePasswordAuthenticationToken(userResponse, token);
+        return new UsernamePasswordAuthenticationToken(userResponse, token, authorities);
     }
 }
