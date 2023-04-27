@@ -1,5 +1,7 @@
 package com.eumpyo.eum.config;
 
+import com.eumpyo.eum.config.handler.JwtAccessDeniedHandler;
+import com.eumpyo.eum.config.handler.JwtAuthenticationEntryPoint;
 import com.eumpyo.eum.config.oauth2.CustomOAuth2UserService;
 import com.eumpyo.eum.config.oauth2.filter.JwtAuthenticationFilter;
 import com.eumpyo.eum.config.oauth2.filter.JwtExceptionFilter;
@@ -9,10 +11,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
@@ -38,10 +42,14 @@ public class SecurityConfig {
             // 이 기능은 CSRF 공격을 방지하기 위해 CSRF 토큰을 사용하여 요청을 검증합니다.
             .csrf().disable()
             // 권한 설정
-//            .authorizeRequests()
-//            .antMatchers("/oauth2**", "/home**").permitAll()
-//            .anyRequest().authenticated()
-//            .and()
+            .authorizeRequests()
+            .antMatchers("/oauth2/*", "/home").permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .exceptionHandling()
+            .authenticationEntryPoint(jwtAuthenticationEntryPoint())
+            .accessDeniedHandler(jwtAccessDeniedHandler())
+            .and()
             // Spring Security JWT Filter Load
             .addFilterBefore(jwtAuthorizationFilter(), BasicAuthenticationFilter.class)
             // JwtExceptionFilter
@@ -54,7 +62,6 @@ public class SecurityConfig {
         // authorizeRequests() 메서드는 antMatchers() 메서드와 함께 사용하여, 다양한 URL 경로나 리소스에 대한 접근 권한을 설정할 수 있습니다.
 //            .authorizeRequests()
             .oauth2Login()				// OAuth2기반의 로그인인 경우
-//                .loginPage("/loginForm");		// 인증이 필요한 URL에 접근하면 /loginForm으로 이동
                 // 인가 엔드포인트를 설정
                 .authorizationEndpoint()
                 .baseUri("/oauth2/authorize")
@@ -90,5 +97,25 @@ public class SecurityConfig {
     @Bean
     public JwtExceptionFilter jwtExceptionFilter() {
         return new JwtExceptionFilter(new ObjectMapper());
+    }
+
+    /**
+     * authorizeRequests에서 유효한 자격증명을 제공하지 않고 접근하려
+     *
+     * @return 401 Exception
+     */
+    @Bean
+    public JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint() {
+        return new JwtAuthenticationEntryPoint();
+    }
+
+    /**
+     * authorizeRequests에서 필요한 권한이 없이 접근하려 할때 발생
+     *
+     * @return 403 Exception
+     */
+    @Bean
+    public JwtAccessDeniedHandler jwtAccessDeniedHandler() {
+        return new JwtAccessDeniedHandler();
     }
 }

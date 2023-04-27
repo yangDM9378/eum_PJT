@@ -19,17 +19,12 @@ module.exports = {
         "brand-pink": "#E9D1C6",
         "brand-blue": "#7592B0",
       },
+      fontFamily: {
+        "gmarket-thin": ["GmarketSansthin"],
+        "gmarket-medium": ["GmarketSansMedium"],
+        "gmarket-bold": ["GmarketSansBold"],
+      },
     },
-    fontFamily: {
-      "brand-gmarketsans": ["GmarketSans"],
-      "brand-poppins": ["Poppins", "sans-serif"],
-    },
-    // backgroundColor: {
-    //   "brand-baige": "#F8F9F3",
-    //   "brand-red": "#D3A48D",
-    //   "brand-green": "#77BC9E",
-    //   "brand-pink": "#E9D1C6",
-    // },
   },
   plugins: [],
 };
