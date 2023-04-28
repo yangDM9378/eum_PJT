@@ -1,5 +1,4 @@
-import RemoveBg from "@/components/addcamera/removebg/RemoveBg";
-import React from "react";
+import RemoveBg from "@/components/addeventcamera/aging/removebg/RemoveBg";
 
 export default function RemoveBgPage() {
   return (

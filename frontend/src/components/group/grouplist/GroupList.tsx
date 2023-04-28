@@ -3,13 +3,12 @@
 import Image from "next/image";
 import { useState } from "react";
 
-import {Poppins} from 'next/font/google'
-
+import { Poppins } from "next/font/google";
 
 const poppins = Poppins({
-  weight: ["200","300","500"],
-  preload:false,
-})
+  weight: ["200", "300", "500"],
+  preload: false,
+});
 
 // 타입
 type Group = {
@@ -60,10 +59,10 @@ const GroupList = () => {
       <ul className="pt-[2vh] ">
         {groupList.map((group, index) => (
           <li key={index}>
-            <div className="grid grid-cols-10 pl-[2vw] place-content-around py-3">
+            <div className="grid grid-cols-10 pl-[3vw] place-content-around py-3">
               <div className="col-span-8 font-brand-poppins">
-                <p className="font-brand-poppins text-[1.2rem]">{group.name}</p>
-                <p className="text-[0.8rem] pt-[0.5vh]">{group.description}</p>
+                <p className="font-brand-poppins text-[1rem]">{group.name}</p>
+                <p className="text-[0.8rem] pt-[0.5vh] font-thin">{group.description}</p>
               </div>
               <div className="col-span-2 mr-[2vw]">
                 <Image

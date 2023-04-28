@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Router from "next/router";
 import { useRouter } from "next/navigation";
 
 const RemoveBg = () => {
@@ -17,9 +16,8 @@ const RemoveBg = () => {
 
   useEffect(() => {
     // localstorage에 있는 값 받아오기
-    const originImageURL = localStorage.getItem("Imagepath");
+    const originImageURL = localStorage.getItem("originimagepath");
     setOriginImageUrl(originImageURL);
-    // localStorage.removeItem("Imagepath");
   }, []);
 
   // 누끼따주세요 POST 요청 보내기
@@ -46,6 +44,10 @@ const RemoveBg = () => {
 
   // 에이징 페이지로 이동
   const goAging = () => {
+    console.log(removebgImageUrl);
+    if (removebgImageUrl) {
+      localStorage.setItem("removeimagepath", removebgImageUrl);
+    }
     router.push(`/addcamera/removeBg/aging`);
   };
 
