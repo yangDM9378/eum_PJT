@@ -6,6 +6,7 @@ const initialState = {
     lat: 0,
     lng: 0,
   },
+  path: "",
 };
 
 export const coords = createSlice({
@@ -16,8 +17,11 @@ export const coords = createSlice({
     assign: (state, action: PayloadAction<Coords>) => {
       state.coords = action.payload;
     },
+    destination: (state, action: PayloadAction<string>) => {
+      state.path = action.payload;
+    },
   },
 });
 
-export const { reset, assign } = coords.actions;
+export const { reset, assign, destination } = coords.actions;
 export default coords.reducer;

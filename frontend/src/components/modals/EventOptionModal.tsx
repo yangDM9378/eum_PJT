@@ -2,7 +2,9 @@
 
 import React from "react";
 import Modal from "react-modal";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { destination } from "@/redux/map/mapSlice";
+import { useAppDispatch } from "@/redux/hooks";
 
 const customStyles = {
   overlay: {
@@ -17,6 +19,7 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
     border: "none",
     width: "85vw",
+    background: "#F8F9F3",
   },
 };
 
@@ -30,6 +33,14 @@ type ModalProps = {
 };
 
 const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const moveEvent = (dest: string) => {
+    router.push("/addcamera");
+    dispatch(destination(dest));
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -47,16 +58,18 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
           onClick={() => setIsOpen(false)}
         />
         <div>등록할 이벤트를 선택해 주세요.</div>
-        <Link href="/addcamera/removeBg/aging">
-          <div className="shadow-xl rounded-lg h-[6vh] my-4 flex items-center px-3 py-2 text-sm bg-brand-red">
-            <span>함께 찍기(에이징/디에이징)</span>
-          </div>
-        </Link>
-        <Link href="/addcamera/removeBg/pose">
-          <div className="shadow-xl rounded-lg h-[6vh] my-4 flex items-center px-3 py-2 text-sm bg-brand-red">
-            <span>동작 따라 찍기</span>
-          </div>
-        </Link>
+        <div
+          className="shadow-xl rounded-lg h-[6vh] my-4 flex items-center px-3 py-2 text-sm bg-brand-red"
+          onClick={() => moveEvent("aging")}
+        >
+          <span>함께 찍기(에이징/디에이징)</span>
+        </div>
+        <div
+          className="shadow-xl rounded-lg h-[6vh] my-4 flex items-center px-3 py-2 text-sm bg-brand-red"
+          onClick={() => moveEvent("pose")}
+        >
+          <span>동작 따라 찍기</span>
+        </div>
       </section>
     </Modal>
   );
