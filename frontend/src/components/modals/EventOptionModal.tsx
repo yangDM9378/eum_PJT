@@ -36,9 +36,9 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const moveEvent = (dest: string) => {
-    router.push("/addcamera");
-    dispatch(destination(dest));
+  const moveEvent = (path: string) => {
+    dispatch(destination(path));
+    router.push("/addeventcamera");
   };
 
   return (
@@ -50,7 +50,7 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
       ariaHideApp={false}
       style={customStyles}
     >
-      <section className="flex flex-col  py-3 px-2 relative">
+      <section className="relative flex flex-col px-2 py-3">
         <img
           src="/modal/closeBTN.png"
           alt="닫기버튼"

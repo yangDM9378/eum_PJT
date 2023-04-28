@@ -2,12 +2,20 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { originimageurl } from "@/redux/addevent/addEventSlice";
 
-const AddCamera = () => {
+const AddEvnetCamera = () => {
   const [isCameraReady, setIsCameraReady] = useState(false);
+  const [pathOption, setPathOption] = useState("");
+  const dispatch = useAppDispatch();
+  const pathSelector = useAppSelector((state) => state.coordsReducer.path);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
   useEffect(() => {
+    // 여기서 redux에서 pathOption값 가져와서 setPathOption 하기
+    setPathOption(pathSelector);
     // 페이지 랜더시 자동으로 camera 켜지게 하기
     const startCamera = async () => {
       try {
@@ -46,9 +54,8 @@ const AddCamera = () => {
       }
       // 이미지 localStorage를 통해 removebg로 이동시키기
       const dataURL = canvas.toDataURL("image/png");
-      localStorage.setItem("Imagepath", dataURL);
-
-      await router.push(`/addcamera/removeBg`);
+      dispatch(originimageurl(dataURL));
+      router.push(`/addeventcamera/${pathOption}`);
     }
   };
 
@@ -67,4 +74,4 @@ const AddCamera = () => {
   );
 };
 
-export default AddCamera;
+export default AddEvnetCamera;
