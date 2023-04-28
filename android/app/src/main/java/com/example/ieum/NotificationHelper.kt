@@ -20,7 +20,7 @@ class NotificationHelper (context: Context): ContextWrapper(context){
     private val CHANNEL_NAME = "메시지 알람"
 
     fun displayNotification(reqId: Int, title: String, body : String, activityName : Class<*>){
-        Log.d(ContentValues.TAG, "display notification!!")
+        Log.d(ContentValues.TAG, title+"display notification!!")
 
         //알람 콘텐츠 설정
         val intent = Intent(this, activityName)

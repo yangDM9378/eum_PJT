@@ -44,8 +44,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
         super.onCreate(savedInstanceState)
         binding= ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val notificationHelper = NotificationHelper(this)
-        notificationHelper.createNotificationChannel()
+//        val notificationHelper = NotificationHelper(this)
+//        notificationHelper.createNotificationChannel()
 //        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 //        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M && !notificationManager.isNotificationPolicyAccessGranted){
 //            val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
@@ -59,6 +59,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
         geofenceHelper = GeofenceHelper(this)
         var button = findViewById<Button>(R.id.button2)
 
+        val samsung = LatLng(35.205234,126.811794)
+
+        addGeofence(samsung)
         button.setOnClickListener(){
             val notificationHelper = NotificationHelper(this)
             notificationHelper.createNotificationChannel()
@@ -90,17 +93,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
 
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
-        val samsung = LatLng(35.205234,126.811794)
-        markingOptions = MarkerOptions().position(samsung).title("Marker in Sydney").snippet("good city")
-        mMap.addMarker(markingOptions)
-        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(samsung,12f)
-        mMap.animateCamera(cameraUpdate)
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(samsung))
+//        markingOptions = MarkerOptions().position(samsung).title("Marker in Sydney").snippet("good city")
+//        mMap.addMarker(markingOptions)
+//        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(samsung,12f)
+//        mMap.animateCamera(cameraUpdate)
+//
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(samsung))
 
         getMyLocation()
         // Add more markers and move the camera
-        addGeofence(samsung)
     }
 
     private fun getMyLocation() {

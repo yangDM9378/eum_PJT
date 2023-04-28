@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent
@@ -13,9 +15,7 @@ import kotlin.random.Random
 
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
-    // ...
 
-    private lateinit var geofencelist : List<Geofence>
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(TAG, "onReceive!!")
@@ -37,7 +37,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         // Get the transition type.
         val transitionTypes = geofencingEvent?.geofenceTransition
 
-        geofencelist = geofencingEvent?.triggeringGeofences as List<Geofence>
+//        geofencelist = geofencingEvent?.triggeringGeofences as List<Geofence>
         when (transitionTypes) {
 
             Geofence.GEOFENCE_TRANSITION_ENTER -> {
