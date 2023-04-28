@@ -36,9 +36,9 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const moveEvent = (dest: string) => {
-    router.push("/addcamera");
-    dispatch(destination(dest));
+  const moveEvent = (path: string) => {
+    dispatch(destination(path));
+    router.push("/addeventcamera");
   };
 
   return (

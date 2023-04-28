@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
-  originimagepth: "",
+  originimageurl: "",
 };
 
 export const addevent = createSlice({
@@ -9,11 +9,11 @@ export const addevent = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
-    assign: (state, action: PayloadAction<string>) => {
-      state.originimagepth = action.payload;
+    originimageurl: (state, action: PayloadAction<string>) => {
+      state.originimageurl = action.payload;
     },
   },
 });
 
-export const { reset, assign } = addevent.actions;
+export const { reset, originimageurl } = addevent.actions;
 export default addevent.reducer;
