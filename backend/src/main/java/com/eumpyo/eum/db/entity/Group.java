@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "\"group\"")
 @Getter
 @NoArgsConstructor
 public class Group {

@@ -38,29 +38,33 @@ public enum ErrorCode {
     // Request Parameter 로 데이터가 전달되지 않을 경우
     MISSING_REQUEST_PARAMETER_ERROR(400, "E004", "Missing Servlet RequestParameter Exception"),
 
+    // @RequestBody 및 @RequestParam, @PathVariable 값이 유효하지 않음
+    MISSING_REQUEST_HEADER_ERROR(400, "E005", "Missing RequestHeader Exception"),
+
     // 입력/출력 값이 유효하지 않음
-    IO_ERROR(400, "E005", "I/O Exception"),
+    IO_ERROR(400, "E006", "I/O Exception"),
 
     // com.google.gson JSON 파싱 실패
-    JSON_PARSE_ERROR(400, "E006", "JsonParseException"),
+    JSON_PARSE_ERROR(400, "E007", "JsonParseException"),
 
     // com.fasterxml.jackson.core Processing Error
-    JACKSON_PROCESS_ERROR(400, "E007", "com.fasterxml.jackson.core Exception"),
+    JACKSON_PROCESS_ERROR(400, "E008", "com.fasterxml.jackson.core Exception"),
 
     // @RequestBody 및 @RequestParam, @PathVariable 값이 유효하지 않음
-    NOT_VALID_ERROR(400, "E008", "handle Validation Exception"),
+    // MethodArgumentNotValidException 발생 시
+    ARGUMENT_NOT_VALID_ERROR(400, "E009", "validation on an argument fails"),
 
     // @RequestBody 및 @RequestParam, @PathVariable 값이 유효하지 않음
-    NOT_VALID_HEADER_ERROR(400, "E009", "Header에 데이터가 존재하지 않는 경우 "),
+    NOT_VALID_HEADER_ERROR(400, "E0010", "Header에 데이터가 존재하지 않는 경우 "),
 
     // @RequestBody 및 @RequestParam, @PathVariable 값이 유효하지 않음
-    UNAUTHORIZED_ERROR(401, "E010", "Header에 데이터가 존재하지 않는 경우 "),
+    UNAUTHORIZED_ERROR(401, "E011", "Header에 데이터가 존재하지 않는 경우 "),
 
     // 권한이 없어 요청이 거부됨
-    FORBIDDEN_ERROR(403, "E011", "Forbidden Exception"),
+    FORBIDDEN_ERROR(403, "E012", "Forbidden Exception"),
 
     // 서버로 요청한 리소스가 존재하지 않음
-    NOT_FOUND_ERROR(404, "E012", "Not Found Exception"),
+    NOT_FOUND_ERROR(404, "E013", "Not Found Exception"),
 
     // 서버가 처리 할 방법을 모르는 경우 발생
     INTERNAL_SERVER_ERROR(500, "G999", "Internal Server Error Exception"),

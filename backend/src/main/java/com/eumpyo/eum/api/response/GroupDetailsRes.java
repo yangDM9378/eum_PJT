@@ -1,9 +1,11 @@
 package com.eumpyo.eum.api.response;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 public class GroupDetailsRes {
     // 이름
     String name;
