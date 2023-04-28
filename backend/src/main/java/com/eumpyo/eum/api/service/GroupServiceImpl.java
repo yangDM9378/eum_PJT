@@ -7,15 +7,13 @@ import com.eumpyo.eum.db.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
 
     @Override
-    public void groupAdd(GroupAddReq groupAddReq) {
+    public void addGroup(GroupAddReq groupAddReq) {
         Group group = Group.builder()
                 .name(groupAddReq.getName())
                 .createdDate(groupAddReq.getCreatedDate())
@@ -28,6 +26,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupDetailsRes findGroup(Integer groupId) {
+        // 그룹 없을 때 어떤 예외 발생
         Group group = groupRepository.findByGroupId(groupId)
                 .orElseThrow(() ->new IllegalStateException(""));
 
@@ -42,7 +41,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void groupRemove(Integer groupId) {
+    public void removeGroup(Integer groupId) {
         groupRepository.deleteById(groupId);
     }
 }

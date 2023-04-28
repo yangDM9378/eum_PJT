@@ -3,6 +3,7 @@ package com.eumpyo.eum.api.controller;
 import com.eumpyo.eum.api.request.GroupAddReq;
 import com.eumpyo.eum.api.response.GroupDetailsRes;
 import com.eumpyo.eum.api.service.GroupService;
+import com.eumpyo.eum.common.code.SuccessCode;
 import com.eumpyo.eum.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +21,15 @@ public class GroupController {
 
     @PostMapping()
     ResponseEntity<ApiResponse> groupAdd(@RequestBody GroupAddReq groupAddReq) {
-        groupService.groupAdd(groupAddReq);
+        groupService.addGroup(groupAddReq);
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
                 .result(null)
-                .resultCode(200)
-                .resultMsg("그룹 생성에 성공했습니다.")
+                .resultCode(SuccessCode.INSERT.getCode())
+                .resultMsg(SuccessCode.INSERT.getMessage())
                 .build();
 
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.valueOf(SuccessCode.INSERT.getStatus()));
     }
 
     @GetMapping("/{groupId}")
@@ -37,23 +38,23 @@ public class GroupController {
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
                 .result(groupDetailsRes)
-                .resultCode(200)
-                .resultMsg("그룹 조회에 성공했습니다.")
+                .resultCode(SuccessCode.SELECT.getCode())
+                .resultMsg(SuccessCode.SELECT.getMessage())
                 .build();
 
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.valueOf(SuccessCode.SELECT.getStatus()));
     }
 
     @DeleteMapping("/{groupId}")
     ResponseEntity<ApiResponse> groupRemove(@PathVariable("groupId") Integer groupId) {
-        groupService.groupRemove(groupId);
+        groupService.removeGroup(groupId);
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
                 .result(null)
-                .resultCode(200)
-                .resultMsg("그룹 삭제에 성공했습니다.")
+                .resultCode(SuccessCode.DELETE.getCode())
+                .resultMsg(SuccessCode.DELETE.getMessage())
                 .build();
 
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.valueOf(SuccessCode.DELETE.getStatus()));
     }
 }

@@ -10,13 +10,13 @@ public class ApiResponse<T> {
     private T result;
 
     // API 응답 코드 Response
-    private int resultCode;
+    private String resultCode;
 
     // API 응답 코드 Message
     private String resultMsg;
 
     @Builder
-    public ApiResponse(T result, int resultCode, String resultMsg) {
+    public ApiResponse(T result, String resultCode, String resultMsg) {
         this.result = result;
         this.resultCode = resultCode;
         this.resultMsg = resultMsg;

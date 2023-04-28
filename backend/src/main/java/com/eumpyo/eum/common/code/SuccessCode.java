@@ -26,7 +26,7 @@ public enum SuccessCode {
     // 수정 성공 코드 (HTTP Response: 201 Created)
     UPDATE(200, "OK", "UPDATE SUCCESS"),
     // 삭제 성공 코드 (HTTP Response: 200 OK)
-    DELETE(200, "OK", "DELETE SUCCESS"),
+    DELETE(204, "No Content", "DELETE SUCCESS"),
 
     ; // End
 

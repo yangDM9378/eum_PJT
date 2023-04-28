@@ -1,4 +1,4 @@
-package com.eumpyo.eum.common.response;
+package com.eumpyo.eum.common.code;
 
 import lombok.AccessLevel;
 import lombok.Getter;
