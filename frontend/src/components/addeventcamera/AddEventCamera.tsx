@@ -54,8 +54,8 @@ const AddEvnetCamera = () => {
       }
       // 이미지 localStorage를 통해 removebg로 이동시키기
       const dataURL = canvas.toDataURL("image/png");
-      dispatch(originimageurl(dataURL));
-      router.push(`/addeventcamera/${pathOption}`);
+      await dispatch(originimageurl(dataURL));
+      await router.push(`/addeventcamera/${pathOption}`);
     }
   };
 
