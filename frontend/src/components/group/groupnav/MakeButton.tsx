@@ -4,21 +4,26 @@
 
 import React from "react";
 import { useState } from "react";
-import ModalTest from "@/components/modals/ModalTest";
+
+import MakeGroupModal from '../../modals/MakeGroupModal'
 
 const MakeButton = () => {
-    const [modalIsopen, setModalIsOpen] = useState<boolean>(false)
-    const clickMaodal = () => setModalIsOpen(!modalIsopen)
+    const [Isopen, setIsopen] = useState<boolean>(false)
+    
+    // 클릭하면 모달 열기
+    const openModal = () => {
+      setIsopen(true);
+    }
 
-    const closeModal = () => setModalIsOpen(false);
 
   return (
     <div className="font-brand-gmarketsans">
       <button className="bg-brand-pink w-[35vw] h-[3vh] rounded-md font-brand-gmarketsans text-[15px]"
-      onClick={clickMaodal}>
+      onClick={openModal}>
         그룹 만들기
       </button>
-      {modalIsopen && <ModalTest isOpen={modalIsopen} onRequestClose={closeModal}/>}
+      <MakeGroupModal isOpen={Isopen} setIsOpen={setIsopen}/>
+     
     </div>
   );
 };
