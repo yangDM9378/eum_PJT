@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
-
 import { GoogleMap, MarkerF, MarkerClustererF } from "@react-google-maps/api";
+import EventOptionModal from "../modals/EventOptionModal";
 
 // 지도 옵션입니다.
 const GoogleMapOptions: google.maps.MapOptions = {
@@ -38,6 +38,8 @@ function Map() {
     lng: 126.811123,
   });
 
+  const [isOpen, setIsOpen] = useState(false);
+
   //지도가 로드되면 매핑합니다.
   const handleOnLoad = (map: google.maps.Map) => {
     setMapRef(map);
@@ -70,6 +72,7 @@ function Map() {
   // 메시지 추가 이벤트입니다.
   const addLetter = () => {
     alert(`추가버튼을 누르셨습니다. ${changeCenter.lat} ${changeCenter.lng}`);
+    setIsOpen(true);
   };
 
   const getUserGps = () => {
@@ -129,6 +132,7 @@ function Map() {
           onClick={addLetter}
         />
       </GoogleMap>
+      <EventOptionModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </section>
   );
 }
