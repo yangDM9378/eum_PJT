@@ -19,6 +19,7 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
     border: "none",
     width: "85vw",
+    background: "#F8F9F3",
   },
 };
 
