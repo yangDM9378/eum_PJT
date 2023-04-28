@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import coordsReducer from "./map/slice";
+import coordsReducer from "./map/mapSlice";
 export const store = configureStore({
   reducer: { coordsReducer },
   devTools: process.env.NODE_ENV === "development",

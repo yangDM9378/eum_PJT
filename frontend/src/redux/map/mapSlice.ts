@@ -1,9 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-type Coords = {
-  lat: number;
-  lng: number;
-};
+import { Coords } from "@/types/map";
 
 const initialState = {
   coords: {
