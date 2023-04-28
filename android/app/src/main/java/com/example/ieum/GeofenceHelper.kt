@@ -31,10 +31,10 @@ class GeofenceHelper(context: Context?): ContextWrapper(context) {
     }
 
 //    모니터링 할 지오펜싱 지정 및 이벤트 트리거 방식 설정
-    fun getGeofencingRequest(geofences : List<Geofence>): GeofencingRequest {
+    fun getGeofencingRequest(geofence: Geofence): GeofencingRequest {
         return GeofencingRequest.Builder().apply {
 //        모니터링할 지오펜스 추가
-            addGeofences(geofences)
+            addGeofence(geofence)
 //            기기가 이미 지오펜싱 내에 있는 경우 ENTER 트리거, 나갈때 EXIT 트리거로 전환
             setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
         }.build()

@@ -3,6 +3,7 @@ package com.example.ieum
 import android.Manifest
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
@@ -19,12 +20,13 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.LocationServices
-import kotlin.random.Random
+import com.google.android.gms.maps.model.LatLng
 
 
 class MainActivity : ComponentActivity() {
     private val KEY_REPLY="key_reply"
 
+   var target_url="https://www.naver.com/"
     private val MY_PERMISSIONS_REQ_ACCESS_FINE_LOCATION = 100
     private val MY_PERMISSIONS_REQ_ACCESS_BACKGROUND_LOCATION = 101
 
@@ -44,10 +46,12 @@ class MainActivity : ComponentActivity() {
     private final val locationCode1 = 2001
 
     private fun getMyLocation() {
+        Log.d("Main","getmyLocation!!")
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
             val currentLatLng = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             if (currentLatLng != null) {
+                Log.d("Main","${currentLatLng.latitude} ${currentLatLng.longitude}!!")
                 Toast.makeText(this,"${currentLatLng.latitude} ${currentLatLng.longitude}",Toast.LENGTH_SHORT).show()
             }
         }else{
@@ -120,12 +124,28 @@ class MainActivity : ComponentActivity() {
             // JavaScript 인터페이스 활성화
             addJavascriptInterface(WebAppInterface(this@MainActivity),"WebAppInterface")
         }
-        web.loadUrl("https://www.naver.com/")
+
+        val intent = intent
+        val bundle = intent.extras
+        if (bundle != null) {
+            if (bundle.getString("url") != null && !bundle.getString("url")
+                    .equals("", ignoreCase = true)
+            ) {
+                target_url = bundle.getString("url")!!
+
+                Log.d("main",target_url+"!!")
+            }
+        }
+        
+        web.loadUrl(target_url) // 웹뷰에 표시할 웹사이트 주소, 웹뷰 시작
+
 
 
         geofencingClient= LocationServices.getGeofencingClient(this)
         geofenceHelper = GeofenceHelper(this)
-        addGeofence(geofenceList)
+        val samsung = LatLng(35.205234,126.811794)
+
+        addGeofence(samsung)
         Log.d(ContentValues.TAG, geofenceList.toString()+"!!")
 
         getMyLocation()
@@ -133,17 +153,21 @@ class MainActivity : ComponentActivity() {
 
         var button = findViewById<Button>(R.id.button)
         button.setOnClickListener(){
-            val notificationHelper = NotificationHelper(this)
-            notificationHelper.createNotificationChannel()
-            notificationHelper.displayNotification(
-                Random.nextInt(),"button test","test",
-                MainActivity().javaClass)
+//            val notificationHelper = NotificationHelper(this)
+//            notificationHelper.createNotificationChannel()
+//            notificationHelper.displayNotification(
+//                Random.nextInt(),"button test","test",
+//                MainActivity().javaClass)
+            val intent= Intent(this,MapsActivity::class.java)
+            startActivity(intent)
         }
     }
 
 
-    private fun addGeofence(geo:List<Geofence>) {
-        val geofenceRequest = geo?.let{geofenceHelper.getGeofencingRequest(geo)}
+    private fun addGeofence(p0 : LatLng) {
+        val geofence = geofenceHelper.getGeofence("ID", Pair(p0.latitude,p0.longitude),100f)
+        val geofenceRequest = geofence?.let{geofenceHelper.getGeofencingRequest(it)}
+
         val pendingIntent = geofenceHelper.geofencePendingIntent
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
             return
@@ -198,6 +222,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        target_url="https://www.naver.com/"
     }
 
     override fun onLowMemory() {

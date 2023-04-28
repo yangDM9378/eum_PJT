@@ -27,7 +27,7 @@ import com.google.android.gms.maps.model.CircleOptions
 import kotlin.random.Random
 
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener{
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
@@ -100,7 +100,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
 
         getMyLocation()
         // Add more markers and move the camera
-        handleMapLongClick(samsung)
+        addGeofence(samsung)
     }
 
     private fun getMyLocation() {
@@ -146,50 +146,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         }
     }
 
-    override fun onMapLongClick(p0: LatLng) {
-        if(Build.VERSION.SDK_INT>=29){
-            if(ContextCompat.checkSelfPermission(this,ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
-                handleMapLongClick(p0)
-            }else{
-                if(ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)){
-                    ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION),locationCode1)
-                    Toast.makeText(this,"For Triggering Geofences We need your Background Location Permission", Toast.LENGTH_SHORT).show()
-                }else{
-                    ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION),locationCode1)
-                }
 
-            }
-        }else{
-            handleMapLongClick(p0)
+
+    private fun addGeofence(p0: LatLng) {
+        val geofence = geofenceHelper.getGeofence("ID", Pair(p0.latitude,p0.longitude),100f)
+        val geofenceRequest = geofence?.let{geofenceHelper.getGeofencingRequest(it)}
+        val pendingIntent = geofenceHelper.geofencePendingIntent
+        if(ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+            return
         }
+        geofencingClient.addGeofences(geofenceRequest!!,pendingIntent).run{
+            addOnSuccessListener{
+                Log.d("Success","Geofence added")
+            }
+            addOnFailureListener{
+                Log.d("Failure","Geofence Not added")
+            }
 
+        }
     }
-
-    private fun handleMapLongClick(p0: LatLng) {
-        Log.d("map","handleMapLongClick")
-        mMap.clear()
-        addMarker(p0)
-        addCircle(p0)
-//        addGeofence(p0)
-    }
-
-//    private fun addGeofence(p0: LatLng) {
-//        val geofence = geofenceHelper.getGeofence("ID", Pair(p0.latitude,p0.longitude),100f)
-//        val geofenceRequest = geofence?.let{geofenceHelper.getGeofencingRequest(it)}
-//        val pendingIntent = geofenceHelper.geofencePendingIntent
-//        if(ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
-//            return
-//        }
-//        geofencingClient.addGeofences(geofenceRequest!!,pendingIntent).run{
-//            addOnSuccessListener{
-//                Log.d("Success","Geofence added")
-//            }
-//            addOnFailureListener{
-//                Log.d("Failure","Geofence Not added")
-//            }
-//
-//        }
-//    }
 
     private fun addCircle(p0: LatLng?) {
         val circleOptions = CircleOptions()

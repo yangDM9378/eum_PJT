@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationCompat
@@ -23,7 +24,12 @@ class NotificationHelper (context: Context): ContextWrapper(context){
 
         //알람 콘텐츠 설정
         val intent = Intent(this, activityName)
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_IMMUTABLE)
+//        상태 저장
+        val bundle = Bundle()
+        bundle.putString("url","https://www.daum.net/")
+        intent.putExtras(bundle)
+
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
 
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
