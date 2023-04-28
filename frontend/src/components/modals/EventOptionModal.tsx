@@ -32,7 +32,6 @@ type ModalProps = {
 
 const EventOptionModal = ({ isOpen, setIsOpen, changeCenter }: ModalProps) => {
   const coords = useAppSelector((state) => state.coordsReducer.coords);
-
   return (
     <Modal
       isOpen={isOpen}
@@ -42,7 +41,7 @@ const EventOptionModal = ({ isOpen, setIsOpen, changeCenter }: ModalProps) => {
       ariaHideApp={false}
       style={customStyles}
     >
-      <section className="flex flex-col  py-3 px-2 relative">
+      <section className="relative flex flex-col px-2 py-3">
         <img
           src="/modal/closeBTN.png"
           alt="닫기버튼"
@@ -50,12 +49,12 @@ const EventOptionModal = ({ isOpen, setIsOpen, changeCenter }: ModalProps) => {
           onClick={() => setIsOpen(false)}
         />
         <div>등록할 이벤트를 선택해 주세요.</div>
-        <Link href="/addcamera/removeBg/aging">
+        <Link href="/addcamera">
           <div className="shadow-xl rounded-lg h-[6vh] my-4 flex items-center px-3 py-2 text-sm bg-brand-red">
             <span>함께 찍기(에이징/디에이징)</span>
           </div>
         </Link>
-        <Link href="/addcamera/removeBg/pose">
+        <Link href="/addcamera">
           <div className="shadow-xl rounded-lg h-[6vh] my-4 flex items-center px-3 py-2 text-sm bg-brand-red">
             <span>동작 따라 찍기</span>
           </div>
