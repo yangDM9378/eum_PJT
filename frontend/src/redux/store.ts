@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-
+import coordsReducer from "./map/slice";
 export const store = configureStore({
-  reducer: {},
+  reducer: { coordsReducer },
   devTools: process.env.NODE_ENV !== "production",
 });
 
