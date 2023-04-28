@@ -3,7 +3,6 @@
 import React from "react";
 import Modal from "react-modal";
 import Link from "next/link";
-import { useAppSelector } from "@/redux/hooks";
 
 const customStyles = {
   overlay: {
@@ -30,9 +29,7 @@ type ModalProps = {
   };
 };
 
-const EventOptionModal = ({ isOpen, setIsOpen, changeCenter }: ModalProps) => {
-  const coords = useAppSelector((state) => state.coordsReducer.coords);
-
+const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -61,9 +58,6 @@ const EventOptionModal = ({ isOpen, setIsOpen, changeCenter }: ModalProps) => {
           </div>
         </Link>
       </section>
-      {/* <div>
-        {changeCenter.lat},{changeCenter.lng}
-      </div> */}
     </Modal>
   );
 };

@@ -3,8 +3,8 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { GoogleMap, MarkerF, MarkerClustererF } from "@react-google-maps/api";
 import EventOptionModal from "../modals/EventOptionModal";
-import { assign } from "@/redux/map/slice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { assign } from "@/redux/map/mapSlice";
+import { useAppDispatch } from "@/redux/hooks";
 
 // 지도 옵션입니다.
 const GoogleMapOptions: google.maps.MapOptions = {
@@ -92,8 +92,6 @@ function Map() {
         const lng = position.coords.longitude;
         setCurCenter({ lat, lng });
       }
-      console.log("Latitude is :", position.coords.latitude);
-      console.log("Longitude is :", position.coords.longitude);
     });
   };
 
