@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { originimageurl } from "@/redux/addevent/addEventSlice";
+import { startCamera } from "@/utils/getCamera";
 
 const AddEvnetCamera = () => {
   const [isCameraReady, setIsCameraReady] = useState(false);
@@ -16,23 +17,11 @@ const AddEvnetCamera = () => {
   useEffect(() => {
     // 여기서 redux에서 pathOption값 가져와서 setPathOption 하기
     setPathOption(pathSelector);
-    // 페이지 랜더시 자동으로 camera 켜지게 하기
-    const startCamera = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play();
-          setIsCameraReady(true);
-        }
-      } catch (err) {
-        console.error(err);
-      }
+    // 자동으로 켜져있는 camera 시작
+    const startcamera = async () => {
+      await startCamera(videoRef, setIsCameraReady);
     };
-
-    startCamera();
+    startcamera();
   }, []);
 
   //사진 찰영 버튼 클릭 시
@@ -60,17 +49,15 @@ const AddEvnetCamera = () => {
   };
 
   return (
-    <>
-      <div>
-        <video
-          ref={videoRef}
-          style={{ display: isCameraReady ? "block" : "none" }}
-        ></video>
-      </div>
+    <div className="w-full h-full bg-black">
+      <video
+        ref={videoRef}
+        style={{ display: isCameraReady ? "block" : "none" }}
+      ></video>
       <div>
         <button onClick={handleTakePicture}>사진 촬영</button>
       </div>
-    </>
+    </div>
   );
 };
 
