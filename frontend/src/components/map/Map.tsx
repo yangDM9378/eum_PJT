@@ -35,11 +35,14 @@ function Map() {
     lat: 35.205331,
     lng: 126.811123,
   });
-
-  const mapCenter = useMemo(
-    () => ({ lat: 35.221305123331, lng: 126.811123 }),
-    []
-  );
+  const [mapCenter, setMapCenter] = useState({
+    lat: 35.221305123331,
+    lng: 126.811123,
+  });
+  // const mapCenter = useMemo(
+  //   () => ({ lat: 35.221305123331, lng: 126.811123 }),
+  //   []
+  // );
   const [mapref, setMapRef] = useState<google.maps.Map | null>(null);
   const [changeCenter, setChangeCenter] = useState({
     lat: 35.205331,
@@ -53,6 +56,23 @@ function Map() {
   const dispatch = useAppDispatch();
 
   // 검색기능입니다.
+  const [changePlaces, setChangePlaces] =
+    useState<google.maps.places.Autocomplete | null>(null);
+
+  const onPlaceChanged = () => {
+    if (changePlaces !== null) {
+      const place = changePlaces.getPlace();
+      if (place.geometry?.location?.lat()) {
+        const searchLat = place.geometry.location.lat();
+        const searchLng = place.geometry.location.lng();
+        console.log(searchLat, searchLng);
+        setMapCenter({ lat: searchLat, lng: searchLng });
+      }
+    }
+  };
+  const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
+    setChangePlaces(autocomplete);
+  };
 
   // 함수입니다.
   //지도가 로드되면 매핑합니다.
@@ -120,9 +140,12 @@ function Map() {
         options={GoogleMapOptions}
         onCenterChanged={handleCenterChanged}
       >
-        <Autocomplete>
+        <Autocomplete onPlaceChanged={onPlaceChanged} onLoad={onLoad}>
           <input
             type="text"
+            // onClick={(e) => {
+            //   e.currentTarget.value = "";
+            // }}
             style={{
               boxSizing: `border-box`,
               border: `1px solid transparent`,
