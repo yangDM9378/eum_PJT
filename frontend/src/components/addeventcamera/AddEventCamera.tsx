@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { originimageurl } from "@/redux/addevent/addEventSlice";
 import { startCamera } from "@/utils/getCamera";
 import { AiOutlineCamera } from "react-icons/ai";
-import BackIcon from "../common/BackIcon";
 
 const AddEvnetCamera = () => {
   const [isCameraReady, setIsCameraReady] = useState(false);
