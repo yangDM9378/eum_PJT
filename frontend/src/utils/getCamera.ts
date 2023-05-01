@@ -1,4 +1,5 @@
-export const startCamera = async (
+// 카메라 가져오기
+const startCamera = async (
   videoRef: React.RefObject<HTMLVideoElement>,
   setIsCameraReady: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
@@ -29,3 +30,32 @@ export const startCamera = async (
     console.error(err);
   }
 };
+
+// 카메라 멈추기
+const stopCamera = (videoRef: React.RefObject<HTMLVideoElement>) => {
+  if (videoRef.current) {
+    const stream = videoRef.current.srcObject as MediaStream;
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach((track) => track.stop());
+    }
+  }
+};
+
+// 카메라 사진찰영
+const captureImage = async (videoRef: React.RefObject<HTMLVideoElement>) => {
+  if (videoRef.current) {
+    const canvas = document.createElement("canvas");
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    canvas
+      .getContext("2d")
+      ?.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+    const dataURL = canvas.toDataURL("image/png");
+    return dataURL;
+  } else {
+    throw new Error("Video element is not available.");
+  }
+};
+export { startCamera, stopCamera, captureImage };
