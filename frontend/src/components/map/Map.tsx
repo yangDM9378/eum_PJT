@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
-import { GoogleMap, MarkerF, MarkerClustererF } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  MarkerF,
+  MarkerClustererF,
+  Autocomplete,
+} from "@react-google-maps/api";
 import EventOptionModal from "../modals/EventOptionModal";
 import MessageModal from "../modals/MessageModal";
 import { assign } from "@/redux/map/mapSlice";
@@ -46,6 +51,8 @@ function Map() {
   const [messageId, setMessageId] = useState(-1);
 
   const dispatch = useAppDispatch();
+
+  // 검색기능입니다.
 
   // 함수입니다.
   //지도가 로드되면 매핑합니다.
@@ -113,6 +120,27 @@ function Map() {
         options={GoogleMapOptions}
         onCenterChanged={handleCenterChanged}
       >
+        <Autocomplete>
+          <input
+            type="text"
+            style={{
+              boxSizing: `border-box`,
+              border: `1px solid transparent`,
+              width: `240px`,
+              height: `32px`,
+              padding: `0 12px`,
+              borderRadius: `3px`,
+              boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+              fontSize: `14px`,
+              outline: `none`,
+              textOverflow: `ellipses`,
+              position: "absolute",
+              left: "50%",
+              marginLeft: "-120px",
+              top: "2%",
+            }}
+          />
+        </Autocomplete>
         {/* 지도의 센터 좌표 이미지입니다. */}
         <img
           className="absolute top-[50%] left-[50%] w-[10vh]"
