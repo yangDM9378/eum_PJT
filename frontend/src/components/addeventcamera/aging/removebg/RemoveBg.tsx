@@ -22,8 +22,7 @@ const RemoveBg = () => {
   // base64파일 blob으로 만들어서 배경지우기 요청
   const fetchBlob = async () => {
     const formData = new FormData();
-    console.log(agingImage);
-    console.log(agingSelectUrl);
+
     const blob = await (await fetch(agingSelectUrl)).blob();
     formData.append("image", blob, "image.png");
     const response = await axios.post(
