@@ -3,6 +3,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { GoogleMap, MarkerF, MarkerClustererF } from "@react-google-maps/api";
 import EventOptionModal from "../modals/EventOptionModal";
+import MessageModal from "../modals/MessageModal";
 import { assign } from "@/redux/map/mapSlice";
 import { useAppDispatch } from "@/redux/hooks";
 
@@ -41,6 +42,8 @@ function Map() {
   });
 
   const [isOpen, setIsOpen] = useState(false);
+  const [messageOpen, setMessageOpen] = useState(false);
+  const [messageId, setMessageId] = useState(-1);
 
   const dispatch = useAppDispatch();
 
@@ -66,7 +69,8 @@ function Map() {
     id: number;
     position: { lat: number; lng: number };
   }) => {
-    alert(marker.id);
+    setMessageId(marker.id);
+    setMessageOpen(true);
   };
 
   // const options = {
@@ -144,6 +148,11 @@ function Map() {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         changeCenter={changeCenter}
+      />
+      <MessageModal
+        messageOpen={messageOpen}
+        setMessageOpen={setMessageOpen}
+        messageId={messageId}
       />
     </section>
   );

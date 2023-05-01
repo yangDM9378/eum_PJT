@@ -52,7 +52,7 @@ const AddEvnetCamera = () => {
         const tracks = stream.getTracks();
         tracks.forEach((track) => track.stop());
       }
-      // 이미지 localStorage를 통해 removebg로 이동시키기
+      // 이미지 redux를 통해 aging or pose로 이동시키기
       const dataURL = canvas.toDataURL("image/png");
       dispatch(originimageurl(dataURL));
       router.push(`/addeventcamera/${pathOption}`);
