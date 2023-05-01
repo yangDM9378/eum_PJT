@@ -5,6 +5,8 @@ import { useState, useRef, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { originimageurl } from "@/redux/addevent/addEventSlice";
 import { startCamera } from "@/utils/getCamera";
+import { AiOutlineCamera } from "react-icons/ai";
+import BackIcon from "../common/BackIcon";
 
 const AddEvnetCamera = () => {
   const [isCameraReady, setIsCameraReady] = useState(false);
@@ -47,15 +49,22 @@ const AddEvnetCamera = () => {
       router.push(`/addeventcamera/${pathOption}`);
     }
   };
-
   return (
-    <div className="w-full h-full bg-black">
-      <video
-        ref={videoRef}
-        style={{ display: isCameraReady ? "block" : "none" }}
-      ></video>
-      <div>
-        <button onClick={handleTakePicture}>사진 촬영</button>
+    <div className="w-full h-full">
+      <div className="h-[88%] flex items-center justify-center">
+        <video
+          className="rounded-3xl px-[2%]"
+          ref={videoRef}
+          style={{
+            display: isCameraReady ? "block" : "none",
+          }}
+        />
+      </div>
+      <div className="flex items-center justify-center h-[12%]">
+        <AiOutlineCamera
+          className="bg-white rounded-full text-brand-green text-[50px] p-[2%]"
+          onClick={handleTakePicture}
+        />
       </div>
     </div>
   );
