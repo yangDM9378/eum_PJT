@@ -30,7 +30,7 @@ import com.google.android.gms.maps.model.LatLng
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private val KEY_REPLY="key_reply"
 
-   var target_url="https://www.naver.com/"
+   var target_url="http://i-eum-u.com/"
     private val MY_PERMISSIONS_REQ_ACCESS_FINE_LOCATION = 100
     private val MY_PERMISSIONS_REQ_ACCESS_BACKGROUND_LOCATION = 101
 
@@ -53,9 +53,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(p0: GoogleMap) {
         mMap=p0
         getMyLocation()
-        val samsung = LatLng(35.205234,126.811794)
-
-        addGeofence(samsung)
+        addGeofence(geofenceList)
     }
     private fun getMyLocation() {
         mMap.isMyLocationEnabled=true
@@ -158,17 +156,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         geofencingClient= LocationServices.getGeofencingClient(this)
         geofenceHelper = GeofenceHelper(this)
 
-        val samsung = LatLng(35.205234,126.811794)
-        addGeofence(samsung)
-
         Log.d(ContentValues.TAG, geofenceList.toString()+"!!")
 
     }
 
 
-    private fun addGeofence(p0 : LatLng) {
-        val geofence = geofenceHelper.getGeofence("ID", Pair(p0.latitude,p0.longitude),100f)
-        val geofenceRequest = geofence?.let{geofenceHelper.getGeofencingRequest(it)}
+    private fun addGeofence(geofences : List<Geofence>) {
+        val geofenceRequest = geofences?.let{geofenceHelper.getGeofencingRequest(it)}
 
         val pendingIntent = geofenceHelper.geofencePendingIntent
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
@@ -182,6 +176,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 Log.d("Failure","Geofence Not added!!")
             }
 
+        }
+    }
+
+    private fun removeGeofence(geofencesId: List<String>){
+        geofencingClient.removeGeofences(geofencesId).run {
+            addOnSuccessListener {
+                Log.d("Success","Geofence removed")
+            }
+            addOnFailureListener {
+                Log.d("Failure","Geofence Not Removed")
+            }
         }
     }
 

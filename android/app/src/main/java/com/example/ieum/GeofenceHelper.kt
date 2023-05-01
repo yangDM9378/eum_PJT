@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
+import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
 
 class GeofenceHelper(context: Context?): ContextWrapper(context) {
@@ -30,11 +31,12 @@ class GeofenceHelper(context: Context?): ContextWrapper(context) {
             .build()
     }
 
+
 //    모니터링 할 지오펜싱 지정 및 이벤트 트리거 방식 설정
-    fun getGeofencingRequest(geofence: Geofence): GeofencingRequest {
+    fun getGeofencingRequest(geofences: List<Geofence>): GeofencingRequest {
         return GeofencingRequest.Builder().apply {
 //        모니터링할 지오펜스 추가
-            addGeofence(geofence)
+            addGeofences(geofences)
 //            기기가 이미 지오펜싱 내에 있는 경우 ENTER 트리거, 나갈때 EXIT 트리거로 전환
             setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
         }.build()

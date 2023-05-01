@@ -29,7 +29,7 @@ class NotificationHelper (context: Context): ContextWrapper(context){
         bundle.putString("url","https://www.daum.net/")
         intent.putExtras(bundle)
 
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
 
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
