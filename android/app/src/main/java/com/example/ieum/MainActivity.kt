@@ -3,8 +3,9 @@ package com.example.ieum
 import android.Manifest
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
@@ -12,19 +13,20 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Button
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import com.example.ieum.api.Result
+import com.example.ieum.api.RetrofitImpl
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
+import retrofit2.Call
+import retrofit2.Response
+import javax.security.auth.callback.Callback
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -35,15 +37,36 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private val MY_PERMISSIONS_REQ_ACCESS_BACKGROUND_LOCATION = 101
 
     private lateinit var  geofencingClient: GeofencingClient
-    private lateinit var locationManager: LocationManager
     private lateinit var geofenceHelper: GeofenceHelper
 
+    private lateinit var locationManager: LocationManager
+    var locationProvider : String? = null
+    val locationListener = object:LocationListener{
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+            super.onStatusChanged(provider, status, extras)
+        }
+        override fun onLocationChanged(location: Location) {
+            val longitude = location.longitude
+            val latitude = location.latitude
+
+            Log.d("Location",longitude.toString()+" "+latitude.toString())
+        }
+
+        override fun onProviderEnabled(provider: String) {
+            super.onProviderEnabled(provider)
+        }
+
+        override fun onProviderDisabled(provider: String) {
+            super.onProviderDisabled(provider)
+        }
+    }
     private lateinit var mMap : GoogleMap
+
     val geofenceList: MutableList<Geofence> by lazy {
         mutableListOf(
-            geofenceHelper.getGeofence("현대백화점", Pair(37.5085864,127.0601149),100f),
-            geofenceHelper.getGeofence("삼성역", Pair(37.5094518,127.063603),100f),
-            geofenceHelper.getGeofence("광주삼성", Pair(35.205234,126.811794),100f)
+            geofenceHelper.getGeofence("현대", Pair(37.5085864,127.0601149),100f),
+            geofenceHelper.getGeofence("삼성", Pair(37.5094518,127.063603),100f),
+            geofenceHelper.getGeofence("삼성광주", Pair(35.205234,126.811794),100f)
         )
     }
 
@@ -56,15 +79,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         addGeofence(geofenceList)
     }
     private fun getMyLocation() {
-        mMap.isMyLocationEnabled=true
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
-            val currentLatLng = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            if (currentLatLng != null) {
-                Log.d("Main","${currentLatLng.latitude} ${currentLatLng.longitude}!!")
-                Toast.makeText(this,"${currentLatLng.latitude} ${currentLatLng.longitude}",Toast.LENGTH_SHORT).show()
-            }
-        }else{
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             if(ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION
                 )){
@@ -72,8 +94,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }else{
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),locationCode)
             }
-
+            return
         }
+
+
+        mMap.isMyLocationEnabled=true
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        var location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10000,100.0f,locationListener)
+        Log.d("Main","${location?.latitude} ${location?.longitude}!!")
+
     }
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -133,6 +163,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             settings.databaseEnabled = true
             settings.setGeolocationEnabled(true)
             settings.allowFileAccess = true
+            settings.domStorageEnabled=true
             // JavaScript 인터페이스 활성화
             addJavascriptInterface(WebAppInterface(this@MainActivity),"WebAppInterface")
         }
@@ -157,7 +188,37 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         geofenceHelper = GeofenceHelper(this)
 
         Log.d(ContentValues.TAG, geofenceList.toString()+"!!")
+        initList()
+        RetrofitImpl.service.getGroupAll(3).enqueue(object : retrofit2.Callback<Result>{
+            override fun onFailure(call: Call<Result>, t: Throwable) {
+                Log.e("Failed",t.toString()+"!!")
+            }
 
+            override fun onResponse(call: Call<Result>, response: Response<Result>) {
+                Log.d("Sucess",response.toString()+"!!")
+            }
+        })
+
+
+    }
+    private fun initList(){
+        val pin = RetrofitImpl.service.getPinAll().enqueue(object : retrofit2.Callback<List<Result.Pin>>{
+            override fun onFailure(call: Call<List<Result.Pin>>, t: Throwable) {
+                Log.e("Failed",t.toString()+"!!")
+            }
+
+            override fun onResponse(
+                call: Call<List<Result.Pin>>,
+                response: Response<List<Result.Pin>>
+            ) {
+                val listGeofence = response.body()
+                listGeofence?.forEach{
+
+                    it->geofenceHelper.getGeofence(it.pin_id.toString(), Pair(it.latitude, it.longitude),it.radius)
+                    Log.d("!!",it.toString())
+                }
+            }
+        })
     }
 
 
@@ -229,7 +290,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onDestroy() {
         super.onDestroy()
-        target_url="https://www.naver.com/"
+        target_url="http://i-eum-u.com/"
     }
 
     override fun onLowMemory() {

@@ -33,7 +33,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         // Get the geofences that were triggered. A single event can trigger
         // multiple geofences.
         val location = geofencingEvent?.triggeringLocation
-
+        val geofenceId = geofencingEvent?.triggeringGeofences?.get(0)?.requestId
         // Get the transition type.
         val transitionTypes = geofencingEvent?.geofenceTransition
 
@@ -43,7 +43,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             Geofence.GEOFENCE_TRANSITION_ENTER -> {
                 notificationHelper.displayNotification(
                     Random.nextInt(),
-                    "ENTER",
+                    geofenceId!!,
                     "TEST BODY TEXT",
                     MainActivity().javaClass
                 )
@@ -52,7 +52,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             Geofence.GEOFENCE_TRANSITION_DWELL -> {
                 notificationHelper.displayNotification(
                     Random.nextInt(),
-                    "DWELL",
+                    geofenceId!!,
                     "TEST BODY TEXT",
                     MainActivity().javaClass
                 )
@@ -61,7 +61,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             Geofence.GEOFENCE_TRANSITION_EXIT -> {
                 notificationHelper.displayNotification(
                     Random.nextInt(),
-                    "EXIT",
+                    geofenceId!!,
                     "TEST BODY TEXT",
                     MainActivity().javaClass
                 )
