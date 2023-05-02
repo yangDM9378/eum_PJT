@@ -1,5 +1,9 @@
-import React from "react";
+import EventCamera from "@/components/eventcamera/EventCamera";
 
-export default function EventcameraPage() {
-  return <div>이벤트 페이지</div>;
+export default function CameraPage() {
+  return (
+    <div>
+      <EventCamera />
+    </div>
+  );
 }
