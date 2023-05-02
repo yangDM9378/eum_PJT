@@ -1,6 +1,5 @@
 "use client";
 
-
 import React from "react";
 import Modal from "react-modal";
 import Image from "next/image";
@@ -46,7 +45,13 @@ const GroupPhotoModal = ({ isOpen, setIsOpen }: ModalProps) => {
           onClick={() => setIsOpen(false)}
         />
         <div className="pt-[10%]">
-        <Image src="/images/GroupSample.png" alt="" width={400} height={400}  className="rounded-lg" />
+          <Image
+            src="/images/GroupSample.png"
+            alt=""
+            width={400}
+            height={400}
+            className="rounded-lg"
+          />
         </div>
         <button className="bg-brand-green w-[30%] h-[5vh] mt-[10%] font-gmarket-thin rounded-xl">
           공유
