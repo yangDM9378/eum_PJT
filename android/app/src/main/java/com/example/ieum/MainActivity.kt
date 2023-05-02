@@ -182,20 +182,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         web.loadUrl(target_url) // 웹뷰에 표시할 웹사이트 주소, 웹뷰 시작
 
-
+        val token="Beare%20eyJyZWdEYXRlIjoxNjgzMDEwOTMxNzU4LCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyR2VuZGVyIjoxLCJ1c2VyQmlydGhZZWFyIjoxOTk0LCJ1c2VyTmFtZSI6IuuwseyngOybkCIsInVzZXJJZCI6InFvcndsZG5qczEwMEBuYXZlci5jb20iLCJzdWIiOiJxb3J3bGRuanMxMDBAbmF2ZXIuY29tIiwiZXhwIjoxNjgzMDI4OTMxfQ.4IkrNTSbfQK1dyzhBVXlVLKy2nBVz4auCUmoS3p7Ybg"
 
         geofencingClient= LocationServices.getGeofencingClient(this)
         geofenceHelper = GeofenceHelper(this)
 
         Log.d(ContentValues.TAG, geofenceList.toString()+"!!")
         initList()
-        RetrofitImpl.service.getGroupAll(3).enqueue(object : retrofit2.Callback<Result>{
+        RetrofitImpl.service.getGroupAll(token,3).enqueue(object : retrofit2.Callback<Result>{
             override fun onFailure(call: Call<Result>, t: Throwable) {
-                Log.e("Failed",t.toString()+"!!")
+                Log.e("Failed",t.toString()+"!!!!!")
             }
 
             override fun onResponse(call: Call<Result>, response: Response<Result>) {
-                Log.d("Sucess",response.toString()+"!!")
+                Log.d("Success",response.toString()+"!!!")
             }
         })
 
