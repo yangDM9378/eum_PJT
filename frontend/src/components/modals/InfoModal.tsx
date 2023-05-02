@@ -1,13 +1,16 @@
 "use client";
 
 
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "react-modal";
 import Image from "next/image";
+import { useAppSelector } from "@/redux/hooks";
+import { useState } from "react";
+
 
 type ModalProps = {
   isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 const customStyles = {
@@ -33,6 +36,18 @@ const customStyles = {
 };
 
 const GroupPhotoModal = ({ isOpen, setIsOpen }: ModalProps) => {
+
+  const poseImage = useAppSelector((state) => {
+    state.addEventReducer.originimageurl
+  })
+  console.log(poseImage,'👻')
+
+  const [originPoseImage,setOriginPoseImage] = useState<string>('')
+
+
+  useEffect(() => {
+    setOriginPoseImage(poseImage)
+  })
   return (
     <Modal
       isOpen={isOpen}

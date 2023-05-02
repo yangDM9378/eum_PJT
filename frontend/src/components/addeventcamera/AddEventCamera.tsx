@@ -7,6 +7,8 @@ import { originimageurl } from "@/redux/addevent/addEventSlice";
 import { captureImage, startCamera, stopCamera } from "@/utils/getCamera";
 import { AiOutlineCamera } from "react-icons/ai";
 
+import { AiOutlineInfoCircle } from "react-icons/ai";
+
 const AddEventCamera = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -31,6 +33,10 @@ const AddEventCamera = () => {
     router.push(`/addeventcamera/${pathOption}`);
   };
 
+  const openInfoModal = () => {
+    setI
+  }
+
   return (
     <div className="w-full h-full">
       <div className="h-[88%] flex items-center justify-center">
@@ -47,6 +53,9 @@ const AddEventCamera = () => {
           className="bg-white rounded-full text-brand-green text-[50px] p-[2%]"
           onClick={handleTakePicture}
         />
+      </div>
+      <div>
+        <AiOutlineInfoCircle onClick={openInfoModal} />
       </div>
     </div>
   );
