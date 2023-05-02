@@ -7,17 +7,17 @@ import { originimageurl } from "@/redux/addevent/addEventSlice";
 import { captureImage, startCamera, stopCamera } from "@/utils/getCamera";
 import { AiOutlineCamera } from "react-icons/ai";
 
-const AddEventCamera = () => {
+const EventCamera = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const pathSelector = useAppSelector((state) => state.coordsReducer.path);
-  const [pathOption, setPathOption] = useState(pathSelector);
+  // const pathSelector = useAppSelector((state) => state.coordsReducer.path);
   const [isCameraReady, setIsCameraReady] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     // 자동으로 켜져있는 camera 시작
     startCamera(videoRef, setIsCameraReady);
+    localStorage.setItem("pathOption", "pose");
   }, []);
 
   //사진 찰영 버튼 클릭 시
@@ -28,7 +28,7 @@ const AddEventCamera = () => {
     stopCamera(videoRef);
     // 이미지 redux를 통해 aging or pose로 이동시키기
     dispatch(originimageurl(dataURL));
-    router.push(`/addeventcamera/${pathOption}`);
+    router.push(`/eventcamera/${localStorage.getItem("pathOption")}`);
   };
 
   return (
@@ -52,4 +52,4 @@ const AddEventCamera = () => {
   );
 };
 
-export default AddEventCamera;
+export default EventCamera;

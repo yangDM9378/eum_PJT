@@ -28,7 +28,7 @@ public class GroupServiceImpl implements GroupService {
     public GroupDetailsRes findGroup(Integer groupId) {
         // 그룹 없을 때 어떤 예외 발생
         Group group = groupRepository.findByGroupId(groupId)
-                .orElseThrow(() ->new IllegalStateException(""));
+                .orElseThrow(() -> new IllegalStateException("해당하는 그룹이 존재하지 않습니다."));
 
         GroupDetailsRes groupDetailsRes = GroupDetailsRes.builder()
                 .name(group.getName())

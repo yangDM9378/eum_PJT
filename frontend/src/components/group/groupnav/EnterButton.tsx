@@ -4,6 +4,9 @@ import EnterGroupModal from "@/components/modals/EnterGroupModal";
 import React from "react";
 import { useState } from "react";
 
+import InfoModal from '../../modals/InfoModal'
+
+
 const EnterButton = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -19,7 +22,8 @@ const EnterButton = () => {
       >
         그룹 들어가기
       </button>
-      <EnterGroupModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      {/* <EnterGroupModal isOpen={isOpen} setIsOpen={setIsOpen} /> */}
+      <InfoModal isOpen={isOpen} setIsOpen={setIsOpen}/>
     </div>
   );
 };
