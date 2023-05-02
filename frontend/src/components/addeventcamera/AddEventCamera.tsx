@@ -7,7 +7,7 @@ import { originimageurl } from "@/redux/addevent/addEventSlice";
 import { captureImage, startCamera, stopCamera } from "@/utils/getCamera";
 import { AiOutlineCamera } from "react-icons/ai";
 
-const AddEvnetCamera = () => {
+const AddEventCamera = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const pathSelector = useAppSelector((state) => state.coordsReducer.path);
@@ -52,4 +52,4 @@ const AddEvnetCamera = () => {
   );
 };
 
-export default AddEvnetCamera;
+export default AddEventCamera;
