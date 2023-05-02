@@ -43,7 +43,7 @@ public class SecurityConfig {
             .csrf().disable()
             // 권한 설정
             .authorizeRequests()
-            .antMatchers("/oauth2/*", "/home").permitAll()
+            .antMatchers("/api/v1/oauth2/**", "/home").permitAll()
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()
@@ -64,11 +64,11 @@ public class SecurityConfig {
             .oauth2Login()				// OAuth2기반의 로그인인 경우
                 // 인가 엔드포인트를 설정
                 .authorizationEndpoint()
-                .baseUri("/oauth2/authorize")
+                .baseUri("/api/v1/oauth2/authorize")
                 .and()
                 // 인가 후 redirect_uri 엔드 포인트 설정, 등록한 redirect_uri로 설정해야 함
                 .redirectionEndpoint()
-                .baseUri("/oauth2/callback/*")
+                .baseUri("/api/v1/oauth2/callback/*")
                 .and()
                 .userInfoEndpoint()			// 로그인 성공 후 사용자정보를 가져온다
                 .userService(customOAuth2UserService)	//사용자정보를 처리할 때 사용한다

@@ -2,13 +2,15 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
+import AddEventModal from "@/components/modals/AddEventModal";
+import { removebgApi } from "@/services/removebgApi";
 
 const RemoveBg = () => {
   const [agingImage, setAgingImage] = useState("");
   const [removebgImageUrl, setRemovebgImageUrl] = useState("");
+  // 모달관련 usestate
+  const [modalOpen, setModalOpen] = useState(false);
 
   // redux에 있는 선택된 에이징 base64 파일 가져오기
   const agingSelectUrl = useAppSelector(
@@ -16,28 +18,17 @@ const RemoveBg = () => {
   );
 
   useEffect(() => {
-    fetchBlob();
+    async function fetchData() {
+      const response = await removebgApi(agingSelectUrl);
+      console.log(response);
+      setAgingImage(agingSelectUrl);
+      setRemovebgImageUrl(response.data.data.image_url);
+    }
+    fetchData();
   }, []);
 
-  // base64파일 blob으로 만들어서 배경지우기 요청
-  const fetchBlob = async () => {
-    const formData = new FormData();
-    console.log(agingImage);
-    console.log(agingSelectUrl);
-    const blob = await (await fetch(agingSelectUrl)).blob();
-    formData.append("image", blob, "image.png");
-    const response = await axios.post(
-      "https://www.ailabapi.com/api/cutout/general/universal-background-removal",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "ailabapi-api-key": process.env.NEXT_PUBLIC_AILAB_API_KEY,
-        },
-      }
-    );
-    setAgingImage(agingSelectUrl);
-    setRemovebgImageUrl(response.data.data.image_url);
+  const addEventModalOpen = () => {
+    setModalOpen(true);
   };
 
   return (
@@ -61,9 +52,15 @@ const RemoveBg = () => {
           <button
             className="bg-brand-blue text-white py-[1vh] px-[6vw] rounded-md  shadow-xl font-brand-gmarketsans"
             type="button"
+            onClick={addEventModalOpen}
           >
             이벤트등록
           </button>
+          <AddEventModal
+            modalOpen={modalOpen}
+            setModalOpen={setModalOpen}
+            image={removebgImageUrl}
+          />
         </div>
       )}
     </>

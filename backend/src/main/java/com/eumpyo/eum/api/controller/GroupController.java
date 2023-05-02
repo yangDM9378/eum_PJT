@@ -29,7 +29,7 @@ public class GroupController {
                 .resultMsg(SuccessCode.INSERT.getMessage())
                 .build();
 
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.valueOf(SuccessCode.INSERT.getStatus()));
+        return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.INSERT.getStatus()));
     }
 
     @GetMapping("/{groupId}")
@@ -42,7 +42,7 @@ public class GroupController {
                 .resultMsg(SuccessCode.SELECT.getMessage())
                 .build();
 
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.valueOf(SuccessCode.SELECT.getStatus()));
+        return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.SELECT.getStatus()));
     }
 
     @DeleteMapping("/{groupId}")
@@ -55,6 +55,6 @@ public class GroupController {
                 .resultMsg(SuccessCode.DELETE.getMessage())
                 .build();
 
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.valueOf(SuccessCode.DELETE.getStatus()));
+        return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.DELETE.getStatus()));
     }
 }

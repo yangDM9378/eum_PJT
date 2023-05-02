@@ -2,8 +2,10 @@ package com.eumpyo.eum.common.response;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApiResponse<T> {
     // API 응답 결과 Response
