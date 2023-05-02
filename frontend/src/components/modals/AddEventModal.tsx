@@ -1,9 +1,9 @@
 import Modal from "react-modal";
 import { useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
-import Image from "next/image";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
+import { createPin } from "@/services/pinApi";
 
 const customStyles = {
   overlay: {
@@ -26,12 +26,6 @@ type ModalProps = {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   image: string;
-};
-
-// 핀만들기 API
-const createPin = async (formData: FormData) => {
-  const { data } = await axios.post("/api/v1/pins", formData);
-  return data;
 };
 
 const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {

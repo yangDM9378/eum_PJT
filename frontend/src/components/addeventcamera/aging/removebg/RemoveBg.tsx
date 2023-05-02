@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useAppSelector } from "@/redux/hooks";
 import AddEventModal from "@/components/modals/AddEventModal";
+import { removebgApi } from "@/services/removebgApi";
 
 const RemoveBg = () => {
   const [agingImage, setAgingImage] = useState("");
@@ -18,28 +18,14 @@ const RemoveBg = () => {
   );
 
   useEffect(() => {
-    fetchBlob();
+    async function fetchData() {
+      const response = await removebgApi(agingSelectUrl);
+      console.log(response);
+      setAgingImage(agingSelectUrl);
+      setRemovebgImageUrl(response.data.data.image_url);
+    }
+    fetchData();
   }, []);
-
-  // base64파일 blob으로 만들어서 배경지우기 요청
-  const fetchBlob = async () => {
-    const formData = new FormData();
-
-    const blob = await (await fetch(agingSelectUrl)).blob();
-    formData.append("image", blob, "image.png");
-    const response = await axios.post(
-      "https://www.ailabapi.com/api/cutout/general/universal-background-removal",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "ailabapi-api-key": process.env.NEXT_PUBLIC_AILAB_API_KEY,
-        },
-      }
-    );
-    setAgingImage(agingSelectUrl);
-    setRemovebgImageUrl(response.data.data.image_url);
-  };
 
   const addEventModalOpen = () => {
     setModalOpen(true);

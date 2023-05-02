@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import { agingselecturl } from "@/redux/addevent/addEventSlice";
-import 
-  import { agingApi } from "@/services/agingAPi";
+import { agingApi } from "@/services/agingAPi";
+
 const Aging = () => {
   const [originImage, setOriginImage] = useState<string>("");
   const [oldImage, setOldImage] = useState<string>("");
