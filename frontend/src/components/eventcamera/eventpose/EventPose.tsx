@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React from "react";
 
-const PoseImagePage = () => {
+const EventPose = () => {
   return (
     <>
       <div className="flex justify-center h-[70%] pt-[3%]">
@@ -23,4 +23,4 @@ const PoseImagePage = () => {
   );
 };
 
-export default PoseImagePage;
+export default EventPose;
