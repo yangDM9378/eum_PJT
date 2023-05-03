@@ -1,13 +1,11 @@
-package com.example.ieum
+package com.example.ieum.geofencing
 
 import android.content.BroadcastReceiver
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContextCompat
+import com.example.ieum.MainActivity
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent

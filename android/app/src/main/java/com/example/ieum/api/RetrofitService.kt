@@ -10,9 +10,9 @@ interface RetrofitService {
 
 
     @GET("pins")
-    fun getPinAll(): Call<List<Result.Pin>>
+    fun getPinAll(@Header("Authorization")token:String): Call<List<Result.Pin>>
 
 
     @GET("groups/{group_id}")
-    fun getGroupAll(@Header("Authorization")token:String, @Path("group_id") id:Int): Call<Result>
+    fun getGroupAll(@Header("Authorization")token:String, @Path("group_id") id:Int): Call<Result.Response>
 }

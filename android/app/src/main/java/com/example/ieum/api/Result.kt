@@ -9,7 +9,7 @@ public class Result {
         val radius: Float = 1000f
     )
     data class Response(
-        val code: Int,
+        val code: String,
         val message: String,
         val status: Int
     )

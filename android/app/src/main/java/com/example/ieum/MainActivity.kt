@@ -1,8 +1,10 @@
 package com.example.ieum
 
 import android.Manifest
+import android.content.BroadcastReceiver
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -18,6 +20,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.ieum.api.Result
 import com.example.ieum.api.RetrofitImpl
+import com.example.ieum.geofencing.GeofenceBroadcastReceiver
+import com.example.ieum.geofencing.GeofenceHelper
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.LocationServices
@@ -26,7 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import retrofit2.Call
 import retrofit2.Response
-import javax.security.auth.callback.Callback
+import java.util.Arrays
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -41,6 +49,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var locationManager: LocationManager
     var locationProvider : String? = null
+
     val locationListener = object:LocationListener{
         override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
             super.onStatusChanged(provider, status, extras)
@@ -60,6 +69,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             super.onProviderDisabled(provider)
         }
     }
+
     private lateinit var mMap : GoogleMap
 
     val geofenceList: MutableList<Geofence> by lazy {
@@ -140,10 +150,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         fun test(){}
     }
 
+    lateinit var mAdView : AdView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        MobileAds.initialize(this) {}
+        mAdView = findViewById<AdView>(R.id.adView)
+        val adRequest=AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
+
+        val testDeviceIds = Arrays.asList("ca-app-pub-3940256099942544/6300978111")
+        val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
+        MobileAds.setRequestConfiguration(configuration)
+
         checkPermission()
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment)as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -182,27 +203,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         web.loadUrl(target_url) // 웹뷰에 표시할 웹사이트 주소, 웹뷰 시작
 
-        val token="Beare%20eyJyZWdEYXRlIjoxNjgzMDEwOTMxNzU4LCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyR2VuZGVyIjoxLCJ1c2VyQmlydGhZZWFyIjoxOTk0LCJ1c2VyTmFtZSI6IuuwseyngOybkCIsInVzZXJJZCI6InFvcndsZG5qczEwMEBuYXZlci5jb20iLCJzdWIiOiJxb3J3bGRuanMxMDBAbmF2ZXIuY29tIiwiZXhwIjoxNjgzMDI4OTMxfQ.4IkrNTSbfQK1dyzhBVXlVLKy2nBVz4auCUmoS3p7Ybg"
+        val token="Bearer%20eyJyZWdEYXRlIjoxNjgzMDg5ODI4MzcyLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyR2VuZGVyIjoxLCJ1c2VyQmlydGhZZWFyIjoxOTk0LCJ1c2VyTmFtZSI6IuuwseyngOybkCIsInVzZXJJZCI6InFvcndsZG5qczEwMEBuYXZlci5jb20iLCJzdWIiOiJxb3J3bGRuanMxMDBAbmF2ZXIuY29tIiwiZXhwIjoxNjgzMTA3ODI4fQ.U2Q390nsuDlfpLJLlW8-sKMi2hvzAHvvC8vi7EWryaY"
 
         geofencingClient= LocationServices.getGeofencingClient(this)
         geofenceHelper = GeofenceHelper(this)
 
         Log.d(ContentValues.TAG, geofenceList.toString()+"!!")
-        initList()
-        RetrofitImpl.service.getGroupAll(token,3).enqueue(object : retrofit2.Callback<Result>{
-            override fun onFailure(call: Call<Result>, t: Throwable) {
-                Log.e("Failed",t.toString()+"!!!!!")
-            }
+        initList(token)
 
-            override fun onResponse(call: Call<Result>, response: Response<Result>) {
-                Log.d("Success",response.toString()+"!!!")
-            }
-        })
+        val serviceIntent =
+            Intent(this, GeofenceBroadcastReceiver::class.java) // MyBackgroundService 를 실행하는 인텐트 생성
+
+        startService(serviceIntent) // 서비스 인텐트를 전달한 서비스 시작 메서드 실행
+
+
+
 
 
     }
-    private fun initList(){
-        val pin = RetrofitImpl.service.getPinAll().enqueue(object : retrofit2.Callback<List<Result.Pin>>{
+    private fun initList(token: String){
+        val pin = RetrofitImpl.service.getPinAll(token).enqueue(object : retrofit2.Callback<List<Result.Pin>>{
             override fun onFailure(call: Call<List<Result.Pin>>, t: Throwable) {
                 Log.e("Failed",t.toString()+"!!")
             }
@@ -211,11 +231,28 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 call: Call<List<Result.Pin>>,
                 response: Response<List<Result.Pin>>
             ) {
-                val listGeofence = response.body()
-                listGeofence?.forEach{
+                if(response.isSuccessful){
 
-                    it->geofenceHelper.getGeofence(it.pin_id.toString(), Pair(it.latitude, it.longitude),it.radius)
-                    Log.d("!!",it.toString())
+                    val listGeofence = response.body()
+                    Log.d("Success",listGeofence.toString()+"!!")
+                    listGeofence?.forEach{
+                            it->geofenceHelper.getGeofence(it.pin_id.toString(), Pair(it.latitude, it.longitude),it.radius)
+                        Log.d("!!",it.toString())
+                    }
+                }
+            }
+        })
+        RetrofitImpl.service.getGroupAll(token,3).enqueue(object : retrofit2.Callback<Result.Response>{
+
+            override fun onFailure(call: Call<Result.Response>, t: Throwable) {
+
+                Log.e("Failed",t.toString()+"!!!!!")
+            }
+
+            override fun onResponse(call: Call<Result.Response>, response: Response<Result.Response>) {
+                if(response.isSuccessful){
+                    val rawList = response.body()
+                    Log.d("Success!!",rawList.toString())
                 }
             }
         })

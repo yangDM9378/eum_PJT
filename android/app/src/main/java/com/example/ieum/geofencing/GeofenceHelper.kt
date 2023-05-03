@@ -1,4 +1,4 @@
-package com.example.ieum
+package com.example.ieum.geofencing
 
 import android.app.PendingIntent
 import android.content.ContentValues
@@ -7,11 +7,9 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
-import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
 
 class GeofenceHelper(context: Context?): ContextWrapper(context) {
@@ -46,7 +44,7 @@ class GeofenceHelper(context: Context?): ContextWrapper(context) {
     val geofencePendingIntent: PendingIntent by lazy {
     Log.d(ContentValues.TAG, "start geofencePendingIntent!!")
 
-    val intent = Intent(this,GeofenceBroadcastReceiver::class.java)
+    val intent = Intent(this, GeofenceBroadcastReceiver::class.java)
     intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         if(Build.VERSION.SDK_INT > 30){
             PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)

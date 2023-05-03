@@ -1,4 +1,4 @@
-package com.example.ieum
+package com.example.ieum.geofencing
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -11,7 +11,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationCompat
 
 class NotificationHelper (context: Context): ContextWrapper(context){

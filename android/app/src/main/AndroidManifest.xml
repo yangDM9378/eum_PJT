@@ -53,6 +53,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-4728228463704876~7696936623"/>
         <activity
             android:name=".MapsActivity"
             android:exported="false"
@@ -82,7 +85,7 @@
         </activity>
 
         <receiver
-            android:name=".GeofenceBroadcastReceiver"
+            android:name=".geofencing.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
     </application>
