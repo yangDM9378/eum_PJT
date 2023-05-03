@@ -41,7 +41,8 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         response.addCookie(cookie);
 
         String targetUrl = UriComponentsBuilder
-                .fromUriString("http://localhost/oauth")
+//                .fromUriString("http://i-eum-u.com/oauth")
+                .fromUriString("http://localhost:3000/oauth")
                 .queryParam("accessToken","Bearer " + token)
                 .build()
                 .toUriString();
