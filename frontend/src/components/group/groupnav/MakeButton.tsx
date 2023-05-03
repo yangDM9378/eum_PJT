@@ -4,8 +4,6 @@ import React from "react";
 import { useState } from "react";
 
 import MakeGroupModal from "../../modals/MakeGroupModal";
-import GroupPhotoModal from '../../modals/GroupPhotoModal'
-
 
 const MakeButton = () => {
   const [Isopen, setIsopen] = useState<boolean>(false);
@@ -23,8 +21,7 @@ const MakeButton = () => {
       >
         그룹 만들기
       </button>
-      {/* <MakeGroupModal isOpen={Isopen} setIsOpen={setIsopen} /> */}
-      <GroupPhotoModal isOpen = {Isopen} setIsOpen={setIsopen}/>
+      <MakeGroupModal isOpen={Isopen} setIsOpen={setIsopen} />
     </div>
   );
 };
