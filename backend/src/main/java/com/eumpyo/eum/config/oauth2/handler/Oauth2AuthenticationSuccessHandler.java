@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -30,8 +31,17 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         UserResponse userResponse = user.UserToDto();
         String token = tokenUtil.generateJwtToken(userResponse, "access");
 
+        Cookie cookie = new Cookie("accessToken",token);
+        cookie.setDomain("localhost");
+        cookie.setPath("/");
+
+        // 300 분간 저장 tokenUtil과 동기화 해주세요.
+        cookie.setMaxAge(60 * 300);
+        cookie.setSecure(false);
+        response.addCookie(cookie);
+
         String targetUrl = UriComponentsBuilder
-                .fromUriString("http://i-eum-u.com/oauth")
+                .fromUriString("http://localhost/oauth")
                 .queryParam("accessToken","Bearer " + token)
                 .build()
                 .toUriString();
