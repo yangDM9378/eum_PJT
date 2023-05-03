@@ -41,14 +41,21 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
     const blobRes = await axios.get(image, { responseType: "blob" });
 
     const formData = new FormData();
-    formData.append("title", title);
-    formData.append("content", content);
-    formData.append("latitude", coords.lat.toString());
-    formData.append("longitude", coords.lng.toString());
-    formData.append("type", type);
+    const json = {
+      title: title,
+      content: content,
+      latitude: coords.lat.toString(),
+      longitude: coords.lng.toString(),
+    };
+    formData.append("pinAddReq", json.toString());
+    // formData.append("title", title);
+    // formData.append("content", content);
+    // formData.append("latitude", coords.lat.toString());
+    // formData.append("longitude", coords.lng.toString());
+    // formData.append("type", type);
     formData.append("image", blobRes.data, "image.png");
     //수정 바람
-    formData.append("group_id", "1");
+    // formData.append("group_id", "1");
     await mutate(formData);
   };
   return (

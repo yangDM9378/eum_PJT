@@ -18,7 +18,8 @@ import java.util.*;
 @Service
 @Slf4j
 public class TokenUtil {
-    public final static long TOKEN_VALIDATION_SECOND = 1000L * 60 * 300;
+    @Value("${accessToken.TOKEN_VALIDATION_SECOND}")
+    public static int TOKEN_VALIDATION_SECOND;
     public final static long REFRESH_TOKEN_VALIDATION_SECOND = 1000L * 60 * 24 * 2;
 
     final static public String ACCESS_TOKEN_NAME = "access";
@@ -91,7 +92,7 @@ public class TokenUtil {
      */
     private Date createExpiredDate(String type) {
         if (type.equals(ACCESS_TOKEN_NAME)) {
-            return new Date(System.currentTimeMillis() + TOKEN_VALIDATION_SECOND);
+            return new Date(System.currentTimeMillis() + TOKEN_VALIDATION_SECOND * 1000L);
         } else { // // REFRESH_TOKEN_NAME
             return new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDATION_SECOND);
         }

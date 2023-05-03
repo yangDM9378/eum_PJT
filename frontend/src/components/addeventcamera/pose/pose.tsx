@@ -32,7 +32,7 @@ const Pose = () => {
           alt=""
           width={300}
           height={700}
-          className="pt-[10%] h-[60vh] px-3"
+          className="pt-[30%] h-[50vh] px-1"
         />
       </div>
       <div className="flex justify-center pt-[10%] ">

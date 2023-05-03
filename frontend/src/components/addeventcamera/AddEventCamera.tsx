@@ -7,6 +7,8 @@ import { originimageurl } from "@/redux/addevent/addEventSlice";
 import { captureImage, startCamera, stopCamera } from "@/utils/getCamera";
 import { AiOutlineCamera } from "react-icons/ai";
 
+import { AiOutlineInfoCircle } from "react-icons/ai";
+
 const AddEventCamera = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -30,6 +32,8 @@ const AddEventCamera = () => {
     dispatch(originimageurl(dataURL));
     router.push(`/addeventcamera/${pathOption}`);
   };
+
+
 
   return (
     <div className="w-full h-full">
