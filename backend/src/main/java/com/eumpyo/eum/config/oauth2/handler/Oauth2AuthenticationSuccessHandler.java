@@ -24,10 +24,10 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Autowired
     TokenUtil tokenUtil;
 
-    @Value("${server.domain}")
+    @Value("${my.domain}")
     private String domain;
 
-    @Value("${server.port}")
+    @Value("${my.port}")
     private String port;
 
     @Value("${accessToken.TOKEN_VALIDATION_SECOND}")
@@ -38,13 +38,11 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                         Authentication authentication) throws IOException, ServletException {
         PrincipalDetails oAuth2User = (PrincipalDetails) authentication.getPrincipal();
         User user = oAuth2User.getUser();
-        UserResponse userResponse = user.UserToDto();
-        String token = tokenUtil.generateJwtToken(userResponse, "access");
+        String token = tokenUtil.generateJwtToken(user, "access");
         Cookie cookie = new Cookie("accessToken",token);
         cookie.setDomain(domain);
         cookie.setPath("/");
 
-        log.info(String.valueOf(TOKEN_VALIDATION_SECOND));
         // 300 분간 저장 tokenUtil과 동기화 해주세요.
         cookie.setMaxAge(TOKEN_VALIDATION_SECOND);
         cookie.setSecure(false);
