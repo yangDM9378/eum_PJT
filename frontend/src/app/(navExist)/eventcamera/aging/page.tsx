@@ -1,5 +1,10 @@
+import EventAging from "@/components/eventcamera/eventaging/EventAging";
 import React from "react";
 
-export default function AgingPage() {
-  return <div>에이징 페이지레</div>;
+export default function EventAgingPage() {
+  return (
+    <div>
+      <EventAging />
+    </div>
+  );
 }

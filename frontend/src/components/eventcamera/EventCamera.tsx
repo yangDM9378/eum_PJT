@@ -17,7 +17,7 @@ const EventCamera = () => {
   useEffect(() => {
     // 자동으로 켜져있는 camera 시작
     startCamera(videoRef, setIsCameraReady);
-    localStorage.setItem("pathOption", "pose");
+    localStorage.setItem("pathOption", "aging");
   }, []);
 
   //사진 찰영 버튼 클릭 시
