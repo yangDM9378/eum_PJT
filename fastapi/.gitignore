@@ -1,2 +1,5 @@
 # venv
 .venv
+
+# cache
+._pycache_
