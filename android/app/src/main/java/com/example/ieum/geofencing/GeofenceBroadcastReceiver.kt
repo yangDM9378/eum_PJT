@@ -42,7 +42,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 notificationHelper.displayNotification(
                     Random.nextInt(),
                     geofenceId!!,
-                    "TEST BODY TEXT",
+                    "ENTER TEST BODY TEXT",
                     MainActivity().javaClass
                 )
             }
@@ -51,7 +51,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 notificationHelper.displayNotification(
                     Random.nextInt(),
                     geofenceId!!,
-                    "TEST BODY TEXT",
+                    "DWELL TEST BODY TEXT",
                     MainActivity().javaClass
                 )
             }
@@ -60,7 +60,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 notificationHelper.displayNotification(
                     Random.nextInt(),
                     geofenceId!!,
-                    "TEST BODY TEXT",
+                    "EXIT TEST BODY TEXT",
                     MainActivity().javaClass
                 )
             }

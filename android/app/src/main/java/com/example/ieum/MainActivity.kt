@@ -1,10 +1,8 @@
 package com.example.ieum
 
 import android.Manifest
-import android.content.BroadcastReceiver
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -12,6 +10,8 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.webkit.CookieManager
+import android.webkit.CookieSyncManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.ieum.api.Result
 import com.example.ieum.api.RetrofitImpl
-import com.example.ieum.geofencing.GeofenceBroadcastReceiver
 import com.example.ieum.geofencing.GeofenceHelper
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -38,7 +37,7 @@ import java.util.Arrays
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
-    private val KEY_REPLY="key_reply"
+    private lateinit var token : String
 
    var target_url="http://i-eum-u.com/"
     private val MY_PERMISSIONS_REQ_ACCESS_FINE_LOCATION = 100
@@ -156,6 +155,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         MobileAds.initialize(this) {}
         mAdView = findViewById<AdView>(R.id.adView)
         val adRequest=AdRequest.Builder().build()
@@ -188,6 +188,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             // JavaScript 인터페이스 활성화
             addJavascriptInterface(WebAppInterface(this@MainActivity),"WebAppInterface")
         }
+        web.setWebViewClient(object : WebViewClient() {
+            override fun onPageFinished(view: WebView, url: String) {
+                super.onPageFinished(view, url);
+//                token=getCookie(target_url,"accessToken")
+//                initList("Bearer "+token)
+//                Log.d("Main",token+"!!")
+            }
+        })
 
         val intent = intent
         val bundle = intent.extras
@@ -202,29 +210,42 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         web.loadUrl(target_url) // 웹뷰에 표시할 웹사이트 주소, 웹뷰 시작
-
-        val token="Bearer%20eyJyZWdEYXRlIjoxNjgzMDg5ODI4MzcyLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyR2VuZGVyIjoxLCJ1c2VyQmlydGhZZWFyIjoxOTk0LCJ1c2VyTmFtZSI6IuuwseyngOybkCIsInVzZXJJZCI6InFvcndsZG5qczEwMEBuYXZlci5jb20iLCJzdWIiOiJxb3J3bGRuanMxMDBAbmF2ZXIuY29tIiwiZXhwIjoxNjgzMTA3ODI4fQ.U2Q390nsuDlfpLJLlW8-sKMi2hvzAHvvC8vi7EWryaY"
+        val cookieManager = CookieManager.getInstance().getCookie(target_url)
+        Log.d("MAIN", cookieManager+"!!")
 
         geofencingClient= LocationServices.getGeofencingClient(this)
         geofenceHelper = GeofenceHelper(this)
 
         Log.d(ContentValues.TAG, geofenceList.toString()+"!!")
+        token ="Bearer%20eyJyZWdEYXRlIjoxNjgzMTAzNDQxMTg2LCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyRW1haWwiOiJxb3J3bGRuanMxMDBAbmF2ZXIuY29tIiwidXNlckdlbmRlciI6MSwidXNlckJpcnRoWWVhciI6MTk5NCwidXNlck5hbWUiOiLrsLHsp4Dsm5AiLCJ1c2VySWQiOjEsInN1YiI6InFvcndsZG5qczEwMEBuYXZlci5jb20iLCJleHAiOjE2ODMxMjE0NDF9.cVcJAOzw-gT11wjLTX43tBzj1QMIw4sRypXQPObHhkg"
         initList(token)
-
-        val serviceIntent =
-            Intent(this, GeofenceBroadcastReceiver::class.java) // MyBackgroundService 를 실행하는 인텐트 생성
-
-        startService(serviceIntent) // 서비스 인텐트를 전달한 서비스 시작 메서드 실행
-
-
 
 
 
     }
+    fun getCookie(siteName: String, cookieName: String): String {
+        var CookieValue: String = ""
+        val cookieManager = CookieManager.getInstance()
+        val cookies = cookieManager.getCookie(siteName)
+        val temp = cookies.split(";".toRegex()).dropLastWhile { it.isEmpty() }
+            .toTypedArray()
+        for (ar1 in temp) {
+            if (ar1.contains(cookieName!!)) {
+                val temp1 = ar1.split("=".toRegex()).dropLastWhile { it.isEmpty() }
+                    .toTypedArray()
+                CookieValue = temp1[1]
+                break
+            }
+        }
+        return CookieValue
+    }
     private fun initList(token: String){
-        val pin = RetrofitImpl.service.getPinAll(token).enqueue(object : retrofit2.Callback<List<Result.Pin>>{
+        Log.d("MAIN","INIT LIST START!!")
+        RetrofitImpl.service.getPinAll(token).enqueue(object : retrofit2.Callback<List<Result.Pin>>{
             override fun onFailure(call: Call<List<Result.Pin>>, t: Throwable) {
                 Log.e("Failed",t.toString()+"!!")
+                Log.d("MAIN","INIT LIST END!!")
+
             }
 
             override fun onResponse(
@@ -237,8 +258,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     Log.d("Success",listGeofence.toString()+"!!")
                     listGeofence?.forEach{
                             it->geofenceHelper.getGeofence(it.pin_id.toString(), Pair(it.latitude, it.longitude),it.radius)
-                        Log.d("!!",it.toString())
+                        Log.d("MAIN",it.toString()+"!!")
+
                     }
+                    Log.d("MAIN","INIT LIST END!!")
+
                 }
             }
         })
@@ -252,10 +276,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             override fun onResponse(call: Call<Result.Response>, response: Response<Result.Response>) {
                 if(response.isSuccessful){
                     val rawList = response.body()
-                    Log.d("Success!!",rawList.toString())
+                    Log.d("Success!!",rawList.toString()+"!!")
+                    Log.d("MAIN","INIT LIST END!!")
+
                 }
             }
         })
+
     }
 
 
@@ -319,6 +346,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onResume() {
         super.onResume()
+        CookieSyncManager.getInstance().startSync()
     }
 
     override fun onPause() {
