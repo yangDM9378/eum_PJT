@@ -32,9 +32,9 @@ const customStyles = {
 const GroupPhotoModal = ({ isOpen, setIsOpen }: ModalProps) => {
   
   //리덕스에 있는 등록한 포즈 이벤트 사진 가져오기
-  const poseImage = useAppSelector((state) => {
-    state.addEventReducer.originimageurl;
-  });
+    const poseImage = useAppSelector(
+    (state) => state.addEventReducer.originimageurl
+  );
   console.log(poseImage, "👻");
 
   const [originPoseImage, setOriginPoseImage] = useState<string>("");
@@ -42,6 +42,7 @@ const GroupPhotoModal = ({ isOpen, setIsOpen }: ModalProps) => {
 
 
   useEffect(() => {
+    if (poseImage)
     setOriginPoseImage(poseImage);
   },[]);
   return (

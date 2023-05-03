@@ -34,6 +34,7 @@ const AddEventCamera = () => {
   };
 
 
+
   return (
     <div className="w-full h-full">
       <div className="h-[88%] flex items-center justify-center">
