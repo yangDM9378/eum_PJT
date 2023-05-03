@@ -45,7 +45,6 @@ const applyResponseInterceptor = (axiosInstance: AxiosInstance) => {
             }
           } catch (error) {
             // 토큰 재발급 실패
-            console.error("Failed to reissue access token", error);
             localStorage.removeItem("accesstoken");
             localStorage.removeItem("refreshtoken");
             window.location.href = "/";

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const agingApi = async (imageUrl: string) => {
+const agingApi = async (imageUrl: string) => {
   const oldFormData = new FormData();
   const kidFormData = new FormData();
   const blob = await (await fetch(imageUrl)).blob();
@@ -35,3 +35,5 @@ export const agingApi = async (imageUrl: string) => {
   const kidImage = response[1].data.result.image;
   return { oldImage, kidImage };
 };
+
+export default agingApi;
