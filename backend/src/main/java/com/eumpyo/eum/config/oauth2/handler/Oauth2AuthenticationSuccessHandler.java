@@ -1,6 +1,5 @@
 package com.eumpyo.eum.config.oauth2.handler;
 
-import com.eumpyo.eum.api.response.UserResponse;
 import com.eumpyo.eum.common.util.TokenUtil;
 import com.eumpyo.eum.config.oauth2.PrincipalDetails;
 import com.eumpyo.eum.db.entity.User;

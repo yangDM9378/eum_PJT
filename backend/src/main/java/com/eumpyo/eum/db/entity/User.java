@@ -1,6 +1,6 @@
 package com.eumpyo.eum.db.entity;
 
-import com.eumpyo.eum.api.response.UserResponse;
+import com.eumpyo.eum.api.response.UserRes;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,8 +36,8 @@ public class User {
         this.email = email;
     }
 
-    public UserResponse UserToDto(){
-        return UserResponse
+    public UserRes UserToDto(){
+        return UserRes
                 .builder()
                 .name(name)
                 .birthYear(birthYear)

@@ -1,12 +1,10 @@
 package com.eumpyo.eum.api.controller;
 
-import com.eumpyo.eum.api.response.UserResponse;
-import com.eumpyo.eum.api.service.UserService;
+import com.eumpyo.eum.api.response.UserRes;
 import com.eumpyo.eum.common.code.SuccessCode;
 import com.eumpyo.eum.common.response.ApiResponse;
 import com.eumpyo.eum.db.entity.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,7 +24,7 @@ public class UserController {
     ResponseEntity<ApiResponse> userFind(Authentication authentication){
         User user = (User) authentication.getPrincipal();
 
-        UserResponse userResponse = UserResponse.builder()
+        UserRes userRes = UserRes.builder()
                 .userId(user.getUserId())
                 .name(user.getName())
                 .email(user.getEmail())
@@ -35,7 +33,7 @@ public class UserController {
                 .build();
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
-                .result(userResponse)
+                .result(userRes)
                 .resultCode(SuccessCode.SELECT.getCode())
                 .resultMsg(SuccessCode.SELECT.getMessage())
                 .build();
