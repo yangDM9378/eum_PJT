@@ -53,22 +53,22 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         int birthYear = now.getYear() - Integer.parseInt(age[1]);
 
         Optional<User> byUsername = userRepository.findByEmail(email);
-        User byUser = null;
+        User user = null;
 
         if(byUsername.isPresent()){
-            byUser = byUsername.get();
+            user = byUsername.get();
         } else {
             log.info("회원가입 진행");
 
-            byUser = User.builder()
+            user = User.builder()
                     .name(name)
                     .gender(gender)
                     .birthYear(birthYear)
                     .email(email)
                     .build();
-            userRepository.save(byUser);
+            userRepository.save(user);
         }
-        
-        return new PrincipalDetails(byUser, oAuth2UserInfo);
+
+        return new PrincipalDetails(user, oAuth2UserInfo);
     }
 }

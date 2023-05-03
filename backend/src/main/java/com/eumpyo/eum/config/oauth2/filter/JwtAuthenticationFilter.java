@@ -26,6 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, JwtException {
 
         String token = getAuthenticationToken(request);
+
         // OAuth2 로그인
         if (token == null) {
             filterChain.doFilter(request, response);

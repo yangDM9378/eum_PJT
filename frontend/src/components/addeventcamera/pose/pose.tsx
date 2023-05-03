@@ -1,5 +1,52 @@
+"use client";
+
+import { useAppSelector } from "@/redux/hooks";
 import React from "react";
 
-export default function pose() {
-  return <div>포즈 컴포넌트에요</div>;
-}
+import AddEventModal from "@/components/modals/AddEventModal";
+
+import { useEffect, useState } from "react";
+
+
+import Image from "next/image";
+
+const Pose = () => {
+  const [PoseImage, SetPoseImage] = useState("");
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const addEventModalOpen = () => {
+    setModalOpen(true);
+  };
+  const originImageUrl = useAppSelector(
+    (state) => state.addEventReducer.originimageurl
+  );
+
+  useEffect(() => {
+    SetPoseImage(originImageUrl);
+  });
+  return (
+    <>
+      <div className="flex justify-center">
+        <Image
+          src={PoseImage}
+          alt=""
+          width={300}
+          height={700}
+          className="pt-[30%] h-[50vh] px-1"
+        />
+      </div>
+      <div className="flex justify-center pt-[10%] ">
+        <button onClick={addEventModalOpen}className="w-[60vw] rounded-md  bg-brand-blue h-[5vh]">
+          저장
+        </button>
+        <AddEventModal
+        modalOpen ={modalOpen}
+        setModalOpen={setModalOpen}
+        image={PoseImage}
+        />
+      </div>
+    </>
+  );
+};
+
+export default Pose;

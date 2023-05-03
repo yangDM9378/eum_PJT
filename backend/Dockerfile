@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y dos2unix
 RUN dos2unix ./gradlew
 # gradle build and test
 RUN chmod +x ./gradlew
-RUN ./gradlew build
+RUN ./gradlew bootJAR
 
 FROM adoptopenjdk/openjdk11
 # 위의 builder 과정에서 생성한 build 파일을 app.jar 파일로 복사합니다.
