@@ -20,8 +20,8 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class TestController {
     @GetMapping("/user")
-    public ResponseEntity<UserResponse> getUser(Authentication authentication) {
-        UserResponse userResponse = (UserResponse) authentication.getPrincipal();
-        return ResponseEntity.ok(userResponse);
+    public ResponseEntity<User> getUser(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(user);
     }
 }
