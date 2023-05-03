@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import Cookies from "js-cookie";
 import { config } from "process";
 
-const BASE_URL = "https://i-eum-u.com/api/v1";
+const BASE_URL = "http://i-eum-u.com/api/v1";
 axios.defaults.baseURL = BASE_URL;
 
 const createAxiosInstance = (contentType: string): AxiosInstance => {
