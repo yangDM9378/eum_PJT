@@ -33,9 +33,6 @@ const AddEventCamera = () => {
     router.push(`/addeventcamera/${pathOption}`);
   };
 
-  const openInfoModal = () => {
-    setI
-  }
 
   return (
     <div className="w-full h-full">
@@ -53,9 +50,6 @@ const AddEventCamera = () => {
           className="bg-white rounded-full text-brand-green text-[50px] p-[2%]"
           onClick={handleTakePicture}
         />
-      </div>
-      <div>
-        <AiOutlineInfoCircle onClick={openInfoModal} />
       </div>
     </div>
   );
