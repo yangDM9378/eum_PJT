@@ -31,7 +31,7 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String token = tokenUtil.generateJwtToken(userResponse, "access");
 
         String targetUrl = UriComponentsBuilder
-                .fromUriString("/home")
+                .fromUriString("http://i-eum-u.com/oauth")
                 .queryParam("accessToken","Bearer " + token)
                 .build()
                 .toUriString();
