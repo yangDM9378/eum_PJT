@@ -52,11 +52,9 @@ public class GroupController {
             UUID uuid = UUID.randomUUID();
             String uploadFileName = uuid.toString() + "_" + fileName;
 
-            log.info("file name = " + uploadFileName);
-
             try {
                 log.debug(s3Uploader.upload(image, uploadPath + uploadFileName));
-                groupAddReq.setImage(fileName);
+                groupAddReq.setImage(uploadFileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
             }

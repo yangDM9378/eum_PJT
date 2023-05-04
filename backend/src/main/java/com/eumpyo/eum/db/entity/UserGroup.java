@@ -23,7 +23,7 @@ public class UserGroup {
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @Column(name = "role")
+    @Column(name = "role", length = 20)
     private String role;
 
     @Builder

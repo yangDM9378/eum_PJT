@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -37,6 +38,8 @@ public class GroupServiceImpl implements GroupService {
 
         group = groupRepository.save(group);
 
+
+
         UserGroup userGroup = UserGroup.builder()
                 .user(user)
                 .group(group)
@@ -57,6 +60,12 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     public void joinGroup(User user, String groupCode) {
         Group group = groupRepository.findGroupByGroupCode(groupCode);
+
+        Optional<UserGroup> existUserGroup = userGroupRepository.findByUser_UserIdAndGroup_GroupId(user.getUserId(), group.getGroupId());
+
+        if(existUserGroup.isPresent()) {
+            throw new IllegalStateException("이미 해당 그룹에 존재합니다.");
+        }
 
         UserGroup userGroup = UserGroup.builder()
                 .user(user)
