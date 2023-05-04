@@ -8,7 +8,9 @@ import android.util.Log
 import com.example.ieum.MainActivity
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
+import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingEvent
+import com.google.android.gms.location.LocationServices
 import kotlin.random.Random
 
 

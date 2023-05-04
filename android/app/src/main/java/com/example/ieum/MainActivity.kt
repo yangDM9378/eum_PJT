@@ -9,6 +9,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.util.JsonReader
 import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.CookieSyncManager
@@ -18,6 +19,7 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Observer
 import com.example.ieum.api.Result
 import com.example.ieum.api.RetrofitImpl
 import com.example.ieum.geofencing.GeofenceHelper
@@ -31,6 +33,9 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.gson.Gson
+import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Arrays
@@ -39,6 +44,8 @@ import java.util.Arrays
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var token : String
 
+    private var NEXT_PUBLIC_OUATH_KAKAO_HOSTNAME="http://i-eum-u.com/api/v1/oauth2/authorize/kakao"
+    private var NEXT_PUBLIC_OUATH_KAKAO_REDIRECT_URL="http://i-eum-u.com/api/v1/oauth2/callback/kakao"
    var target_url="http://i-eum-u.com/"
     private val MY_PERMISSIONS_REQ_ACCESS_FINE_LOCATION = 100
     private val MY_PERMISSIONS_REQ_ACCESS_BACKGROUND_LOCATION = 101
@@ -191,11 +198,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         web.setWebViewClient(object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url);
-//                token=getCookie(target_url,"accessToken")
-//                initList("Bearer "+token)
 //                Log.d("Main",token+"!!")
+                token=getCookie(target_url,"accessToken")
+                initList("Bearer "+token)
             }
+
+//            override fun onLoadResource(view: WebView?, url: String?) {
+//                super.onLoadResource(view, url)
+//                val targetUrl = (NEXT_PUBLIC_OUATH_KAKAO_HOSTNAME  +
+//                        "?redirect_url=" + NEXT_PUBLIC_OUATH_KAKAO_REDIRECT_URL).toRegex()
+//                Log.d("MAIN",targetUrl.toString() + "          "+url!!.toRegex()+"!!")
+//
+//                Log.d("MAIN",targetUrl.matches(url).toString()+"!!")
+//                if(targetUrl.matches(url)){
+//
+//                }
+//            }
         })
+        val tokenObserver = Observer<String>{
+            token->initList(token)
+        }
 
         val intent = intent
         val bundle = intent.extras
@@ -217,9 +239,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         geofenceHelper = GeofenceHelper(this)
 
         Log.d(ContentValues.TAG, geofenceList.toString()+"!!")
-        token ="Bearer%20eyJyZWdEYXRlIjoxNjgzMTAzNDQxMTg2LCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyRW1haWwiOiJxb3J3bGRuanMxMDBAbmF2ZXIuY29tIiwidXNlckdlbmRlciI6MSwidXNlckJpcnRoWWVhciI6MTk5NCwidXNlck5hbWUiOiLrsLHsp4Dsm5AiLCJ1c2VySWQiOjEsInN1YiI6InFvcndsZG5qczEwMEBuYXZlci5jb20iLCJleHAiOjE2ODMxMjE0NDF9.cVcJAOzw-gT11wjLTX43tBzj1QMIw4sRypXQPObHhkg"
-        initList(token)
-
 
 
     }
@@ -241,6 +260,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     private fun initList(token: String){
         Log.d("MAIN","INIT LIST START!!")
+
         RetrofitImpl.service.getPinAll(token).enqueue(object : retrofit2.Callback<List<Result.Pin>>{
             override fun onFailure(call: Call<List<Result.Pin>>, t: Throwable) {
                 Log.e("Failed",t.toString()+"!!")
@@ -263,22 +283,32 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                     Log.d("MAIN","INIT LIST END!!")
 
+                }else{
+                    Log.d("Response errorBody", response.errorBody()?.string()+"!!");
+
                 }
             }
-        })
-        RetrofitImpl.service.getGroupAll(token,3).enqueue(object : retrofit2.Callback<Result.Response>{
 
-            override fun onFailure(call: Call<Result.Response>, t: Throwable) {
+        })
+        RetrofitImpl.service.getGroupAll(token,1).enqueue(object : retrofit2.Callback<Result.ResponseGroup>{
+
+            override fun onFailure(call: Call<Result.ResponseGroup>, t: Throwable) {
 
                 Log.e("Failed",t.toString()+"!!!!!")
             }
 
-            override fun onResponse(call: Call<Result.Response>, response: Response<Result.Response>) {
+            override fun onResponse(call: Call<Result.ResponseGroup>, response: Response<Result.ResponseGroup>) {
+                Log.d("Main","response!!"+response)
                 if(response.isSuccessful){
                     val rawList = response.body()
-                    Log.d("Success!!",rawList.toString()+"!!")
+                    val js=JSONObject(Gson().toJson(rawList)).getString("result")
+                    val name=JSONObject(js).getString("name")
+
+                    Log.d("Success!!",js+name+"!!")
                     Log.d("MAIN","INIT LIST END!!")
 
+                }else  {
+                    Log.d("Response errorBody", response.errorBody()?.string()+"!!");
                 }
             }
         })

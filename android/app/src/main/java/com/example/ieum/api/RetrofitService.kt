@@ -14,5 +14,5 @@ interface RetrofitService {
 
 
     @GET("groups/{group_id}")
-    fun getGroupAll(@Header("Authorization")token:String, @Path("group_id") id:Int): Call<Result.Response>
+    fun getGroupAll(@Header("Authorization")token:String, @Path("group_id") id:Int): Call<Result.ResponseGroup>
 }
