@@ -3,6 +3,7 @@ package com.eumpyo.eum.Controller;
 import com.eumpyo.eum.api.controller.GroupController;
 import com.eumpyo.eum.api.request.GroupAddReq;
 import com.eumpyo.eum.api.service.GroupService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,11 +57,9 @@ public class GroupControllerTest {
     void groupDetailsvalidParameter() throws Exception {
         // given
         String inputParameter = "1";
-        groupService.addGroup(GroupAddReq.builder()
+        groupService.addGroup(null, GroupAddReq.builder()
                 .name("그룹이름")
-                .createdDate(LocalDateTime.now())
                 .description("그룹설명")
-                .image("그룹이미지")
                 .build());
 
         // when
@@ -93,6 +92,7 @@ public class GroupControllerTest {
         );
 
         // then
+        System.out.println();
         resultActions.andExpect(status().isBadRequest());
     }
 }

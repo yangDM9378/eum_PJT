@@ -1,6 +1,5 @@
 package com.eumpyo.eum.common.util;
 
-import com.eumpyo.eum.api.response.UserResponse;
 import com.eumpyo.eum.db.entity.User;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
