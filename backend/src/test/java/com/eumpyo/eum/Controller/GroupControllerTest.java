@@ -57,7 +57,7 @@ public class GroupControllerTest {
     void groupDetailsvalidParameter() throws Exception {
         // given
         String inputParameter = "1";
-        groupService.addGroup(1L, GroupAddReq.builder()
+        groupService.addGroup(null, GroupAddReq.builder()
                 .name("그룹이름")
                 .description("그룹설명")
                 .build());
