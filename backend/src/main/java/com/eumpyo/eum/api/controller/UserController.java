@@ -1,16 +1,15 @@
 package com.eumpyo.eum.api.controller;
 
-import com.eumpyo.eum.api.response.UserResponse;
-import com.eumpyo.eum.api.service.UserService;
+import com.eumpyo.eum.api.response.UserRes;
 import com.eumpyo.eum.common.code.SuccessCode;
 import com.eumpyo.eum.common.response.ApiResponse;
 import com.eumpyo.eum.db.entity.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,10 +22,10 @@ public class UserController {
 //    private UserService userService;
 
     @GetMapping()
-    ResponseEntity<ApiResponse> userFind(Authentication authentication){
+    ResponseEntity<ApiResponse> userFind(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
 
-        UserResponse userResponse = UserResponse.builder()
+        UserRes userRes = UserRes.builder()
                 .userId(user.getUserId())
                 .name(user.getName())
                 .email(user.getEmail())
@@ -35,11 +34,16 @@ public class UserController {
                 .build();
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
-                .result(userResponse)
+                .result(userRes)
                 .resultCode(SuccessCode.SELECT.getCode())
                 .resultMsg(SuccessCode.SELECT.getMessage())
                 .build();
 
         return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.SELECT.getStatus()));
+    }
+
+    @PutMapping("/role")
+    ResponseEntity<ApiResponse> userUpdate(Authentication authentication) {
+        return null;
     }
 }

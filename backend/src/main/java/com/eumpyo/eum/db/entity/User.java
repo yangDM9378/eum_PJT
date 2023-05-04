@@ -1,6 +1,6 @@
 package com.eumpyo.eum.db.entity;
 
-import com.eumpyo.eum.api.response.UserResponse;
+import com.eumpyo.eum.api.response.UserRes;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,19 +12,20 @@ import javax.persistence.*;
 @Entity
 public class User {
     @Id
+    @Column(name = "group_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(name = "name", length = 20)
     private String name;
 
-    @Column
+    @Column(name = "birth_year")
     private int birthYear;
 
-    @Column(columnDefinition="TINYINT(1)")
+    @Column(name = "gender", columnDefinition="TINYINT(1)")
     private int gender;
 
-    @Column
+    @Column(name = "email", length = 50)
     private String email;
 
     @Builder
@@ -36,8 +37,8 @@ public class User {
         this.email = email;
     }
 
-    public UserResponse UserToDto(){
-        return UserResponse
+    public UserRes UserToDto(){
+        return UserRes
                 .builder()
                 .name(name)
                 .birthYear(birthYear)

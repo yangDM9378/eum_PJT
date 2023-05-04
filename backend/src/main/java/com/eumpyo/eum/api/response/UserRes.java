@@ -5,7 +5,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserResponse {
+public class UserRes {
 
     private Long userId;
     private String name;
@@ -14,7 +14,7 @@ public class UserResponse {
     private String email;
 
     @Builder
-    public UserResponse(Long userId, String name, int birthYear, int gender, String email) {
+    public UserRes(Long userId, String name, int birthYear, int gender, String email) {
         this.userId = userId;
         this.name = name;
         this.birthYear = birthYear;
