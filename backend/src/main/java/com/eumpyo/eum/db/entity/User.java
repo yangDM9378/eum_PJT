@@ -12,19 +12,20 @@ import javax.persistence.*;
 @Entity
 public class User {
     @Id
+    @Column(name = "group_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(name = "name", length = 20)
     private String name;
 
-    @Column
+    @Column(name = "birth_year")
     private int birthYear;
 
-    @Column(columnDefinition="TINYINT(1)")
+    @Column(name = "gender", columnDefinition="TINYINT(1)")
     private int gender;
 
-    @Column
+    @Column(name = "email", length = 50)
     private String email;
 
     @Builder

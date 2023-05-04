@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +22,7 @@ public class UserController {
 //    private UserService userService;
 
     @GetMapping()
-    ResponseEntity<ApiResponse> userFind(Authentication authentication){
+    ResponseEntity<ApiResponse> userFind(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
 
         UserRes userRes = UserRes.builder()
@@ -39,5 +40,10 @@ public class UserController {
                 .build();
 
         return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.SELECT.getStatus()));
+    }
+
+    @PutMapping("/role")
+    ResponseEntity<ApiResponse> userUpdate(Authentication authentication) {
+        return null;
     }
 }
