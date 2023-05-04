@@ -3,6 +3,7 @@
 import React from "react";
 import Modal from "react-modal";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const customStyles = {
   overlay: {
@@ -36,6 +37,12 @@ const MessageModal = ({
   const moveEvent = () => {
     router.push("/eventcamera");
   };
+
+  const images: string[] = [
+    "/images/gallery1.png",
+    "/images/gallery2.png",
+    "/images/gallery3.png",
+  ];
   return (
     <Modal
       isOpen={messageOpen}
@@ -55,16 +62,32 @@ const MessageModal = ({
         {/* <div>좌표 id : {messageId}</div> */}
         <div className="text-xl py-3">사진찍기 좋은 곳이에요.</div>
         <div className="text-sm">젊은 시절의 나와 사진 찍어요!</div>
-        <img
-          src="/images/GroupSample.png"
-          alt="예시사진"
-          className="h-[25vh] my-4 rounded-[10px] shadow-xl"
-        />
-        <img
-          src="/images/GroupSample.png"
-          alt="예시사진"
-          className="h-[25vh] mb-4 rounded-[10px] shadow-xl"
-        />
+        <div className="flex flex-col">
+          <img
+            src="/images/GroupSample.png"
+            alt="예시사진"
+            className="h-[25vh] my-4 rounded-[10px] shadow-xl"
+          />
+          <div className="flex flex-row justify-center">
+            <div className="flex flex-col flex-col-reverse pr-7">
+              {images.map((image: string, id: number) => (
+                <Image
+                  key={id}
+                  src={image}
+                  alt=""
+                  width={50}
+                  height={50}
+                  className="my-2"
+                />
+              ))}
+            </div>
+            <img
+              src="/images/GroupSample.png"
+              alt="예시사진"
+              className="h-[30vh] rounded-[10px] shadow-xl mb-2"
+            />
+          </div>
+        </div>
         <div
           className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl "
           onClick={moveEvent}
