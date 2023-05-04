@@ -19,3 +19,7 @@ export type GroupResult = {
   image: File;
   description: string;
 };
+
+export type GroupCode = {
+  code: string;
+};
