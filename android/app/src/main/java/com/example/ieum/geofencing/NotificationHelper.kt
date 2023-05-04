@@ -1,4 +1,4 @@
-package com.example.ieum
+package com.example.ieum.geofencing
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -11,7 +11,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationCompat
 
 class NotificationHelper (context: Context): ContextWrapper(context){
@@ -20,16 +19,18 @@ class NotificationHelper (context: Context): ContextWrapper(context){
     private val CHANNEL_NAME = "메시지 알람"
 
     fun displayNotification(reqId: Int, title: String, body : String, activityName : Class<*>){
-        Log.d(ContentValues.TAG, title+"display notification!!")
+        Log.d(ContentValues.TAG, title+body+"display notification!!")
 
         //알람 콘텐츠 설정
         val intent = Intent(this, activityName)
 //        상태 저장
         val bundle = Bundle()
         bundle.putString("url","https://www.daum.net/")
+        bundle.putInt("pin_id",reqId)
+        Log.d("OBSERVER",reqId.toString())
         intent.putExtras(bundle)
 
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
 
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)

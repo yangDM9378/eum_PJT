@@ -1,4 +1,4 @@
-package com.example.ieum
+package com.example.ieum.geofencing
 
 import android.app.PendingIntent
 import android.content.ContentValues
@@ -7,7 +7,6 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
@@ -30,11 +29,12 @@ class GeofenceHelper(context: Context?): ContextWrapper(context) {
             .build()
     }
 
+
 //    모니터링 할 지오펜싱 지정 및 이벤트 트리거 방식 설정
-    fun getGeofencingRequest(geofence: Geofence): GeofencingRequest {
+    fun getGeofencingRequest(geofences: List<Geofence>): GeofencingRequest {
         return GeofencingRequest.Builder().apply {
 //        모니터링할 지오펜스 추가
-            addGeofence(geofence)
+            addGeofences(geofences)
 //            기기가 이미 지오펜싱 내에 있는 경우 ENTER 트리거, 나갈때 EXIT 트리거로 전환
             setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
         }.build()
@@ -44,7 +44,7 @@ class GeofenceHelper(context: Context?): ContextWrapper(context) {
     val geofencePendingIntent: PendingIntent by lazy {
     Log.d(ContentValues.TAG, "start geofencePendingIntent!!")
 
-    val intent = Intent(this,GeofenceBroadcastReceiver::class.java)
+    val intent = Intent(this, GeofenceBroadcastReceiver::class.java)
     intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         if(Build.VERSION.SDK_INT > 30){
             PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
