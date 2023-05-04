@@ -37,8 +37,6 @@ pose_api.add_middleware(
     allow_headers=["*"],
 )
 
-pose_api = FastAPI()
-
 @pose_api.get("/")
 async def root():
     return {"message": "Hello World"}
