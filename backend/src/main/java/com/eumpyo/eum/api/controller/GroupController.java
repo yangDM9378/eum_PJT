@@ -3,7 +3,6 @@ package com.eumpyo.eum.api.controller;
 import com.eumpyo.eum.api.request.GroupAddReq;
 import com.eumpyo.eum.api.response.GroupDetailsRes;
 import com.eumpyo.eum.api.response.GroupListRes;
-import com.eumpyo.eum.api.response.UserResponse;
 import com.eumpyo.eum.api.service.GroupService;
 import com.eumpyo.eum.common.code.SuccessCode;
 import com.eumpyo.eum.common.response.ApiResponse;
