@@ -19,10 +19,15 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.room.Room
 import com.example.ieum.api.Result
 import com.example.ieum.api.RetrofitImpl
 import com.example.ieum.geofencing.GeofenceHelper
+import com.example.ieum.roomdb.notifiedLocationDB
+import com.example.ieum.roomdb.notifiedLocationEntity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -195,13 +200,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             // JavaScript 인터페이스 활성화
             addJavascriptInterface(WebAppInterface(this@MainActivity),"WebAppInterface")
         }
-        web.setWebViewClient(object : WebViewClient() {
-            override fun onPageFinished(view: WebView, url: String) {
-                super.onPageFinished(view, url);
-//                Log.d("Main",token+"!!")
-                token=getCookie(target_url,"accessToken")
-                initList("Bearer "+token)
-            }
+
+        val accessToken: MutableLiveData<String> = MutableLiveData()
+        accessToken.observe(this, Observer{
+          token=getCookie(target_url,"accessToken")
+          initList(token)
+            Log.d("token",token.toString()+"!!")
+        })
+//        web.setWebViewClient(object : WebViewClient() {
+//            override fun onPageFinished(view: WebView, url: String) {
+//                super.onPageFinished(view, url);
+////                Log.d("Main",token+"!!")
+//                token=getCookie(target_url,"accessToken")
+//                initList("Bearer "+token)
+//            }
 
 //            override fun onLoadResource(view: WebView?, url: String?) {
 //                super.onLoadResource(view, url)
@@ -214,13 +226,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //
 //                }
 //            }
-        })
-        val tokenObserver = Observer<String>{
-            token->initList(token)
-        }
+//        })
+
+        val db= Room.databaseBuilder(applicationContext, notifiedLocationDB::class.java,"pin").allowMainThreadQueries().build()
+        db.dao().getAll().observe(this, Observer { tmp -> Log.d("OBSERVER",tmp.toString()+"!!") })
 
         val intent = intent
         val bundle = intent.extras
+        Log.d("OBSERVER!!",bundle?.getInt("pin_id").toString())
         if (bundle != null) {
             if (bundle.getString("url") != null && !bundle.getString("url")
                     .equals("", ignoreCase = true)
@@ -228,6 +241,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 target_url = bundle.getString("url")!!
 
                 Log.d("main",target_url+"!!")
+            }
+            if(bundle.getInt("pin_id")!=null){
+                db.dao().insert(notifiedLocationEntity(bundle.getInt("pin_id")))
             }
         }
 

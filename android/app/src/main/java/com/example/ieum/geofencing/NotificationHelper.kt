@@ -26,6 +26,8 @@ class NotificationHelper (context: Context): ContextWrapper(context){
 //        상태 저장
         val bundle = Bundle()
         bundle.putString("url","https://www.daum.net/")
+        bundle.putInt("pin_id",reqId)
+        Log.d("OBSERVER",reqId.toString())
         intent.putExtras(bundle)
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
