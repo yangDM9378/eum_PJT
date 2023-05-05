@@ -5,6 +5,7 @@ import com.eumpyo.eum.api.response.PictureDetailRes;
 import com.eumpyo.eum.api.response.PictureGroupRes;
 import com.eumpyo.eum.api.response.PicturePinRes;
 import com.eumpyo.eum.api.service.PictureService;
+import com.eumpyo.eum.common.code.ErrorCode;
 import com.eumpyo.eum.common.code.SuccessCode;
 import com.eumpyo.eum.common.response.ApiResponse;
 import com.eumpyo.eum.db.entity.User;
@@ -88,8 +89,29 @@ public class PictureController {
     }
 
     @DeleteMapping("/{picture_id}")
-    ResponseEntity<ApiResponse> pictureRemove(@PathVariable("picture_id") Long pictureId ) {
-        log.info(String.valueOf(pictureId));
-        return null;
+    ResponseEntity<ApiResponse> pictureRemove(Authentication authentication, @PathVariable("picture_id") Long pictureId ) {
+        User user = (User)authentication.getPrincipal();
+        boolean isSuccess = pictureService.removePicture(user, pictureId);
+        ApiResponse apiResponse;
+
+        if (isSuccess){
+            apiResponse = ApiResponse
+                    .builder()
+                    .result(null)
+                    .resultCode(SuccessCode.DELETE.getCode())
+                    .resultMsg(SuccessCode.DELETE.getMessage())
+                    .build();
+
+            return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.DELETE.getStatus()));
+        } else {
+            apiResponse = ApiResponse
+                    .builder()
+                    .result(null)
+                    .resultCode(ErrorCode.FORBIDDEN_ERROR.getCode())
+                    .resultMsg(ErrorCode.FORBIDDEN_ERROR.getMessage())
+                    .build();
+
+            return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(ErrorCode.FORBIDDEN_ERROR.getStatus()));
+        }
     }
 }

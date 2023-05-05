@@ -16,4 +16,5 @@ public interface PictureService {
     PictureDetailRes findPictureDetail(Long pictureId);
     List<PictureGroupRes> findPictureGroupList(Long groupId);
     void addPicture(User user, PictureAddReq pictureAddReq, MultipartFile image);
+    boolean removePicture(User user, Long pictureId);
 }

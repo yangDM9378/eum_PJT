@@ -9,6 +9,7 @@ import com.eumpyo.eum.db.entity.*;
 import com.eumpyo.eum.db.repository.GroupRepository;
 import com.eumpyo.eum.db.repository.PictureRepository;
 import com.eumpyo.eum.db.repository.PinRepository;
+import com.eumpyo.eum.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +32,6 @@ public class PictureServiceImpl implements PictureService {
     private final PinRepository pinRepository;
     private final GroupRepository groupRepository;
     private final PictureRepository pictureRepository;
-
     @Override
     public List<PicturePinRes> findPicturePinList(Long pinId) {
         List<PicturePinRes> pictures = pictureRepository.findByPinId(pinId);
@@ -94,5 +94,19 @@ public class PictureServiceImpl implements PictureService {
         }
 
         pictureRepository.save(picture);
+    }
+
+    @Override
+    public boolean removePicture(User user, Long pictureId) {
+        Picture picture = pictureRepository.findById(pictureId)
+                .orElseThrow(() -> new IllegalStateException("해당 사진이 존재하지 않습니다."));
+
+        if (picture.getUser().getUserId() == user.getUserId()){
+            s3Uploader.deleteS3(picture.getImage());
+            pictureRepository.delete(picture);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
