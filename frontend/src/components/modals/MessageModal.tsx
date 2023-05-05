@@ -45,7 +45,6 @@ const MessageModal = ({
         setDetailData(pinDetailRes);
       };
       getPinDetailData();
-      console.log(detailData);
     }
   }, [messageId]);
 
@@ -72,8 +71,8 @@ const MessageModal = ({
           className="absolute left-[95%] top-[0%]"
           onClick={() => setMessageOpen(false)}
         />
-        <div className="py-3 text-xl">사진찍기 좋은 곳이에요.</div>
-        <div className="text-sm">젊은 시절의 나와 사진 찍어요!</div>
+        <div className="py-3 text-xl">{detailData?.result.title}</div>
+        <div className="text-sm">{detailData?.result.content}</div>
         <img
           src="/images/GroupSample.png"
           alt="예시사진"

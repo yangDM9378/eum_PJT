@@ -43,8 +43,6 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
     e.preventDefault();
     const formData = new FormData();
 
-    const blobRes = await axios.get(image, { responseType: "blob" });
-
     const jsonData = {
       title: title,
       content: content,
@@ -53,8 +51,17 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
       type: eventtype,
       groupId: 2,
     };
-    formData.append("image", blobRes.data, "image.png");
-    formData.append(
+
+    if (eventtype === "aging") {
+      const blobRes = await axios.get(image, { responseType: "blob" });
+      formData.append("image", blobRes.data, "image.png");
+    }
+    if (eventtype === "pose") {
+      const blobRes = await (await fetch(image)).blob();
+      formData.append("image", blobRes, "image.png");
+    }
+
+    await formData.append(
       "pinAddReq",
       new Blob([JSON.stringify(jsonData)], { type: "application/json" })
     );
