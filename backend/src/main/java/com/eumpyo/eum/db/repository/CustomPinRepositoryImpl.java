@@ -42,13 +42,4 @@ public class CustomPinRepositoryImpl implements CustomPinRepository {
                                 .where(condition(userId, userGroup.user.userId::eq))))
                 .fetch();
     }
-
-    @Override
-    public PinAlarmRes findPinAlarmByPinId(Long pinId) {
-        return queryFactory
-                .select(Projections.constructor(PinAlarmRes.class, pin.title, pin.user.userId, userRole.role))
-                .from(pin)
-                .where(condition(pinId, pin.pinId::eq))
-                .fetchOne();
-    }
 }
