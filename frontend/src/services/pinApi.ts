@@ -18,8 +18,8 @@ const getPinList = async (groupId: number) => {
 
 // 핀 디테일 페이지 가져오기
 const getPinDetail = async (pinId: number): Promise<PindetailResult> => {
-  const data = await jsonAuthApi.get(`/pins/${pinId}`);
-  return data.data;
+  const { data } = await jsonAuthApi.get(`/pins/${pinId}`);
+  return data;
 };
 
 export { createPin, getPinList, getPinDetail };

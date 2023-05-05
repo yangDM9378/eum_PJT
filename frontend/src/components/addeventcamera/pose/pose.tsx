@@ -2,21 +2,19 @@
 
 import { useAppSelector } from "@/redux/hooks";
 import React from "react";
-
 import AddEventModal from "@/components/modals/AddEventModal";
-
 import { useEffect, useState } from "react";
-
-
 import Image from "next/image";
 
 const Pose = () => {
   const [PoseImage, SetPoseImage] = useState("");
 
   const [modalOpen, setModalOpen] = useState(false);
+
   const addEventModalOpen = () => {
     setModalOpen(true);
   };
+
   const originImageUrl = useAppSelector(
     (state) => state.addEventReducer.originimageurl
   );
@@ -27,22 +25,21 @@ const Pose = () => {
   return (
     <>
       <div className="flex justify-center">
-        <Image
-          src={PoseImage}
-          alt=""
-          width={300}
-          height={700}
-          className="pt-[30%] h-[50vh] px-1"
-        />
+        {PoseImage && (
+          <Image src={PoseImage} alt="poseimage" width={300} height={700} />
+        )}
       </div>
       <div className="flex justify-center pt-[10%] ">
-        <button onClick={addEventModalOpen}className="w-[60vw] rounded-md  bg-brand-blue h-[5vh]">
+        <button
+          onClick={addEventModalOpen}
+          className="w-[60vw] rounded-md  bg-brand-blue h-[5vh]"
+        >
           저장
         </button>
         <AddEventModal
-        modalOpen ={modalOpen}
-        setModalOpen={setModalOpen}
-        image={PoseImage}
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          image={PoseImage}
         />
       </div>
     </>
