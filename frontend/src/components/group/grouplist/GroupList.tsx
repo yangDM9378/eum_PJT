@@ -26,11 +26,11 @@ const GroupList = () => {
     const response = await getGroupList();
     console.log(response);
   };
-  // const { data, isLoading, isFetching, error } = useQuery({
-  //   queryKey: ["initial-group"],
-  //   queryFn: () => getGroup(),
-  // });
-
+  const { data, isLoading, isFetching, error } = useQuery({
+    queryKey: ["initial-group"],
+    queryFn: async () => await getGroup(),
+  });
+  // console.log(error);
   // const groupList: Group[] = [
   //   {
   //     id: "1",
