@@ -8,7 +8,7 @@ interface Result {
 }
 
 // 그룹 생성하기
-const createGroup = async (data: Group) => {
+const createGroup = async (data: FormData) => {
   await multipartAuthApi.post(`/groups`, data);
 };
 

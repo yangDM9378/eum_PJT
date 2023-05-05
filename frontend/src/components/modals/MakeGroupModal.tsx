@@ -29,24 +29,49 @@ type ModalProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+const initialGroupState = {
+  name: "",
+  description: "",
+  image: "",
+};
 const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
-  const [groupState, setGroupState] = useState<Group | null>(null);
+  const [groupState, setGroupState] = useState(initialGroupState);
+  const [uploadImg, setUploadImg] = useState<Blob | string>("");
+
+  // 그룹 생성하기
   const makeGroup = () => {
     console.log(groupState);
+    const formData = new FormData();
+    const jsonData = {
+      name: groupState.name,
+      description: groupState.description,
+    };
+    formData.append("image", uploadImg, "image.png");
+    formData.append(
+      "groupAddReq",
+      new Blob([JSON.stringify(jsonData)], { type: "application/json" })
+    );
+    createGroup(formData);
+    setGroupState(initialGroupState);
     setIsOpen(false);
   };
 
   // 그룹 이름 & 설명 내용 가져오기
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
-    console.log(value);
+    setGroupState({ ...groupState, [name]: value });
   };
 
   // 그룹 이미지 가져오기
-  const groupImg = useRef<HTMLInputElement>();
+  const groupImg = useRef<HTMLInputElement>(null);
   const saveGroupImg = async () => {
     if (groupImg?.current?.files !== null) {
       const file = groupImg?.current?.files[0];
+      console.log(file);
+      if (file) {
+        setUploadImg(file);
+        setGroupState({ ...groupState, image: URL.createObjectURL(file) });
+      }
     }
   };
   return (
@@ -69,7 +94,7 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
         <input
           type="text"
           name="name"
-          value={groupState?.name}
+          value={groupState.name}
           onChange={handleChange}
           className="w-[80%] h-[10%] bg-transparent border border-brand-baige-2"
         />
@@ -77,13 +102,19 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
         <input
           type="text"
           name="description"
-          value={groupState?.description}
+          value={groupState.description}
           onChange={handleChange}
           className="w-[80%] h-[30%] pt-[10%] bg-transparent border border-brand-baige-2 "
         />
 
         <p className="pt-[10%]">모임의 사진을 올려주세요.</p>
-        <AiOutlineCamera className="pt-[5%] w-[50px] h-[50px]" />
+        <label htmlFor="groupImg">
+          {groupState.image ? (
+            <img src={groupState.image} alt="" />
+          ) : (
+            <AiOutlineCamera className="pt-[5%] w-[50px] h-[50px]" />
+          )}
+        </label>
         <input
           type="file"
           accept="image/*"
