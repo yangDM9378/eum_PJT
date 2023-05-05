@@ -1,6 +1,7 @@
 package com.eumpyo.eum.api.service;
 
 import com.eumpyo.eum.api.request.PictureAddReq;
+import com.eumpyo.eum.api.response.PictureDetailRes;
 import com.eumpyo.eum.api.response.PicturePinRes;
 import com.eumpyo.eum.common.util.S3Uploader;
 import com.eumpyo.eum.db.entity.*;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -33,6 +35,21 @@ public class PictureServiceImpl implements PictureService {
     public List<PicturePinRes> findPicturePinList(Long pinId) {
         List<PicturePinRes> pictures = pictureRepository.findByPinId(pinId);
         return pictures;
+    }
+
+    @Override
+    public PictureDetailRes findPictureDetail(Long pictureId) {
+        Picture picture = pictureRepository.findById(pictureId)
+                .orElseThrow(() -> new IllegalStateException("해당 사진이 존재하지 않습니다."));
+
+        PictureDetailRes pictureDetailRes = PictureDetailRes
+                .builder()
+                .userId(picture.getUserId().getUserId())
+                .createdDate(picture.getCreatedDate())
+                .image(picture.getImage())
+                .userName(picture.getUserId().getName())
+                .build();
+        return pictureDetailRes;
     }
 
     @Override
