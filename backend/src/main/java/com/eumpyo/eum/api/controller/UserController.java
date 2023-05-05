@@ -1,6 +1,6 @@
 package com.eumpyo.eum.api.controller;
 
-import com.eumpyo.eum.api.request.UserRoleReq;
+import com.eumpyo.eum.api.request.UserRoleAddReq;
 import com.eumpyo.eum.api.response.UserRes;
 import com.eumpyo.eum.api.service.UserService;
 import com.eumpyo.eum.common.code.SuccessCode;
@@ -43,10 +43,10 @@ public class UserController {
     }
 
     @PutMapping("/role")
-    ResponseEntity<ApiResponse> userUpdate(@RequestBody UserRoleReq userRoleReq, Authentication authentication) {
+    ResponseEntity<ApiResponse> userUpdate(@RequestBody UserRoleAddReq userRoleAddReq, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
 
-        userService.updateUserRole(userRoleReq, user);
+        userService.updateUserRole(userRoleAddReq, user);
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
                 .result(null)
