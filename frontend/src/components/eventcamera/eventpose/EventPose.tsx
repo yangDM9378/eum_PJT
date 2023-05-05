@@ -1,19 +1,20 @@
 "use client";
 
-import { poseimageurl } from "@/redux/doevent/DoEventSlice";
+import { eventimageurl } from "@/redux/doevent/eventSlice";
 import { useAppSelector } from "@/redux/hooks";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 const EventPose = () => {
-  const [PoseImage,setPoseImage] = useState('')
+  const [PoseImage, setPoseImage] = useState("");
 
-  const originImageUrl = useAppSelector((state) => 
-  state.poseEventReducer.originimageurl)
+  const originImageUrl = useAppSelector(
+    (state) => state.eventReducer.eventimageurl
+  );
 
   useEffect(() => {
-    setPoseImage(originImageUrl)
-  })
+    setPoseImage(originImageUrl);
+  });
 
   return (
     <>
