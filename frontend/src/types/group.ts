@@ -23,3 +23,9 @@ export type GroupResult = {
 export type GroupCode = {
   code: string;
 };
+export type GroupCodeResult {
+  result: null;
+  resultCode: string;
+  resultMsg: string;
+}
+
