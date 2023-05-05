@@ -2,6 +2,7 @@ package com.eumpyo.eum.api.controller;
 
 import com.eumpyo.eum.api.request.PictureAddReq;
 import com.eumpyo.eum.api.response.PictureDetailRes;
+import com.eumpyo.eum.api.response.PictureGroupRes;
 import com.eumpyo.eum.api.response.PicturePinRes;
 import com.eumpyo.eum.api.service.PictureService;
 import com.eumpyo.eum.common.code.SuccessCode;
@@ -54,8 +55,16 @@ public class PictureController {
 
     @GetMapping("/group/{group_id}")
     ResponseEntity<ApiResponse> pictureGroupListFind(@PathVariable("group_id") Long groupId) {
-        log.info(String.valueOf(groupId));
-        return null;
+        List<PictureGroupRes> pictureGroupRes = pictureService.findPictureGroupList(groupId);
+
+        ApiResponse apiResponse = ApiResponse
+                .builder()
+                .result(pictureGroupRes)
+                .resultCode(SuccessCode.SELECT.getCode())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.SELECT.getStatus()));
     }
 
     @PostMapping()

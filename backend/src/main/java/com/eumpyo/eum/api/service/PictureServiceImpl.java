@@ -2,6 +2,7 @@ package com.eumpyo.eum.api.service;
 
 import com.eumpyo.eum.api.request.PictureAddReq;
 import com.eumpyo.eum.api.response.PictureDetailRes;
+import com.eumpyo.eum.api.response.PictureGroupRes;
 import com.eumpyo.eum.api.response.PicturePinRes;
 import com.eumpyo.eum.common.util.S3Uploader;
 import com.eumpyo.eum.db.entity.*;
@@ -50,6 +51,13 @@ public class PictureServiceImpl implements PictureService {
                 .userName(picture.getUser().getName())
                 .build();
         return pictureDetailRes;
+    }
+
+    @Override
+    public List<PictureGroupRes> findPictureGroupList(Long groupId) {
+        List<PictureGroupRes> pictureGroupRes = pictureRepository.findByGroupId(groupId);
+
+        return pictureGroupRes;
     }
 
     @Override
