@@ -22,7 +22,7 @@ public class CustomPictureRepositoryImpl implements CustomPictureRepository{
         List<PicturePinRes> pictures = jpaQueryFactory
                 .select(Projections.constructor(PicturePinRes.class, picture.picture_id, picture.image))
                 .from(picture)
-                .join(picture.pinId, pin)
+                .join(picture.pin, pin)
                 .where(pin.pinId.eq(pinId))
                 .fetch();
 

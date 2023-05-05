@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void updateUserRole(UserRoleAddReq userRoleAddReq, User user) {
-        User targetUser = userRepository.findById(Long.valueOf(userRoleAddReq.getUserId()))
+        User targetUser = userRepository.findById(userRoleAddReq.getUserId())
                 .orElseThrow(() ->  new IllegalStateException("해당 유저가 존재하지 않습니다."));
 
         UserRole userRole;

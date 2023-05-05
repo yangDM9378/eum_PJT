@@ -44,10 +44,10 @@ public class PictureServiceImpl implements PictureService {
 
         PictureDetailRes pictureDetailRes = PictureDetailRes
                 .builder()
-                .userId(picture.getUserId().getUserId())
+                .userId(picture.getUser().getUserId())
                 .createdDate(picture.getCreatedDate())
                 .image(picture.getImage())
-                .userName(picture.getUserId().getName())
+                .userName(picture.getUser().getName())
                 .build();
         return pictureDetailRes;
     }
@@ -55,10 +55,10 @@ public class PictureServiceImpl implements PictureService {
     @Override
     public void addPicture(User user, PictureAddReq pictureAddReq, MultipartFile image) {
 
-        Pin pin = pinRepository.findById(Long.valueOf(pictureAddReq.getPinId()))
+        Pin pin = pinRepository.findById(pictureAddReq.getPinId())
                 .orElseThrow(() -> new IllegalStateException("Pin이 존재하지 않습니다."));
 
-        Group group = groupRepository.findById(Long.valueOf(pictureAddReq.getGroupId()))
+        Group group = groupRepository.findById(pictureAddReq.getGroupId())
                 .orElseThrow(() -> new IllegalStateException("Group이 존재하지 않습니다."));
 
         Picture picture = Picture.builder()

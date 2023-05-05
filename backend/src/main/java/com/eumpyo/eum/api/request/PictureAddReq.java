@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class PictureAddReq {
-    int groupId;
-    int pinId;
+    Long groupId;
+    Long pinId;
 }

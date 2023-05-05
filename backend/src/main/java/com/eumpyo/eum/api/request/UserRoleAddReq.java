@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class UserRoleAddReq {
-    int userId;
+    Long userId;
     String role;
 }

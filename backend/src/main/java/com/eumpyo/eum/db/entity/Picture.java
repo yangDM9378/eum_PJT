@@ -27,21 +27,21 @@ public class Picture {
 
     @ManyToOne(targetEntity = Group.class, fetch = FetchType.LAZY)
     @JoinColumn(name="group_id")
-    Group groupId;
+    Group group;
 
     @ManyToOne(targetEntity = Pin.class, fetch = FetchType.LAZY)
     @JoinColumn(name="pin_id")
-    Pin pinId;
+    Pin pin;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
-    User userId;
+    User user;
 
     @Builder
     public Picture(Pin pin, Group group, String image, User user){
-        this.pinId = pin;
-        this.groupId = group;
-        this.userId = user;
+        this.pin = pin;
+        this.group = group;
+        this.user = user;
     }
 
     public void addImage(String image) {
