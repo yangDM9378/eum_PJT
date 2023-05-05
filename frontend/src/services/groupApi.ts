@@ -14,8 +14,7 @@ const createGroup = async (data: FormData) => {
 
 // 그룹 리스트 가져오기
 const getGroupList = async (): Promise<Array<Group>> => {
-  const response = await jsonAuthApi.get(`/groups`);
-  console.log(response.data);
+  const response = await jsonAuthApi.get(`/groups/`);
   const groupList: Array<Group> = response.data.result;
   return groupList;
 };

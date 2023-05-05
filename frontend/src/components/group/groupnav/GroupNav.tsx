@@ -14,7 +14,6 @@ export default function groupnav() {
         <MakeButton />
         <EnterButton />
       </div>
-      <UserInfo />
     </div>
   );
 }

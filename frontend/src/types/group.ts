@@ -1,4 +1,5 @@
 export type Group = {
+  id: number;
   name: string;
   image: File;
   description: string;
