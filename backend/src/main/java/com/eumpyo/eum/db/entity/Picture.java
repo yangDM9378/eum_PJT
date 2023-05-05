@@ -27,4 +27,8 @@ public class Picture {
     @ManyToOne(targetEntity = Group.class, fetch = FetchType.LAZY)
     @JoinColumn(name="group_id")
     Group groupId;
+
+    @ManyToOne(targetEntity = Pin.class, fetch = FetchType.LAZY)
+    @JoinColumn(name="pin_id")
+    Group pinId;
 }

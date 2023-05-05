@@ -1,6 +1,6 @@
 package com.eumpyo.eum.api.controller;
 
-import com.eumpyo.eum.api.request.PictureReq;
+import com.eumpyo.eum.api.request.PictureAddReq;
 import com.eumpyo.eum.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +32,9 @@ public class PictureController {
     }
 
     @PostMapping()
-    ResponseEntity<ApiResponse> pictureAdd(@RequestPart PictureReq pictureReq, @RequestPart(value = "image", required = false) MultipartFile image) {
-        log.info(String.valueOf(pictureReq.getPinId()));
-        log.info(String.valueOf(pictureReq.getGroupId()));
+    ResponseEntity<ApiResponse> pictureAdd(@RequestPart PictureAddReq pictureAddReq, @RequestPart(value = "image", required = false) MultipartFile image) {
+        log.info(String.valueOf(pictureAddReq.getPinId()));
+        log.info(String.valueOf(pictureAddReq.getGroupId()));
 
         if (image != null) {
             log.info("image");
