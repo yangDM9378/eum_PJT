@@ -1,6 +1,7 @@
 package com.eumpyo.eum.api.controller;
 
 import com.eumpyo.eum.api.request.PictureAddReq;
+import com.eumpyo.eum.api.response.PicturePinRes;
 import com.eumpyo.eum.api.service.PictureService;
 import com.eumpyo.eum.common.code.SuccessCode;
 import com.eumpyo.eum.common.response.ApiResponse;
@@ -13,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -22,8 +25,16 @@ public class PictureController {
     private final PictureService pictureService;
     @GetMapping("/pin/{pin_id}")
     ResponseEntity<ApiResponse> picturePinListFind(@PathVariable("pin_id") Long pinId) {
-        log.info(String.valueOf(pinId));
-        return null;
+        List<PicturePinRes> picturePinResList = pictureService.findPicturePinList(pinId);
+
+        ApiResponse apiResponse = ApiResponse
+                .builder()
+                .result(picturePinResList)
+                .resultCode(SuccessCode.SELECT.getCode())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.SELECT.getStatus()));
     }
 
     @GetMapping("/{picture_id}")

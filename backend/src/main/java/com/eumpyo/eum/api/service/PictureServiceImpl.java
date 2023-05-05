@@ -1,11 +1,9 @@
 package com.eumpyo.eum.api.service;
 
 import com.eumpyo.eum.api.request.PictureAddReq;
+import com.eumpyo.eum.api.response.PicturePinRes;
 import com.eumpyo.eum.common.util.S3Uploader;
-import com.eumpyo.eum.db.entity.Group;
-import com.eumpyo.eum.db.entity.Picture;
-import com.eumpyo.eum.db.entity.Pin;
-import com.eumpyo.eum.db.entity.User;
+import com.eumpyo.eum.db.entity.*;
 import com.eumpyo.eum.db.repository.GroupRepository;
 import com.eumpyo.eum.db.repository.PictureRepository;
 import com.eumpyo.eum.db.repository.PinRepository;
@@ -15,8 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -30,6 +28,13 @@ public class PictureServiceImpl implements PictureService {
     private final PinRepository pinRepository;
     private final GroupRepository groupRepository;
     private final PictureRepository pictureRepository;
+
+    @Override
+    public List<PicturePinRes> findPicturePinList(Long pinId) {
+        List<PicturePinRes> pictures = pictureRepository.findByPinId(pinId);
+        return pictures;
+    }
+
     @Override
     public void addPicture(User user, PictureAddReq pictureAddReq, MultipartFile image) {
 
