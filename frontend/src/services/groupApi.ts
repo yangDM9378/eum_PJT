@@ -1,17 +1,22 @@
 import { multipartAuthApi, jsonAuthApi } from "@/libs/axiosConfig";
+
+interface Result {
+  result: null;
+  resultCode: number;
+  resultMsg: string;
+}
 import { Group, GroupCodeResult } from "@/types/group";
 
 // 그룹 생성하기
-const createGroup = async (data: Group) => {
+const createGroup = async (data: FormData) => {
   await multipartAuthApi.post(`/groups`, data);
 };
 
 // 그룹 리스트 가져오기
-const getGroupList = async () => {
-  const {
-    data: { result },
-  } = await jsonAuthApi.get(`/groups`);
-  return result;
+const getGroupList = async (): Promise<Array<Group>> => {
+  const response = await jsonAuthApi.get(`/groups/`);
+  const groupList: Array<Group> = response.data.result;
+  return groupList;
 };
 
 // 그룹 참여하기

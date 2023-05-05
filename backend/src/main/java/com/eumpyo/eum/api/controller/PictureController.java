@@ -1,50 +1,117 @@
 package com.eumpyo.eum.api.controller;
 
-import com.eumpyo.eum.api.request.PictureReq;
+import com.eumpyo.eum.api.request.PictureAddReq;
+import com.eumpyo.eum.api.response.PictureDetailRes;
+import com.eumpyo.eum.api.response.PictureGroupRes;
+import com.eumpyo.eum.api.response.PicturePinRes;
+import com.eumpyo.eum.api.service.PictureService;
+import com.eumpyo.eum.common.code.ErrorCode;
+import com.eumpyo.eum.common.code.SuccessCode;
 import com.eumpyo.eum.common.response.ApiResponse;
+import com.eumpyo.eum.db.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/pictures")
 public class PictureController {
+
+    private final PictureService pictureService;
     @GetMapping("/pin/{pin_id}")
     ResponseEntity<ApiResponse> picturePinListFind(@PathVariable("pin_id") Long pinId) {
-        log.info(String.valueOf(pinId));
-        return null;
+        List<PicturePinRes> picturePinResList = pictureService.findPicturePinList(pinId);
+
+        ApiResponse apiResponse = ApiResponse
+                .builder()
+                .result(picturePinResList)
+                .resultCode(SuccessCode.SELECT.getCode())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.SELECT.getStatus()));
     }
 
     @GetMapping("/{picture_id}")
     ResponseEntity<ApiResponse> pictureDetailFind(@PathVariable("picture_id") Long pictureId) {
-        log.info(String.valueOf(pictureId));
-        return null;
+        PictureDetailRes pictureDetailRes = pictureService.findPictureDetail(pictureId);
+
+        ApiResponse apiResponse = ApiResponse
+                .builder()
+                .result(pictureDetailRes)
+                .resultCode(SuccessCode.SELECT.getCode())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.SELECT.getStatus()));
     }
 
     @GetMapping("/group/{group_id}")
     ResponseEntity<ApiResponse> pictureGroupListFind(@PathVariable("group_id") Long groupId) {
-        log.info(String.valueOf(groupId));
-        return null;
+        List<PictureGroupRes> pictureGroupRes = pictureService.findPictureGroupList(groupId);
+
+        ApiResponse apiResponse = ApiResponse
+                .builder()
+                .result(pictureGroupRes)
+                .resultCode(SuccessCode.SELECT.getCode())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.SELECT.getStatus()));
     }
 
     @PostMapping()
-    ResponseEntity<ApiResponse> pictureAdd(@RequestPart PictureReq pictureReq, @RequestPart(value = "image", required = false) MultipartFile image) {
-        log.info(String.valueOf(pictureReq.getPinId()));
-        log.info(String.valueOf(pictureReq.getGroupId()));
+    ResponseEntity<ApiResponse> pictureAdd(
+            Authentication authentication,
+            @RequestPart PictureAddReq pictureAddReq,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
 
-        if (image != null) {
-            log.info("image");
-        }
-        return null;
+        User user = (User)authentication.getPrincipal();
+
+        pictureService.addPicture(user, pictureAddReq, image);
+
+        ApiResponse apiResponse = ApiResponse
+                .builder()
+                .result(null)
+                .resultCode(SuccessCode.INSERT.getCode())
+                .resultMsg(SuccessCode.INSERT.getMessage())
+                .build();
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.INSERT.getStatus()));
     }
 
     @DeleteMapping("/{picture_id}")
-    ResponseEntity<ApiResponse> pictureRemove(@PathVariable("picture_id") Long pictureId ) {
-        log.info(String.valueOf(pictureId));
-        return null;
+    ResponseEntity<ApiResponse> pictureRemove(Authentication authentication, @PathVariable("picture_id") Long pictureId ) {
+        User user = (User)authentication.getPrincipal();
+        boolean isSuccess = pictureService.removePicture(user, pictureId);
+        ApiResponse apiResponse;
+
+        if (isSuccess){
+            apiResponse = ApiResponse
+                    .builder()
+                    .result(null)
+                    .resultCode(SuccessCode.DELETE.getCode())
+                    .resultMsg(SuccessCode.DELETE.getMessage())
+                    .build();
+
+            return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.DELETE.getStatus()));
+        } else {
+            apiResponse = ApiResponse
+                    .builder()
+                    .result(null)
+                    .resultCode(ErrorCode.FORBIDDEN_ERROR.getCode())
+                    .resultMsg(ErrorCode.FORBIDDEN_ERROR.getMessage())
+                    .build();
+
+            return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(ErrorCode.FORBIDDEN_ERROR.getStatus()));
+        }
     }
 }

@@ -28,6 +28,7 @@ const RemoveBg = () => {
   }, []);
 
   const addEventModalOpen = () => {
+    console.log(removebgImageUrl);
     setModalOpen(true);
   };
 
