@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import Cookies from "js-cookie";
 
-const BASE_URL = "http://i-eum-u.com/api/v1";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL_DEFAULT;
 axios.defaults.baseURL = BASE_URL;
 
 const createAxiosInstance = (contentType: string): AxiosInstance => {

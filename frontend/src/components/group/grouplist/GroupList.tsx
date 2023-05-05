@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { Poppins } from "next/font/google";
@@ -26,6 +26,7 @@ const GroupList = () => {
     const response = await getGroupList();
     console.log(response);
   };
+
   // const { data, isLoading, isFetching, error } = useQuery({
   //   queryKey: ["initial-group"],
   //   queryFn: async () => await getGroup(),
