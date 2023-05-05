@@ -1,6 +1,8 @@
 package com.eumpyo.eum.api.service;
 
 import com.eumpyo.eum.api.request.PinAddReq;
+import com.eumpyo.eum.api.response.PinAlarmRes;
+import com.eumpyo.eum.api.response.PinDetailsRes;
 import com.eumpyo.eum.api.response.PinListRes;
 import com.eumpyo.eum.db.entity.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,4 +17,8 @@ public interface PinService {
     List<PinListRes> findGroupPin(Long groupId);
 
     List<PinListRes> findUserPin(User user);
+
+    PinDetailsRes findPin(Long pinId);
+
+    PinAlarmRes findPinAlarm(User user, Long pinId);
 }
