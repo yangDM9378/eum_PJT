@@ -40,11 +40,15 @@ const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
   const [groupCode, setgroupCode] = useState<string>("");
 
   // 코드 응답
-  const [response, setResponse] = useState<Result>();
+  const [response, setResponse] = useState<Result | null>(null);
 
   // API 응답 데이터를 상태로 저장
   const handleSuccess = (data: Result) => {
     setResponse(data);
+  };
+
+  const reset = () => {
+    setResponse(null);
   };
 
   //useMutation 타입 순서대로 응답 타입, 오류 타입, 보내는 값 타입
@@ -68,6 +72,7 @@ const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
   useEffect(() => {
     if (response?.resultCode === "Created") {
       setIsOpen(false);
+      reset();
     }
   }, [response]);
 

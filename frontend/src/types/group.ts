@@ -27,5 +27,4 @@ export type GroupCodeResult = {
   result: null;
   resultCode: string;
   resultMsg: string;
-}
-
+};
