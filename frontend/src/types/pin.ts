@@ -14,7 +14,7 @@ export type Pindetail = {
   title: string;
   content: string;
   image: string;
-  createdDate: ;
+  createdDate: string;
   userName: string;
   type: string;
 };
