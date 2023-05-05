@@ -4,6 +4,7 @@ import { useAppSelector } from "@/redux/hooks";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { createPin } from "@/services/pinApi";
+import { useRouter } from "next/navigation";
 
 const customStyles = {
   overlay: {
@@ -31,32 +32,35 @@ type ModalProps = {
 const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const type = useAppSelector((state) => state.coordsReducer.path);
+  const eventtype = useAppSelector((state) => state.coordsReducer.path);
   const coords = useAppSelector((state) => state.coordsReducer.coords);
 
-  const { mutate } = useMutation(createPin);
+  const { mutate, isLoading } = useMutation(createPin);
+
+  const router = useRouter();
 
   const addEvent = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    const formData = new FormData();
+
     const blobRes = await axios.get(image, { responseType: "blob" });
 
-    const formData = new FormData();
-    const json = {
+    const jsonData = {
       title: title,
       content: content,
-      latitude: coords.lat.toString(),
-      longitude: coords.lng.toString(),
+      latitude: coords.lat,
+      longitude: coords.lng,
+      type: eventtype,
+      groupId: 2,
     };
-    formData.append("pinAddReq", json.toString());
-    // formData.append("title", title);
-    // formData.append("content", content);
-    // formData.append("latitude", coords.lat.toString());
-    // formData.append("longitude", coords.lng.toString());
-    // formData.append("type", type);
     formData.append("image", blobRes.data, "image.png");
-    //수정 바람
-    // formData.append("group_id", "1");
+    formData.append(
+      "pinAddReq",
+      new Blob([JSON.stringify(jsonData)], { type: "application/json" })
+    );
+
     await mutate(formData);
+    await router.push("/map");
   };
   return (
     <Modal
@@ -91,7 +95,9 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
               onChange={(e) => setContent(e.target.value)}
             />
             <br />
-            <button type="submit">등록하기</button>
+            <button type="submit">
+              {isLoading ? "등록 중..." : "등록하기"}
+            </button>
           </label>
         </form>
       </section>
