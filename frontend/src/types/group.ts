@@ -1,4 +1,5 @@
 export type Group = {
+  id: number;
   name: string;
   image: File;
   description: string;
@@ -27,5 +28,4 @@ export type GroupCodeResult = {
   result: null;
   resultCode: string;
   resultMsg: string;
-}
-
+};
