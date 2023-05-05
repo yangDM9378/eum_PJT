@@ -52,9 +52,8 @@ const MessageModal = ({
   const router = useRouter();
   const moveEvent = async () => {
     // redux event 폴더 생성하고 detailpin에서 온 데이터 image type
-
     // 타입으로 `/eventcamera/${type}/`이동
-    await router.push("/eventcamera");
+    // await router.push("/eventcamera");
   };
 
   return (
