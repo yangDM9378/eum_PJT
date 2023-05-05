@@ -11,13 +11,12 @@ export type PinData = {
 };
 
 export type Pindetail = {
-  pinId: Number;
-  title: String;
-  content: String;
-  image: String;
-  createdDate: Date;
-  userName: String;
-  type: String;
+  title: string;
+  content: string;
+  image: string;
+  createdDate: string;
+  userName: string;
+  type: string;
 };
 
 export type PindetailResult = {

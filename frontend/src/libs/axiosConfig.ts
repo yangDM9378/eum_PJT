@@ -1,8 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import Cookies from "js-cookie";
-import { config } from "process";
 
-const BASE_URL = "http://localhost:8080/";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL_DEFAULT;
 axios.defaults.baseURL = BASE_URL;
 
 const createAxiosInstance = (contentType: string): AxiosInstance => {

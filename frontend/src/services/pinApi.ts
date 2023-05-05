@@ -1,5 +1,6 @@
 import { jsonAuthApi, multipartAuthApi } from "@/libs/axiosConfig";
 import { PindetailResult } from "@/types/pin";
+import axios from "axios";
 
 // 핀만들기 API
 const createPin = async (formData: FormData) => {
