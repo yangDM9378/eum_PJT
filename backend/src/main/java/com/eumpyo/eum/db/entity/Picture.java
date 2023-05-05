@@ -1,5 +1,6 @@
 package com.eumpyo.eum.db.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,5 +31,20 @@ public class Picture {
 
     @ManyToOne(targetEntity = Pin.class, fetch = FetchType.LAZY)
     @JoinColumn(name="pin_id")
-    Group pinId;
+    Pin pinId;
+
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    User userId;
+
+    @Builder
+    public Picture(Pin pin, Group group, String image, User user){
+        this.pinId = pin;
+        this.groupId = group;
+        this.userId = user;
+    }
+
+    public void addImage(String image) {
+        this.image = image;
+    }
 }
