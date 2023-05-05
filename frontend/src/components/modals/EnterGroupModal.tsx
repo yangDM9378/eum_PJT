@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { enterGroup } from "@/services/groupApi";
@@ -10,6 +10,7 @@ type ModalProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
 interface Result {
   result: null;
   resultCode: string;
@@ -39,20 +40,15 @@ const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
   const [groupCode, setgroupCode] = useState<string>("");
 
   // 코드 응답
-  const [response, setResponse] = useState<Result>({
-    result: null,
-    resultCode: '',
-    resultMsg: "",
-  });
-
+  const [response, setResponse] = useState<Result>();
 
   // API 응답 데이터를 상태로 저장
   const handleSuccess = (data: Result) => {
-    setResponse(data); 
+    setResponse(data);
   };
 
   //useMutation 타입 순서대로 응답 타입, 오류 타입, 보내는 값 타입
-  const enterGroupMutation = useMutation<Result, unknown, string>(enterGroup, {
+  const enterGroupMutation = useMutation(enterGroup, {
     onSuccess: (data) => {
       handleSuccess(data);
     },
@@ -66,14 +62,14 @@ const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
   // 코드를 입력해서 setgroupCode에 저장하는
   const onchange = (event: React.FormEvent<HTMLInputElement>) => {
     setgroupCode(event.currentTarget.value);
-    console.log(groupCode, "🎈🎈");
   };
 
-
-  // 응답 코드가 Created이면 모달 닫기
-  if (response.resultCode === 'Created') {
-    setIsOpen(false);
-  }
+  // 그룹코드가 맞을때 확인
+  useEffect(() => {
+    if (response?.resultCode === "Created") {
+      setIsOpen(false);
+    }
+  }, [response]);
 
   return (
     <Modal

@@ -6,6 +6,21 @@ export type Pin = {
 
 export type PinData = {
   result: [];
-  resultCode: number;
+  resultCode: string;
+  resultMsg: string;
+};
+
+export type Pindetail = {
+  title: string;
+  content: string;
+  image: string;
+  createdDate: string;
+  userName: string;
+  type: string;
+};
+
+export type PindetailResult = {
+  result: Pindetail;
+  resultCode: string;
   resultMsg: string;
 };
