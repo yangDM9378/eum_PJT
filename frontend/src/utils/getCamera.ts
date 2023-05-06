@@ -54,6 +54,11 @@ const captureImage = async (videoRef: React.RefObject<HTMLVideoElement>) => {
 
     const dataURL = canvas.toDataURL("image/png");
     return dataURL;
+    // return new Promise<Blob>((resolve) => {
+    //   canvas.toBlob((blob) => {
+    //     resolve(blob!);
+    //   }, "image/png");
+    // });
   } else {
     throw new Error("Video element is not available.");
   }
