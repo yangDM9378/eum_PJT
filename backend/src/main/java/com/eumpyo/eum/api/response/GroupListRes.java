@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 
 @Getter
 public class GroupListRes {
+    // 그룹 ID
+    Long groupId;
+
     // 이름
     String name;
-
-    // 생성일
-    LocalDateTime createdDate;
 
     // 설명
     String description;
@@ -20,9 +20,9 @@ public class GroupListRes {
     String image;
 
     @Builder
-    public GroupListRes(String name, LocalDateTime createdDate, String description, String image) {
+    public GroupListRes(Long groupId, String name, String description, String image) {
+        this.groupId = groupId;
         this.name = name;
-        this.createdDate = createdDate;
         this.description = description;
         this.image = image;
     }
