@@ -6,11 +6,12 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import { agingselecturl } from "@/redux/addevent/addEventSlice";
+import agingApi from "../../../services/agingApi";
 
 const Aging = () => {
   const [originImage, setOriginImage] = useState<string>("");
   const [oldImage, setOldImage] = useState<string>("");
-  const [kidImage, setkidImage] = useState<string>("");
+  const [kidImage, setKidImage] = useState<string>("");
   const [selectedimage, setSelectedImage] = useState<string>("");
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -25,45 +26,9 @@ const Aging = () => {
 
   const startAging = async () => {
     setSelectedImage(originImageUrl);
-    const oldFormData = new FormData();
-    const kidFormData = new FormData();
-    // blob 파일 형태로 데이터 변환해서 form 만들기
-    const blob = await (await fetch(originImage)).blob();
-    oldFormData.append("image", blob, "oldimage.png");
-    oldFormData.append("action_type", "TO_OLD");
-    kidFormData.append("image", blob, "kidimage.png");
-    kidFormData.append("action_type", "TO_KID");
-
-    // 두개의 form을 한번에 axios 요청하기 blob -> base64
-    axios
-      .all([
-        axios.post(
-          "https://www.ailabapi.com/api/portrait/effects/face-attribute-editing",
-          oldFormData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              "ailabapi-api-key": process.env.NEXT_PUBLIC_AILAB_API_KEY,
-            },
-          }
-        ),
-        axios.post(
-          "https://www.ailabapi.com/api/portrait/effects/face-attribute-editing",
-          kidFormData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              "ailabapi-api-key": process.env.NEXT_PUBLIC_AILAB_API_KEY,
-            },
-          }
-        ),
-      ])
-      .then(
-        axios.spread((oldResponse, kidResponse) => {
-          setOldImage(oldResponse.data.result.image);
-          setkidImage(kidResponse.data.result.image);
-        })
-      );
+    const { oldImage, kidImage } = await agingApi(originImage);
+    setOldImage(oldImage);
+    setKidImage(kidImage);
   };
 
   // 에이징된 이미지를 선택하기

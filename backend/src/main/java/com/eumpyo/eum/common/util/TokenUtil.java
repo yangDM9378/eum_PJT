@@ -1,6 +1,6 @@
 package com.eumpyo.eum.common.util;
 
-import com.eumpyo.eum.api.response.UserResponse;
+import com.eumpyo.eum.db.entity.User;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +18,8 @@ import java.util.*;
 @Service
 @Slf4j
 public class TokenUtil {
-    public final static long TOKEN_VALIDATION_SECOND = 1000L * 60 * 300;
+    @Value("${accessToken.TOKEN_VALIDATION_SECOND}")
+    private int TOKEN_VALIDATION_SECOND;
     public final static long REFRESH_TOKEN_VALIDATION_SECOND = 1000L * 60 * 24 * 2;
 
     final static public String ACCESS_TOKEN_NAME = "access";
@@ -28,7 +29,7 @@ public class TokenUtil {
     @Value("${spring.jwt.refreshSecret}")
     private String REFRESH_TOKEN_SECRET_KEY;
 
-    public String generateJwtToken(UserResponse user, String type) {
+    public String generateJwtToken(User user, String type) {
         // 사용자 시퀀스를 기준으로 JWT 토큰을 발급하여 반환해줍니다.
         JwtBuilder builder = Jwts.builder()
                 .setHeader(createHeader())                              // Header 구성
@@ -53,15 +54,17 @@ public class TokenUtil {
         return header;
     }
 
-    private Map<String, Object> createClaims(UserResponse user) {
+    private Map<String, Object> createClaims(User user) {
         // 공개 클레임에 사용자의 이름과 이메일을 설정하여 정보를 조회할 수 있다.
         Map<String, Object> claims = new HashMap<>();
-        log.info("userId :" + user.getEmail());
+        log.info("userId :" + user.getUserId());
+        log.info("userEmail :" + user.getEmail());
         log.info("userName :" + user.getName());
         log.info("userBirthYear :" + user.getBirthYear());
         log.info("userGender :" + user.getGender());
 
-        claims.put("userId", user.getEmail());
+        claims.put("userId", user.getUserId());
+        claims.put("userEmail", user.getEmail());
         claims.put("userName", user.getName());
         claims.put("userBirthYear", user.getBirthYear());
         claims.put("userGender", user.getGender());
@@ -91,7 +94,7 @@ public class TokenUtil {
      */
     private Date createExpiredDate(String type) {
         if (type.equals(ACCESS_TOKEN_NAME)) {
-            return new Date(System.currentTimeMillis() + TOKEN_VALIDATION_SECOND);
+            return new Date(System.currentTimeMillis() + TOKEN_VALIDATION_SECOND * 1000L);
         } else { // // REFRESH_TOKEN_NAME
             return new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDATION_SECOND);
         }
@@ -146,16 +149,17 @@ public class TokenUtil {
                 .parseClaimsJws(token)
                 .getBody();
 
-        UserResponse userResponse = UserResponse
+        User user = User
                 .builder()
+                .userId(((Integer) claims.get("userId")).longValue())
                 .name((String) claims.get("userName"))
                 .birthYear((Integer) claims.get("userBirthYear"))
-                .email((String) claims.get("userId"))
+                .email((String) claims.get("userEmail"))
                 .gender((Integer) claims.get("userGender"))
                 .build();
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-        return new UsernamePasswordAuthenticationToken(userResponse, token, authorities);
+        return new UsernamePasswordAuthenticationToken(user, token, authorities);
     }
 }

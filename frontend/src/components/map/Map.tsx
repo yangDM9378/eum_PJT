@@ -1,11 +1,17 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
-import { GoogleMap, MarkerF, MarkerClustererF } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  MarkerF,
+  MarkerClustererF,
+  Autocomplete,
+} from "@react-google-maps/api";
 import EventOptionModal from "../modals/EventOptionModal";
 import MessageModal from "../modals/MessageModal";
 import { assign } from "@/redux/map/mapSlice";
 import { useAppDispatch } from "@/redux/hooks";
+import { Pin } from "@/types/pin";
 
 // 지도 옵션입니다.
 const GoogleMapOptions: google.maps.MapOptions = {
@@ -25,16 +31,23 @@ const GoogleMapOptions: google.maps.MapOptions = {
   ],
 };
 
-function Map() {
+interface Props {
+  markerList: Array<Pin> | undefined;
+}
+
+function Map({ markerList }: Props) {
   const [curCenter, setCurCenter] = useState({
     lat: 35.205331,
     lng: 126.811123,
   });
-
-  const mapCenter = useMemo(
-    () => ({ lat: 35.221305123331, lng: 126.811123 }),
-    []
-  );
+  const [mapCenter, setMapCenter] = useState({
+    lat: 35.221305123331,
+    lng: 126.811123,
+  });
+  // const mapCenter = useMemo(
+  //   () => ({ lat: 35.221305123331, lng: 126.811123 }),
+  //   []
+  // );
   const [mapref, setMapRef] = useState<google.maps.Map | null>(null);
   const [changeCenter, setChangeCenter] = useState({
     lat: 35.205331,
@@ -46,6 +59,25 @@ function Map() {
   const [messageId, setMessageId] = useState(-1);
 
   const dispatch = useAppDispatch();
+
+  // 검색기능입니다.
+  const [changePlaces, setChangePlaces] =
+    useState<google.maps.places.Autocomplete | null>(null);
+
+  const onPlaceChanged = () => {
+    if (changePlaces !== null) {
+      const place = changePlaces.getPlace();
+      if (place.geometry?.location?.lat()) {
+        const searchLat = place.geometry.location.lat();
+        const searchLng = place.geometry.location.lng();
+        console.log(searchLat, searchLng);
+        setMapCenter({ lat: searchLat, lng: searchLng });
+      }
+    }
+  };
+  const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
+    setChangePlaces(autocomplete);
+  };
 
   // 함수입니다.
   //지도가 로드되면 매핑합니다.
@@ -65,11 +97,8 @@ function Map() {
   };
 
   // 메시지 마커 클릭 이벤트입니다.
-  const clickMarker = (marker: {
-    id: number;
-    position: { lat: number; lng: number };
-  }) => {
-    setMessageId(marker.id);
+  const clickMarker = (pinId: number) => {
+    setMessageId(pinId);
     setMessageOpen(true);
   };
 
@@ -113,6 +142,30 @@ function Map() {
         options={GoogleMapOptions}
         onCenterChanged={handleCenterChanged}
       >
+        <Autocomplete onPlaceChanged={onPlaceChanged} onLoad={onLoad}>
+          <input
+            type="text"
+            // onClick={(e) => {
+            //   e.currentTarget.value = "";
+            // }}
+            style={{
+              boxSizing: `border-box`,
+              border: `1px solid transparent`,
+              width: `240px`,
+              height: `32px`,
+              padding: `0 12px`,
+              borderRadius: `3px`,
+              boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+              fontSize: `14px`,
+              outline: `none`,
+              textOverflow: `ellipses`,
+              position: "absolute",
+              left: "50%",
+              marginLeft: "-120px",
+              top: "2%",
+            }}
+          />
+        </Autocomplete>
         {/* 지도의 센터 좌표 이미지입니다. */}
         <img
           className="absolute top-[50%] left-[50%] w-[10vh]"
@@ -124,14 +177,15 @@ function Map() {
         <MarkerClustererF minimumClusterSize={3}>
           {(clusterer) => (
             <>
-              {markers.map((marker) => (
-                <MarkerF
-                  key={marker.id}
-                  position={marker.position}
-                  clusterer={clusterer}
-                  onClick={() => clickMarker(marker)}
-                />
-              ))}
+              {markerList &&
+                markerList.map((marker) => (
+                  <MarkerF
+                    key={marker.pinId}
+                    position={{ lat: marker.latitude, lng: marker.longitude }}
+                    clusterer={clusterer}
+                    onClick={() => clickMarker(marker.pinId)}
+                  />
+                ))}
             </>
           )}
         </MarkerClustererF>
@@ -159,50 +213,3 @@ function Map() {
 }
 
 export default React.memo(Map);
-
-const markers = [
-  {
-    id: 1,
-    position: { lat: 35.203125331, lng: 126.8421111252 },
-  },
-  {
-    id: 2,
-    position: { lat: 35.220115123313, lng: 126.811114311 },
-  },
-  {
-    id: 3,
-    position: { lat: 35.2252412335, lng: 126.8111235 },
-  },
-  {
-    id: 4,
-    position: { lat: 35.1205436, lng: 126.8111236 },
-  },
-  {
-    id: 5,
-    position: { lat: 35.112320562, lng: 126.8115231 },
-  },
-  {
-    id: 6,
-    position: { lat: 35.25553314, lng: 126.814123212312 },
-  },
-  {
-    id: 7,
-    position: { lat: 35.221205331, lng: 126.814411233 },
-  },
-  {
-    id: 8,
-    position: { lat: 35.205331, lng: 126.8111231 },
-  },
-  {
-    id: 9,
-    position: { lat: 53.876, lng: 9.17 },
-  },
-  {
-    id: 10,
-    position: { lat: 53.345, lng: 9.23 },
-  },
-  {
-    id: 11,
-    position: { lat: 53.276, lng: 9.34 },
-  },
-];

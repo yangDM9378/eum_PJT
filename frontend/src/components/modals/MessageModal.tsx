@@ -1,8 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useRouter } from "next/navigation";
+import { PindetailResult } from "@/types/pin";
+import { getPinDetail } from "@/services/pinApi";
 
 const customStyles = {
   overlay: {
@@ -32,10 +34,27 @@ const MessageModal = ({
   setMessageOpen,
   messageId,
 }: ModalProps) => {
+  const [detailData, setDetailData] = useState<PindetailResult>();
+
+  // messageId로 핀 상세 조회 데이터 가져오기
+  useEffect(() => {
+    // detailpin axios 호출부분
+    if (messageOpen) {
+      const getPinDetailData = async () => {
+        const pinDetailRes = await getPinDetail(messageId);
+        setDetailData(pinDetailRes);
+      };
+      getPinDetailData();
+    }
+  }, [messageId]);
+
   const router = useRouter();
-  const moveEvent = () => {
-    router.push("/eventcamera");
+  const moveEvent = async () => {
+    // redux event 폴더 생성하고 detailpin에서 온 데이터 image type
+    // 타입으로 `/eventcamera/${type}/`이동
+    // await router.push("/eventcamera");
   };
+
   return (
     <Modal
       isOpen={messageOpen}
@@ -45,16 +64,15 @@ const MessageModal = ({
       ariaHideApp={false}
       style={customStyles}
     >
-      <section className="flex flex-col  py-3 px-2 relative text-center">
+      <section className="relative flex flex-col px-2 py-3 text-center">
         <img
           src="/modal/closeBTN.png"
           alt="닫기버튼"
           className="absolute left-[95%] top-[0%]"
           onClick={() => setMessageOpen(false)}
         />
-        {/* <div>좌표 id : {messageId}</div> */}
-        <div className="text-xl py-3">사진찍기 좋은 곳이에요.</div>
-        <div className="text-sm">젊은 시절의 나와 사진 찍어요!</div>
+        <div className="py-3 text-xl">{detailData?.result.title}</div>
+        <div className="text-sm">{detailData?.result.content}</div>
         <img
           src="/images/GroupSample.png"
           alt="예시사진"

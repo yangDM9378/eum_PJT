@@ -5,14 +5,17 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserResponse {
+public class UserRes {
+
+    private Long userId;
     private String name;
     private int birthYear;
     private int gender;
     private String email;
 
     @Builder
-    public UserResponse(String name, int birthYear, int gender, String email) {
+    public UserRes(Long userId, String name, int birthYear, int gender, String email) {
+        this.userId = userId;
         this.name = name;
         this.birthYear = birthYear;
         this.gender = gender;
