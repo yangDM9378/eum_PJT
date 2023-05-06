@@ -7,6 +7,7 @@ const initialState = {
     lng: 0,
   },
   path: "",
+  groupId: 0,
 };
 
 export const coords = createSlice({
@@ -20,8 +21,11 @@ export const coords = createSlice({
     destination: (state, action: PayloadAction<string>) => {
       state.path = action.payload;
     },
+    setGroupId: (state, action: PayloadAction<number>) => {
+      state.groupId = action.payload;
+    },
   },
 });
 
-export const { reset, assign, destination } = coords.actions;
+export const { reset, assign, destination, setGroupId } = coords.actions;
 export default coords.reducer;

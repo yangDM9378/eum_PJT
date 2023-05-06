@@ -1,5 +1,5 @@
 export type Pin = {
-  pin_id: number;
+  pinId: number;
   latitude: number;
   longitude: number;
 };
