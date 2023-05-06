@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import Modal from "react-modal";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { enterGroup } from "@/services/groupApi";
 import axios, { AxiosResponse } from "axios";
 
@@ -36,6 +36,7 @@ const customStyles = {
 };
 
 const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
+  const queryClient = useQueryClient();
   // 그룹코드
   const [groupCode, setgroupCode] = useState<string>("");
 
@@ -55,6 +56,7 @@ const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
   const enterGroupMutation = useMutation(enterGroup, {
     onSuccess: (data) => {
       handleSuccess(data);
+      queryClient.invalidateQueries({ queryKey: ["initial-group"] });
     },
   });
 
