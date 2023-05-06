@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Poppins } from "next/font/google";
 import { getGroupList } from "@/services/groupApi";
+import { useRouter } from "next/navigation";
 
 const poppins = Poppins({
   weight: ["200", "300", "500"],
@@ -12,6 +13,7 @@ const poppins = Poppins({
 });
 
 const GroupList = () => {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const getGroup = async () => {
     const response = await getGroupList();
@@ -24,8 +26,8 @@ const GroupList = () => {
     queryKey: ["initial-group"],
     queryFn: async () => await getGroup(),
   });
-  const goToMap = (groupId: number) => {
-    console.log(groupId);
+  const goToMap = async (groupId: number) => {
+    await router.push(`/map/${groupId}`);
   };
   return (
     <>

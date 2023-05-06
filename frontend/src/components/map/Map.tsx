@@ -11,6 +11,7 @@ import EventOptionModal from "../modals/EventOptionModal";
 import MessageModal from "../modals/MessageModal";
 import { assign } from "@/redux/map/mapSlice";
 import { useAppDispatch } from "@/redux/hooks";
+import { Pin } from "@/types/pin";
 
 // 지도 옵션입니다.
 const GoogleMapOptions: google.maps.MapOptions = {
@@ -30,7 +31,11 @@ const GoogleMapOptions: google.maps.MapOptions = {
   ],
 };
 
-function Map() {
+interface Props {
+  markerList: Array<Pin> | undefined;
+}
+
+function Map({ markerList }: Props) {
   const [curCenter, setCurCenter] = useState({
     lat: 35.205331,
     lng: 126.811123,
@@ -92,11 +97,8 @@ function Map() {
   };
 
   // 메시지 마커 클릭 이벤트입니다.
-  const clickMarker = (marker: {
-    id: number;
-    position: { lat: number; lng: number };
-  }) => {
-    setMessageId(marker.id);
+  const clickMarker = (pinId: number) => {
+    setMessageId(pinId);
     setMessageOpen(true);
   };
 
@@ -175,14 +177,15 @@ function Map() {
         <MarkerClustererF minimumClusterSize={3}>
           {(clusterer) => (
             <>
-              {markers.map((marker) => (
-                <MarkerF
-                  key={marker.id}
-                  position={marker.position}
-                  clusterer={clusterer}
-                  onClick={() => clickMarker(marker)}
-                />
-              ))}
+              {markerList &&
+                markerList.map((marker) => (
+                  <MarkerF
+                    key={marker.pinId}
+                    position={{ lat: marker.latitude, lng: marker.longitude }}
+                    clusterer={clusterer}
+                    onClick={() => clickMarker(marker.pinId)}
+                  />
+                ))}
             </>
           )}
         </MarkerClustererF>
@@ -210,50 +213,3 @@ function Map() {
 }
 
 export default React.memo(Map);
-
-const markers = [
-  {
-    id: 1,
-    position: { lat: 35.203125331, lng: 126.8421111252 },
-  },
-  {
-    id: 2,
-    position: { lat: 35.220115123313, lng: 126.811114311 },
-  },
-  {
-    id: 3,
-    position: { lat: 35.2252412335, lng: 126.8111235 },
-  },
-  {
-    id: 4,
-    position: { lat: 35.1205436, lng: 126.8111236 },
-  },
-  {
-    id: 5,
-    position: { lat: 35.112320562, lng: 126.8115231 },
-  },
-  {
-    id: 6,
-    position: { lat: 35.25553314, lng: 126.814123212312 },
-  },
-  {
-    id: 7,
-    position: { lat: 35.221205331, lng: 126.814411233 },
-  },
-  {
-    id: 8,
-    position: { lat: 35.205331, lng: 126.8111231 },
-  },
-  {
-    id: 9,
-    position: { lat: 53.876, lng: 9.17 },
-  },
-  {
-    id: 10,
-    position: { lat: 53.345, lng: 9.23 },
-  },
-  {
-    id: 11,
-    position: { lat: 53.276, lng: 9.34 },
-  },
-];
