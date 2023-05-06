@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Poppins } from "next/font/google";
@@ -12,14 +11,6 @@ const poppins = Poppins({
   preload: false,
 });
 
-// 타입
-type Group = {
-  id: number;
-  name: string;
-  description: string;
-  image: File;
-};
-
 const GroupList = () => {
   const queryClient = useQueryClient();
   const getGroup = async () => {
@@ -27,17 +18,21 @@ const GroupList = () => {
     return response;
   };
 
+  queryClient.invalidateQueries({ queryKey: ["initial-group"] });
+
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["initial-group"],
     queryFn: async () => await getGroup(),
   });
-  queryClient.invalidateQueries({ queryKey: ["initial-group"] });
+  const goToMap = (groupId: number) => {
+    console.log(groupId);
+  };
   return (
     <>
       <ul className="pt-[2vh] ">
         {data &&
           data.map((group, index) => (
-            <li key={index}>
+            <li key={index} onClick={() => goToMap(group.groupId)}>
               <div className="grid grid-cols-10 pl-[3vw] place-content-around py-3">
                 <div className="col-span-8 font-brand-poppins">
                   <p className="font-brand-poppins text-[1rem]">{group.name}</p>
@@ -48,7 +43,7 @@ const GroupList = () => {
                 <div className="col-span-2 mr-[2vw]">
                   <Image
                     className="rounded-sm"
-                    src={`/images/${group.image}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/group/image/${group.image}`}
                     alt={group.name}
                     width={400}
                     height={400}
