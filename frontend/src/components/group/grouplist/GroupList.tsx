@@ -20,8 +20,6 @@ const GroupList = () => {
     return response;
   };
 
-  queryClient.invalidateQueries({ queryKey: ["initial-group"] });
-
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["initial-group"],
     queryFn: async () => await getGroup(),
