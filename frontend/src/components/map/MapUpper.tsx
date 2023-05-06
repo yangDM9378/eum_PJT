@@ -25,8 +25,6 @@ const MapUpper = ({ groupId }: Props) => {
     return pinList;
   };
   const queryClient = useQueryClient();
-  queryClient.invalidateQueries({ queryKey: ["initial-map"] });
-
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["initial-map"],
     queryFn: async () => await getGroupPin(),
