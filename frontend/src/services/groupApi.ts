@@ -5,7 +5,7 @@ interface Result {
   resultCode: number;
   resultMsg: string;
 }
-import { Group, GroupCodeResult } from "@/types/group";
+import { Group, GroupCodeResult, GroupDetail } from "@/types/group";
 
 // 그룹 생성하기
 const createGroup = async (data: FormData) => {
@@ -26,10 +26,9 @@ const enterGroup = async (groupCode: string): Promise<GroupCodeResult> => {
 };
 
 // 그룹 상세사항
-const detailGroup = async (groupId: number) => {
-  const {
-    data: { result },
-  } = await jsonAuthApi.get(`/groups/${groupId}`);
-  return result;
+const detailGroup = async (groupId: number): Promise<GroupDetail> => {
+  const response = await jsonAuthApi.get(`/groups/${groupId}`);
+  const detailData: GroupDetail = response.data.result;
+  return detailData;
 };
 export { createGroup, getGroupList, enterGroup, detailGroup };
