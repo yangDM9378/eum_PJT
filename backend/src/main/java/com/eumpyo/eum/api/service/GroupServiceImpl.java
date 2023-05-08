@@ -3,6 +3,7 @@ package com.eumpyo.eum.api.service;
 import com.eumpyo.eum.api.request.GroupAddReq;
 import com.eumpyo.eum.api.response.GroupDetailsRes;
 import com.eumpyo.eum.api.response.GroupListRes;
+import com.eumpyo.eum.common.util.S3Uploader;
 import com.eumpyo.eum.db.entity.Group;
 import com.eumpyo.eum.db.entity.User;
 import com.eumpyo.eum.db.entity.UserGroup;
@@ -10,9 +11,12 @@ import com.eumpyo.eum.db.repository.GroupRepository;
 import com.eumpyo.eum.db.repository.UserGroupRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,12 +25,20 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
+
     private final GroupRepository groupRepository;
+
     private final UserGroupRepository userGroupRepository;
+
+    private final S3Uploader s3Uploader;
+
+
+    @Value("${cloud.aws.directory}")
+    String rootPath;
 
     @Override
     @Transactional
-    public void addGroup(User user, GroupAddReq groupAddReq) {
+    public void addGroup(User user, GroupAddReq groupAddReq, MultipartFile image) {
         String groupCode = UUID.randomUUID().toString().replaceAll("-", "");
 
         Group group = Group.builder()
@@ -36,9 +48,25 @@ public class GroupServiceImpl implements GroupService {
                 .groupCode(groupCode)
                 .build();
 
+        // 파일 S3에 저장
+        if (image != null) {
+            //make upload folder
+            String uploadPath = rootPath + "/" + "group" + "/" + "image" + "/";
+
+            String fileName = image.getOriginalFilename();
+
+            UUID uuid = UUID.randomUUID();
+            String uploadFileName = uuid.toString() + "_" + fileName;
+
+            try {
+                log.debug(s3Uploader.upload(image, uploadPath + uploadFileName));
+                group.addImage(uploadPath + uploadFileName);
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+
         group = groupRepository.save(group);
-
-
 
         UserGroup userGroup = UserGroup.builder()
                 .user(user)
@@ -96,8 +124,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public void removeGroup(Long groupId) {
-        groupRepository.deleteById(groupId);
         userGroupRepository.deleteByGroup_GroupId(groupId);
+        groupRepository.deleteById(groupId);
     }
 
 }

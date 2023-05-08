@@ -46,4 +46,8 @@ public class Group {
         this.image = image;
         this.groupCode = groupCode;
     }
+
+    public void addImage(String image) {
+        this.image = image;
+    }
 }

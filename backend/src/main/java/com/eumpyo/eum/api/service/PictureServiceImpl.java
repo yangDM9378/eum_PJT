@@ -78,7 +78,7 @@ public class PictureServiceImpl implements PictureService {
         // 파일 S3에 저장
         if (image != null) {
             //make upload folder
-            String uploadPath = rootPath + "/" + "group" + "/" + "image" + "/";
+            String uploadPath = rootPath + "/" + "picture" + "/" + "image" + "/";
 
             String fileName = image.getOriginalFilename();
 
@@ -87,7 +87,7 @@ public class PictureServiceImpl implements PictureService {
 
             try {
                 log.debug(s3Uploader.upload(image, uploadPath + uploadFileName));
-                picture.addImage(uploadFileName);
+                picture.addImage(uploadPath + uploadFileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
             }

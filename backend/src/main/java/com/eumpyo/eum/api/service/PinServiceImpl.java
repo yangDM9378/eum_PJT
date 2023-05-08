@@ -8,10 +8,10 @@ import com.eumpyo.eum.common.util.S3Uploader;
 import com.eumpyo.eum.db.entity.Group;
 import com.eumpyo.eum.db.entity.Pin;
 import com.eumpyo.eum.db.entity.User;
-import com.eumpyo.eum.db.entity.UserRole;
 import com.eumpyo.eum.db.repository.GroupRepository;
 import com.eumpyo.eum.db.repository.PinRepository;
-import com.eumpyo.eum.db.repository.UserGroupRepository;
+import com.eumpyo.eum.db.repository.UserRepository;
+import com.eumpyo.eum.db.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,8 +29,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class PinServiceImpl implements PinService {
+    private final UserRepository userRepository;
     private final GroupRepository groupRepository;
-    private final UserGroupRepository userGroupRepository;
+    private final UserRoleRepository userRoleRepository;
     private final PinRepository pinRepository;
     private final S3Uploader s3Uploader;
 
@@ -59,7 +60,7 @@ public class PinServiceImpl implements PinService {
         // 파일 S3에 저장
         if (image != null) {
             //make upload folder
-            String uploadPath = rootPath + "/" + "group" + "/" + "image" + "/";
+            String uploadPath = rootPath + "/" + "pin" + "/" + "image" + "/";
             File uploadFilePath = new File(rootPath, uploadPath);
 
             String fileName = image.getOriginalFilename();
@@ -69,7 +70,7 @@ public class PinServiceImpl implements PinService {
 
             try {
                 log.debug(s3Uploader.upload(image, uploadPath + uploadFileName));
-                pin.setImage(uploadFileName);
+                pin.addImage(uploadPath + uploadFileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
             }
@@ -144,9 +145,18 @@ public class PinServiceImpl implements PinService {
                 .orElseThrow(() -> new IllegalStateException("해당하는 핀이 존재하지 않습니다."));
 
         // 유저롤값 읽어오기
+        String userRole = userRoleRepository.getUserRole(user.getUserId(), pin.getUser().getUserId());
+
+        if(userRole == null) {
+            User author = userRepository.findById(pin.getUser().getUserId())
+                    .orElseThrow(() -> new IllegalStateException("해당하는 유저가 존재하지 않습니다."));
+
+            userRole = author.getName();
+        }
 
         PinAlarmRes pinAlarmRes = PinAlarmRes.builder()
                 .title(pin.getTitle())
+                .role(userRole)
                 .build();
 
         return  pinAlarmRes;
