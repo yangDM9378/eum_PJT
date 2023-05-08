@@ -11,6 +11,9 @@ import Image from "next/image";
 import { getpinImages } from "@/services/galleryApi";
 import { Picture } from "@/types/picture";
 import GroupPhotoModal from "./GroupPhotoModal";
+import { pictureid } from "@/redux/doevent/messageSlice";
+
+
 
 const customStyles = {
   overlay: {
@@ -45,7 +48,7 @@ const MessageModal = ({
   const dispatch = useAppDispatch();
 
   // 상세이미지 모달 상태
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isPhotoOpen, setIsPhotoOpen] = useState<boolean>(false);
 
   // messageId로 핀 상세 조회 데이터 가져오기
   useEffect(() => {
@@ -92,12 +95,16 @@ const MessageModal = ({
   const selecteimage = (id: number, image: string) => {
     setSelectedIdx(id);
     setSelectedImage(image);
+
+    // redux에 선택된 이미지 인덱스 넣어주기
+    dispatch(pictureid(selectedIdx));
+
   };
 
   // 메세지 모달 닫고 상세 이미지 모달 열기
   const CloseModal = () => {
     setMessageOpen(false);
-    setIsOpen(true);
+    setIsPhotoOpen(true);
   };
   return (
     <Modal
@@ -135,7 +142,7 @@ const MessageModal = ({
                     alt=""
                     width={60}
                     height={60}
-                    className="my-2"
+                    className={`my-1 ${selectedIdx === image.pictureId ? 'border-4 border-brand-red' : ''}`}
                     onClick={() => selecteimage(image.pictureId, image.image)}
                   />
                 ))
@@ -163,11 +170,7 @@ const MessageModal = ({
           </div>
         </section>
       )}
-      <GroupPhotoModal
-        isOpen={isOpen}
-        selectedIdx={selectedIdx}
-        setIsOpen={setIsOpen}
-      />
+
     </Modal>
   );
 };

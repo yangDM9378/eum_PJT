@@ -7,7 +7,7 @@ import Image from "next/image";
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedIdx: number;
+  pictureId: number;
 };
 
 const customStyles = {
