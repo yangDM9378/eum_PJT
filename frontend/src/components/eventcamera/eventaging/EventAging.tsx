@@ -18,7 +18,7 @@ const EventAging = () => {
   backgroundImage.src = pictureImg;
 
   const decorativeImage = new window.Image();
-  decorativeImage.src = `${process.env.NEXT_PUBLIC_IMAGE_URL}${agingImg}`;
+  decorativeImage.src = `${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${agingImg}`;
 
   return (
     <Stage width={300} height={300}>

@@ -24,8 +24,7 @@ const GroupInfo = ({ groupId }: Props) => {
     try {
       await navigator.clipboard.writeText(text);
       setIsOpen(true);
-    } catch {
-    }
+    } catch {}
   };
   return (
     <section className="h-[25%] flex ">
@@ -33,16 +32,16 @@ const GroupInfo = ({ groupId }: Props) => {
         <div className="flex justify-center items-center w-[90%] h-[80%] m-auto shadow-xl rounded-lg bg-white">
           <div className="w-[30%] h-[80%] flex">
             <img
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/group/image/${data.image}`}
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${data.image}`}
               className="w-[80%] m-auto border rounded-xl"
             />
           </div>
           <div className="w-[70%] h-[80%] flex flex-col justify-center">
             <div className="py-2 text-lg">{data.name}</div>
             <div className="text-xs">{data.description}</div>
-            <div className="flex justify-end  p-2">
+            <div className="flex justify-end p-2">
               <div
-                className=" bg-brand-red text-xs p-2 rounded-md"
+                className="p-2 text-xs rounded-md bg-brand-red"
                 onClick={() => handleCopyClipBoard(data.groupCode)}
               >
                 그룹 코드
