@@ -61,7 +61,7 @@ const GroupPhotoModal = ({ isOpen, setIsOpen }: ModalProps) => {
         </p>
         <div className="pt-[8%]">
           <Image
-            src={originPoseImage}
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${originPoseImage}`}
             alt=""
             width={250}
             height={80}

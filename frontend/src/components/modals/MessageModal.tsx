@@ -124,14 +124,14 @@ const MessageModal = ({
             className="h-[25vh] my-4 rounded-[10px] shadow-xl"
           />
           <div className="flex flex-row justify-center mb-3">
-            <div className="flex flex-col flex-col-reverse pr-7">
+            <div className="flex flex-col-reverse pr-7">
               {selectedImage === null ? (
                 <div>Loading...</div>
               ) : (
                 imagesUrls.map((image) => (
                   <img
                     key={image.pictureId}
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${image.image}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.image}`}
                     alt=""
                     width={60}
                     height={60}
@@ -143,13 +143,13 @@ const MessageModal = ({
             </div>
             {selectedImage !== null && (
               <img
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${selectedImage}`}
+                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${selectedImage}`}
                 alt="선택된 이미지"
                 height={150}
                 width={150}
                 className="rounded-lg"
                 onClick={() => {
-                  CloseModal;
+                  CloseModal();
                 }}
               />
             )}
