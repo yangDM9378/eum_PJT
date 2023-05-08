@@ -7,6 +7,9 @@ import { PindetailResult } from "@/types/pin";
 import { getPinDetail } from "@/services/pinApi";
 import { useAppDispatch } from "@/redux/hooks";
 import { eventimageurl, eventtype } from "@/redux/doevent/eventSlice";
+import Image from "next/image";
+import { getpinImages } from "@/services/galleryApi";
+import { Picture } from "@/types/picture";
 
 const customStyles = {
   overlay: {
@@ -50,6 +53,20 @@ const MessageModal = ({
     }
   }, [messageId]);
 
+  const [imagesUrl, setImagesUrl] = useState<[] | Picture[]>([]);
+
+  // messageId로 핀 이미지들 불러오기
+  const getpinImagesData = async (messageId: number) => {
+    const images = await getpinImages(messageId);
+    setImagesUrl(images);
+    console.log(images[0]);
+    setSelectedImage(images[0].image);
+  };
+
+  useEffect(() => {
+    getpinImagesData(messageId);
+  }, [messageId]);
+
   const router = useRouter();
   const moveEvent = async () => {
     if (detailData) {
@@ -58,6 +75,12 @@ const MessageModal = ({
     }
     await router.push("/eventcamera");
   };
+
+  // 선택된 이미지 인덱스
+  const [selectedidx, setSelectedIdx] = useState<number>(0);
+
+  // 선택된 이미지
+  const [selectedImage, setSelectedImage] = useState<string>("");
 
   return (
     <Modal
@@ -83,13 +106,34 @@ const MessageModal = ({
             alt="이벤트사진"
             className="h-[25vh] my-4 rounded-[10px] shadow-xl"
           />
-          <img
-            src="/images/GroupSample.png"
-            alt="예시사진"
-            className="h-[25vh] mb-4 rounded-[10px] shadow-xl"
-          />
+          <div className="flex flex-row justify-center mb-3">
+            <div className="flex flex-col flex-col-reverse pr-7">
+              {imagesUrl &&
+                imagesUrl.map((image) => (
+                  <img
+                    key={image.pictureId}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${image.image}`}
+                    alt=""
+                    width={60}
+                    height={60}
+                    className="my-2"
+                    onClick={() => setSelectedImage(image.image)}
+                  />
+                ))}
+            </div>
+            {selectedImage && (
+              <img
+                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${selectedImage}`}
+                alt="선택된 이미지"
+                height={150}
+                width={150}
+                className="rounded-lg"
+              />
+            )}
+          </div>
+
           <div
-            className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl "
+            className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl"
             onClick={moveEvent}
           >
             함께 찍기
