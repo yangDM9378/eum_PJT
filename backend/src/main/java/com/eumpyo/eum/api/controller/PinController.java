@@ -1,8 +1,6 @@
 package com.eumpyo.eum.api.controller;
 
-import com.eumpyo.eum.api.request.GroupAddReq;
 import com.eumpyo.eum.api.request.PinAddReq;
-import com.eumpyo.eum.api.response.GroupListRes;
 import com.eumpyo.eum.api.response.PinAlarmRes;
 import com.eumpyo.eum.api.response.PinDetailsRes;
 import com.eumpyo.eum.api.response.PinListRes;
@@ -18,10 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RestController
