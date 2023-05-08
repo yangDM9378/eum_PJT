@@ -1,10 +1,16 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineCamera } from "react-icons/ai";
 import Modal from "react-modal";
 import { createGroup } from "@/services/groupApi";
-import { Group } from "@/types/group";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+interface Result {
+  result: null;
+  resultCode: string;
+  resultMsg: string;
+}
 
 const customStyles = {
   overlay: {
@@ -51,10 +57,34 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
       "groupAddReq",
       new Blob([JSON.stringify(jsonData)], { type: "application/json" })
     );
-    createGroup(formData);
-    setGroupState(initialGroupState);
-    setIsOpen(false);
+    makeGroupMutation.mutate(formData);
   };
+
+  // 응답 코드
+  const [response, setResponse] = useState<Result | null>(null);
+
+  // 응답 성공 or 실패 분기
+  useEffect(() => {
+    if (response?.resultCode === "Created") {
+      setGroupState(initialGroupState);
+      setIsOpen(false);
+    }
+  });
+
+  // 요청 성공시
+  const handleSuccess = (data: Result) => {
+    setResponse(data);
+  };
+
+  const queryClient = useQueryClient();
+
+  // useMutation
+  const makeGroupMutation = useMutation(createGroup, {
+    onSuccess: (data) => {
+      handleSuccess(data);
+      queryClient.invalidateQueries({ queryKey: ["initial-group"] });
+    },
+  });
 
   // 그룹 이름 & 설명 내용 가져오기
   const handleChange = (e: { target: { name: string; value: string } }) => {
