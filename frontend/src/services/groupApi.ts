@@ -7,6 +7,8 @@ interface Result {
 }
 import { Group, GroupCodeResult, GroupDetail } from "@/types/group";
 
+
+
 // 그룹 생성하기
 const createGroup = async (data: FormData) => {
   await multipartAuthApi.post(`/groups`, data);
