@@ -4,6 +4,7 @@ const nextConfig = {
     appDir: true,
   },
   images: {
+    domains: ["eumpyo-eum.s3.us-east-2.amazonaws.com"],
     remotePatterns: [
       {
         protocol: "https",

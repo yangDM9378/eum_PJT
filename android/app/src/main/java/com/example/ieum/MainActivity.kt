@@ -1,5 +1,6 @@
 package com.example.ieum
 
+import Pin
 import android.Manifest
 import android.content.ContentValues
 import android.content.Context
@@ -23,7 +24,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.room.Room
-import com.example.ieum.api.Result
 import com.example.ieum.api.RetrofitImpl
 import com.example.ieum.geofencing.GeofenceHelper
 import com.example.ieum.roomdb.notifiedLocationDB
@@ -51,7 +51,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var NEXT_PUBLIC_OUATH_KAKAO_HOSTNAME="http://i-eum-u.com/api/v1/oauth2/authorize/kakao"
     private var NEXT_PUBLIC_OUATH_KAKAO_REDIRECT_URL="http://i-eum-u.com/api/v1/oauth2/callback/kakao"
-   var target_url="http://i-eum-u.com/"
+//    var target_url="http://10.0.2.2:8080"
+       var target_url="http://i-eum-u.com/"
     private val MY_PERMISSIONS_REQ_ACCESS_FINE_LOCATION = 100
     private val MY_PERMISSIONS_REQ_ACCESS_BACKGROUND_LOCATION = 101
 
@@ -83,13 +84,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap : GoogleMap
 
-    val geofenceList: MutableList<Geofence> by lazy {
-        mutableListOf(
-            geofenceHelper.getGeofence("현대", Pair(37.5085864,127.0601149),100f),
-            geofenceHelper.getGeofence("삼성", Pair(37.5094518,127.063603),100f),
-            geofenceHelper.getGeofence("삼성광주", Pair(35.205234,126.811794),100f)
-        )
-    }
 
     private final val locationCode=2000
     private final val locationCode1 = 2001
@@ -97,7 +91,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(p0: GoogleMap) {
         mMap=p0
         getMyLocation()
-        addGeofence(geofenceList)
     }
     private fun getMyLocation() {
         if (ActivityCompat.checkSelfPermission(
@@ -163,6 +156,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     lateinit var mAdView : AdView
 
+    var accessToken: MutableLiveData<String> = MutableLiveData()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -201,19 +196,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             addJavascriptInterface(WebAppInterface(this@MainActivity),"WebAppInterface")
         }
 
-        val accessToken: MutableLiveData<String> = MutableLiveData()
-        accessToken.observe(this, Observer{
-          token=getCookie(target_url,"accessToken")
-          initList(token)
-            Log.d("token",token.toString()+"!!")
-        })
-//        web.setWebViewClient(object : WebViewClient() {
-//            override fun onPageFinished(view: WebView, url: String) {
-//                super.onPageFinished(view, url);
-////                Log.d("Main",token+"!!")
-//                token=getCookie(target_url,"accessToken")
-//                initList("Bearer "+token)
-//            }
+        accessToken=getCookie(target_url,"accessToken")
+        accessToken.observe(this){
+            initList("Bearer "+it)
+            Log.d("Token","ACCESSTOKEN OBSERVE!!"+it)
+        }
+
+        web.setWebViewClient(object : WebViewClient() {
+            override fun onPageFinished(view: WebView, url: String) {
+                super.onPageFinished(view, url);
+//               Log.d("Main",token+"!!")
+                accessToken=getCookie(target_url,"accessToken")
+                Log.d("OnPageFinished",accessToken.value.toString()+"!!")
+            }
 
 //            override fun onLoadResource(view: WebView?, url: String?) {
 //                super.onLoadResource(view, url)
@@ -226,10 +221,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //
 //                }
 //            }
-//        })
+        })
 
         val db= Room.databaseBuilder(applicationContext, notifiedLocationDB::class.java,"pin").allowMainThreadQueries().build()
-        db.dao().getAll().observe(this, Observer { tmp -> Log.d("OBSERVER",tmp.toString()+"!!") })
+        db.dao().getAll().observe(this ){ tmp ->
+            val StrArr = tmp.map{it.toString()}
+            removeGeofence(StrArr)
+            Log.d("OBSERVER",tmp.toString()+"!!") }
 
         val intent = intent
         val bundle = intent.extras
@@ -248,20 +246,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         web.loadUrl(target_url) // 웹뷰에 표시할 웹사이트 주소, 웹뷰 시작
-        val cookieManager = CookieManager.getInstance().getCookie(target_url)
-        Log.d("MAIN", cookieManager+"!!")
 
         geofencingClient= LocationServices.getGeofencingClient(this)
         geofenceHelper = GeofenceHelper(this)
 
-        Log.d(ContentValues.TAG, geofenceList.toString()+"!!")
-
-
     }
-    fun getCookie(siteName: String, cookieName: String): String {
-        var CookieValue: String = ""
+    fun getCookie(siteName: String, cookieName: String): MutableLiveData<String> {
+        var CookieValue: String=""
+
         val cookieManager = CookieManager.getInstance()
         val cookies = cookieManager.getCookie(siteName)
+        if(cookies==null){
+
+            return MutableLiveData(CookieValue)
+        }
+
+        Log.d("ACCESSTOKEN","cookie : "+cookies+"!!")
         val temp = cookies.split(";".toRegex()).dropLastWhile { it.isEmpty() }
             .toTypedArray()
         for (ar1 in temp) {
@@ -272,28 +272,27 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 break
             }
         }
-        return CookieValue
+        return MutableLiveData(CookieValue)
     }
     private fun initList(token: String){
-        Log.d("MAIN","INIT LIST START!!")
 
-        RetrofitImpl.service.getPinAll(token).enqueue(object : retrofit2.Callback<List<Result.Pin>>{
-            override fun onFailure(call: Call<List<Result.Pin>>, t: Throwable) {
+        RetrofitImpl.service.getPinAll(token).enqueue(object : retrofit2.Callback<Pin>{
+            override fun onFailure(call: Call<Pin>, t: Throwable) {
                 Log.e("Failed",t.toString()+"!!")
-                Log.d("MAIN","INIT LIST END!!")
-
             }
 
             override fun onResponse(
-                call: Call<List<Result.Pin>>,
-                response: Response<List<Result.Pin>>
+                call: Call<Pin>,
+                response: Response<Pin>
             ) {
                 if(response.isSuccessful){
 
-                    val listGeofence = response.body()
+                    val rawlist = response.body()
+                    val listGeofence = rawlist?.result
                     Log.d("Success",listGeofence.toString()+"!!")
                     listGeofence?.forEach{
-                            it->geofenceHelper.getGeofence(it.pin_id.toString(), Pair(it.latitude, it.longitude),it.radius)
+                        val tmp = geofenceHelper.getGeofence(it.pinId.toString(), Pair(it.latitude, it.longitude),1000.0f)
+                        addGeofence(tmp)
                         Log.d("MAIN",it.toString()+"!!")
 
                     }
@@ -306,35 +305,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         })
-        RetrofitImpl.service.getGroupAll(token,1).enqueue(object : retrofit2.Callback<Result.ResponseGroup>{
-
-            override fun onFailure(call: Call<Result.ResponseGroup>, t: Throwable) {
-
-                Log.e("Failed",t.toString()+"!!!!!")
-            }
-
-            override fun onResponse(call: Call<Result.ResponseGroup>, response: Response<Result.ResponseGroup>) {
-                Log.d("Main","response!!"+response)
-                if(response.isSuccessful){
-                    val rawList = response.body()
-                    val js=JSONObject(Gson().toJson(rawList)).getString("result")
-                    val name=JSONObject(js).getString("name")
-
-                    Log.d("Success!!",js+name+"!!")
-                    Log.d("MAIN","INIT LIST END!!")
-
-                }else  {
-                    Log.d("Response errorBody", response.errorBody()?.string()+"!!");
-                }
-            }
-        })
 
     }
 
 
-    private fun addGeofence(geofences : List<Geofence>) {
-        val geofenceRequest = geofences?.let{geofenceHelper.getGeofencingRequest(it)}
-
+    private fun addGeofence(geofence : Geofence) {
+        val geofenceRequest = geofence?.let{geofenceHelper.getGeofencingRequest(it)}
         val pendingIntent = geofenceHelper.geofencePendingIntent
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
             return

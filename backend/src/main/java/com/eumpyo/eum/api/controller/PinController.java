@@ -3,6 +3,8 @@ package com.eumpyo.eum.api.controller;
 import com.eumpyo.eum.api.request.GroupAddReq;
 import com.eumpyo.eum.api.request.PinAddReq;
 import com.eumpyo.eum.api.response.GroupListRes;
+import com.eumpyo.eum.api.response.PinAlarmRes;
+import com.eumpyo.eum.api.response.PinDetailsRes;
 import com.eumpyo.eum.api.response.PinListRes;
 import com.eumpyo.eum.api.service.PinService;
 import com.eumpyo.eum.common.code.SuccessCode;
@@ -70,13 +72,43 @@ public class PinController {
     }
 
     @GetMapping("/user/{userId}")
-    ResponseEntity<ApiResponse> userPinListr(Authentication authentication) {
+    ResponseEntity<ApiResponse> userPinList(Authentication authentication) {
         User user = (User)authentication.getPrincipal();;
 
         List<PinListRes> groupListRes = pinService.findUserPin(user);
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
                 .result(groupListRes)
+                .resultCode(SuccessCode.SELECT.getCode())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.SELECT.getStatus()));
+    }
+
+    @GetMapping("/{pinId}")
+    ResponseEntity<ApiResponse> pinDetails(Authentication authentication, @PathVariable("pinId") Long pinId) {
+        User user = (User)authentication.getPrincipal();;
+
+        PinDetailsRes pinDetailsRes = pinService.findPin(pinId);
+
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .result(pinDetailsRes)
+                .resultCode(SuccessCode.SELECT.getCode())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.SELECT.getStatus()));
+    }
+
+    @GetMapping("alarm/{pinId}")
+    ResponseEntity<ApiResponse> pinAlarmDetails(Authentication authentication, @PathVariable("pinId") Long pinId) {
+        User user = (User)authentication.getPrincipal();;
+
+        PinAlarmRes pinAlarmRes = pinService.findPinAlarm(user, pinId);
+
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .result(pinAlarmRes)
                 .resultCode(SuccessCode.SELECT.getCode())
                 .resultMsg(SuccessCode.SELECT.getMessage())
                 .build();

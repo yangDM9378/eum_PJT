@@ -1,20 +1,21 @@
 export type Group = {
+  groupId: number;
   name: string;
-  image: File;
+  image: string;
   description: string;
 };
 
 export type GroupDetail = {
-  group_id: number;
+  groupId: number;
   name: string;
   created_date: Date;
-  image: File;
+  image: string;
   description: string;
-  code: string;
+  groupCode: string;
 };
 
 export type GroupResult = {
-  group_id: number;
+  groupId: number;
   name: string;
   image: File;
   description: string;
@@ -22,4 +23,9 @@ export type GroupResult = {
 
 export type GroupCode = {
   code: string;
+};
+export type GroupCodeResult = {
+  result: null;
+  resultCode: string;
+  resultMsg: string;
 };

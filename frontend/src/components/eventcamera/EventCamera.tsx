@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { poseimageurl } from "@/redux/doevent/DoEventSlice";
+import { eventimageurl } from "@/redux/doevent/eventSlice";
 import { captureImage, startCamera, stopCamera } from "@/utils/getCamera";
 import { AiOutlineCamera } from "react-icons/ai";
 import { AiOutlineInfoCircle } from "react-icons/ai";
-import InfoModal from '../modals/InfoModal'
+import InfoModal from "../modals/InfoModal";
 
 const EventCamera = () => {
   const dispatch = useAppDispatch();
@@ -17,16 +17,15 @@ const EventCamera = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   //모달관련 상태
-  const [modalOpen,setModalOpen] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   //모달 열기
   const OpenInfoModal = () => {
     setModalOpen(true);
-  }
+  };
 
   //등록한 포즈 사진 가져오기
 
-  
   useEffect(() => {
     // 자동으로 켜져있는 camera 시작
     startCamera(videoRef, setIsCameraReady);
@@ -40,7 +39,7 @@ const EventCamera = () => {
     // 카메라 끄기
     stopCamera(videoRef);
     // 이미지 redux를 통해 aging or pose로 이동시키기
-    dispatch(poseimageurl(dataURL));
+    dispatch(eventimageurl(dataURL));
     router.push(`/eventcamera/${localStorage.getItem("pathOption")}`);
   };
 
@@ -63,9 +62,12 @@ const EventCamera = () => {
       </div>
 
       <div>
-          <AiOutlineInfoCircle onClick={OpenInfoModal} className="h-[10%] w-[10%]"/>
+        <AiOutlineInfoCircle
+          onClick={OpenInfoModal}
+          className="h-[10%] w-[10%]"
+        />
       </div>
-      <InfoModal isOpen={modalOpen} setIsOpen={setModalOpen}/>
+      <InfoModal isOpen={modalOpen} setIsOpen={setModalOpen} />
     </div>
   );
 };

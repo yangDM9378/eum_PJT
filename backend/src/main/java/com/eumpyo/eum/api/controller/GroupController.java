@@ -70,7 +70,7 @@ public class GroupController {
         return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.INSERT.getStatus()));
     }
 
-    @GetMapping("/")
+    @GetMapping()
     ResponseEntity<ApiResponse> groupList(Authentication authentication) {
         User user = (User)authentication.getPrincipal();;
 
