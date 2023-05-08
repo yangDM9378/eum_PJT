@@ -24,7 +24,9 @@ const GroupInfo = ({ groupId }: Props) => {
     try {
       await navigator.clipboard.writeText(text);
       setIsOpen(true);
-    } catch {}
+    } catch {
+      console.log("error");
+    }
   };
   return (
     <section className="h-[25%] flex ">
