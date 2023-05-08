@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class Pin {
     @Id
@@ -65,5 +64,9 @@ public class Pin {
         this.image = image;
         this.user = user;
         this.group = group;
+    }
+
+    public void addImage(String image) {
+        this.image =image;
     }
 }

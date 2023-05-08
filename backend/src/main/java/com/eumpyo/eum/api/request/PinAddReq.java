@@ -8,7 +8,6 @@ import lombok.Setter;
  * 핀 생성
  */
 @Getter
-@Setter
 public class PinAddReq {
     // 제목
     String title;

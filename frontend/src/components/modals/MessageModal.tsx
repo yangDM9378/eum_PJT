@@ -119,7 +119,7 @@ const MessageModal = ({
           <div className="py-3 text-xl">{detailData?.result.title}</div>
           <div className="text-sm">{detailData?.result.content}</div>
           <img
-            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${detailData.result.image}`}
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${detailData.result.image}`}
             alt="이벤트사진"
             className="h-[25vh] my-4 rounded-[10px] shadow-xl"
           />
