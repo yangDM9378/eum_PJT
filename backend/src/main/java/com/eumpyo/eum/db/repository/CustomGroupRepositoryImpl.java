@@ -28,7 +28,7 @@ public class CustomGroupRepositoryImpl implements CustomGroupRepository {
     @Override
     public List<GroupListRes> findGroupListByUser_UserId(Long userId) {
         return queryFactory
-                .select(Projections.constructor(GroupListRes.class, group.name, group.createdDate, group.description, group.image))
+                .select(Projections.constructor(GroupListRes.class, group.groupId, group.name, group.description, group.image))
                 .from(group)
                 .join(userGroup)
                 .on(condition(group.groupId, userGroup.group.groupId::eq))

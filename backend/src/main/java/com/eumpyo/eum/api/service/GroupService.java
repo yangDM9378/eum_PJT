@@ -4,11 +4,12 @@ import com.eumpyo.eum.api.request.GroupAddReq;
 import com.eumpyo.eum.api.response.GroupDetailsRes;
 import com.eumpyo.eum.api.response.GroupListRes;
 import com.eumpyo.eum.db.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface GroupService {
-    void addGroup(User user, GroupAddReq groupAddReq);
+    void addGroup(User user, GroupAddReq groupAddReq, MultipartFile image);
 
     GroupDetailsRes findGroup(Long groupId);
 

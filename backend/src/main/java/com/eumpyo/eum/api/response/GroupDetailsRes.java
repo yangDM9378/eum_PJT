@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 
 @Getter
 public class GroupDetailsRes {
+    // 그룹 ID
+    Long groupId;
+
     // 이름
     String name;
 
@@ -23,7 +26,8 @@ public class GroupDetailsRes {
     String groupCode;
 
     @Builder
-    public GroupDetailsRes(String name, LocalDateTime createdDate, String description, String image, String groupCode) {
+    public GroupDetailsRes(Long groupId, String name, LocalDateTime createdDate, String description, String image, String groupCode) {
+        this.groupId = groupId;
         this.name = name;
         this.createdDate = createdDate;
         this.description = description;
