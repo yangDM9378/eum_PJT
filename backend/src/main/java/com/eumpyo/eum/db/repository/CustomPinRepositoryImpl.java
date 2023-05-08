@@ -1,6 +1,5 @@
 package com.eumpyo.eum.db.repository;
 
-import com.eumpyo.eum.api.response.PinAlarmRes;
 import com.eumpyo.eum.api.response.PinListRes;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -15,7 +14,6 @@ import java.util.function.Function;
 import static com.eumpyo.eum.db.entity.QPin.pin;
 import static com.eumpyo.eum.db.entity.QUser.user;
 import static com.eumpyo.eum.db.entity.QUserGroup.userGroup;
-import static com.eumpyo.eum.db.entity.QUserRole.userRole;
 
 public class CustomPinRepositoryImpl implements CustomPinRepository {
     private JPAQueryFactory queryFactory;
