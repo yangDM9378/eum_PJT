@@ -68,7 +68,7 @@ public class PinServiceImpl implements PinService {
 
             try {
                 log.debug(s3Uploader.upload(image, uploadPath + uploadFileName));
-                pin.setImage(uploadPath + uploadFileName);
+                pin.addImage(uploadPath + uploadFileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
             }
