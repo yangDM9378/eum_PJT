@@ -1,4 +1,4 @@
-package com.example.ieum.roomdb
+package com.ieumpyo.ieum.roomdb
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

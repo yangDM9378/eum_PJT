@@ -1,4 +1,4 @@
-package com.example.ieum.ui.theme
+package com.ieumpyo.ieum.ui.theme
 
 import android.app.Activity
 import android.os.Build

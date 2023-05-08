@@ -1,8 +1,7 @@
-package com.example.ieum.api
+package com.ieumpyo.ieum.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 
 object RetrofitImpl {

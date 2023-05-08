@@ -1,4 +1,4 @@
-package com.example.ieum.roomdb
+package com.ieumpyo.ieum.roomdb
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

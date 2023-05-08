@@ -1,4 +1,4 @@
-package com.example.ieum.ui.theme
+package com.ieumpyo.ieum.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

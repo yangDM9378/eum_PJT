@@ -1,4 +1,4 @@
-package com.example.ieum.geofencing
+package com.ieumpyo.ieum.geofencing
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -15,7 +15,7 @@ import androidx.core.app.NotificationCompat
 
 class NotificationHelper (context: Context): ContextWrapper(context){
     private var notificationManager: NotificationManager? = null
-    private val CHANNEL_ID = "com.example.ieum"
+    private val CHANNEL_ID = "com.ieumpyo.ieumpyo"
     private val CHANNEL_NAME = "메시지 알람"
 
     fun displayNotification(reqId: Int, title: String, body : String, activityName : Class<*>){

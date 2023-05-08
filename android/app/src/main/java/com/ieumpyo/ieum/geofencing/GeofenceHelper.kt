@@ -1,4 +1,4 @@
-package com.example.ieum.geofencing
+package com.ieumpyo.ieum.geofencing
 
 import android.app.PendingIntent
 import android.content.ContentValues

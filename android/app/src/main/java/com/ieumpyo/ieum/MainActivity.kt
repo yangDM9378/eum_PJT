@@ -1,8 +1,7 @@
-package com.example.ieum
+package com.ieumpyo.ieum
 
 import Pin
 import android.Manifest
-import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -10,7 +9,6 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
-import android.util.JsonReader
 import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.CookieSyncManager
@@ -20,35 +18,29 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.room.Room
-import com.example.ieum.api.RetrofitImpl
-import com.example.ieum.geofencing.GeofenceHelper
-import com.example.ieum.roomdb.notifiedLocationDB
-import com.example.ieum.roomdb.notifiedLocationEntity
+import com.ieumpyo.ieum.api.RetrofitImpl
+import com.ieumpyo.ieum.geofencing.GeofenceHelper
+import com.ieumpyo.ieum.roomdb.notifiedLocationDB
+import com.ieumpyo.ieum.roomdb.notifiedLocationEntity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
-import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.gson.Gson
-import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Arrays
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
-    private lateinit var token : String
+
 
     private var NEXT_PUBLIC_OUATH_KAKAO_HOSTNAME="http://i-eum-u.com/api/v1/oauth2/authorize/kakao"
     private var NEXT_PUBLIC_OUATH_KAKAO_REDIRECT_URL="http://i-eum-u.com/api/v1/oauth2/callback/kakao"
@@ -157,7 +149,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     lateinit var mAdView : AdView
 
-    var accessToken: MutableLiveData<String> = MutableLiveData()
+    companion object{
+
+        var accessToken: MutableLiveData<String> = MutableLiveData()
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -212,17 +207,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //                Log.d("OnPageFinished",accessToken.value.toString()+"!!")
             }
 
-//            override fun onLoadResource(view: WebView?, url: String?) {
-//                super.onLoadResource(view, url)
-//                val targetUrl = (NEXT_PUBLIC_OUATH_KAKAO_HOSTNAME  +
-//                        "?redirect_url=" + NEXT_PUBLIC_OUATH_KAKAO_REDIRECT_URL).toRegex()
-//                Log.d("MAIN",targetUrl.toString() + "          "+url!!.toRegex()+"!!")
-//
-//                Log.d("MAIN",targetUrl.matches(url).toString()+"!!")
-//                if(targetUrl.matches(url)){
-//
-//                }
-//            }
         })
         val db= Room.databaseBuilder(applicationContext, notifiedLocationDB::class.java,"pin").allowMainThreadQueries().build()
         db.dao().getAll().observe(this ){ tmp ->

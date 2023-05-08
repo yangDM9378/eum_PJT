@@ -1,10 +1,10 @@
-package com.example.ieum.api
+package com.ieumpyo.ieum.api
 
 import Pin
+import PinDetail
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.Path
 
 interface RetrofitService {
@@ -12,6 +12,9 @@ interface RetrofitService {
 
     @GET("pins/")
     fun getPinAll(@Header("Authorization")token:String): Call<Pin>
+
+    @GET("pins/alarm/{pin_id}")
+    fun getPinDetail(@Header("Authorization")token: String, @Path("pin_id")pin_id:Int): Call<PinDetail>
 
 //
 //    @GET("groups/{group_id}")

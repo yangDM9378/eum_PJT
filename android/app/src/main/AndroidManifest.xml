@@ -68,7 +68,7 @@
              "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
         -->
         <activity
-            android:name=".MainActivity"
+            android:name="com.ieumpyo.ieum.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -80,7 +80,7 @@
         </activity>
 
         <receiver
-            android:name=".geofencing.GeofenceBroadcastReceiver"
+            android:name="com.ieumpyo.ieum.geofencing.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
     </application>

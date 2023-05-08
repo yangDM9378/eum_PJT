@@ -1,4 +1,4 @@
-package com.example.ieum
+package com.ieumpyo.ieum
 
 import org.junit.Test
 
