@@ -9,8 +9,9 @@ const EventAging = () => {
   const [decorativeImageProps, setDecorativeImageProps] = useState({
     x: 10,
     y: 0,
-    width: 300,
-    height: 300,
+    width: 150,
+    height: 150,
+    rotation: 0,
   });
   const [selected, setSelected] = useState(false);
   const [decorativeImage, setDecorativeImage] =
@@ -23,7 +24,7 @@ const EventAging = () => {
   useEffect(() => {
     if (isLoading) {
       const img = new window.Image();
-      img.src = `${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${agingImg}`;
+      img.src = `${process.env.NEXT_PUBLIC_IMAGE_URL}${agingImg}`;
       img.onload = () => {
         setIsLoading(false);
         setDecorativeImage(img);
@@ -46,58 +47,49 @@ const EventAging = () => {
         {backgroundImage && (
           <Image image={backgroundImage} width={300} height={300} />
         )}
-
-        {/* 꾸밀 이미지 */}
-        <Group
-          draggable
-          onClick={() => {
-            setSelected(true);
-          }}
-          onDragEnd={() => {
-            setSelected(false);
-          }}
-        >
-          {decorativeImage && (
-            <Image
-              image={decorativeImage}
-              {...decorativeImageProps}
-              draggable={false}
-            />
-          )}
-          <Transformer
-            keepRatio={true}
-            anchorSize={10}
-            borderEnabled={true} // 변경된 부분
-            rotateEnabled={false}
-            ref={(node) => {
-              if (node) {
-                const layer = node.getLayer();
-                if (layer) {
-                  layer.batchDraw();
-                }
-              }
-            }}
+      </Layer>
+      {/* 꾸밀 이미지 */}
+      <Layer draggable>
+        {decorativeImage && (
+          <Image
+            image={decorativeImage}
             {...decorativeImageProps}
-            onTransform={(event) => {
-              const node = event.target;
-              const scaleX = node.scaleX();
-              const scaleY = node.scaleY();
-              const width = Math.max(5, node.width() * scaleX);
-              const height = Math.max(5, node.height() * scaleY);
-
-              // rotation 속성을 추가하여 새로운 객체를 생성합니다.
-              const newProps = {
-                x: node.x(),
-                y: node.y(),
-                width: width,
-                height: height,
-                rotation: node.rotation(),
-              };
-
-              setDecorativeImageProps(newProps);
-            }}
+            draggable={false}
           />
-        </Group>
+        )}
+        <Transformer
+          keepRatio={true}
+          anchorSize={10}
+          borderEnabled={true}
+          rotateEnabled={false}
+          ref={(node) => {
+            if (node) {
+              const layer = node.getLayer();
+              if (layer) {
+                layer.batchDraw();
+              }
+            }
+          }}
+          {...decorativeImageProps}
+          onTransform={(event) => {
+            const node = event.target;
+            const scaleX = node.scaleX();
+            const scaleY = node.scaleY();
+            const width = Math.max(5, node.width() * scaleX);
+            const height = Math.max(5, node.height() * scaleY);
+
+            // rotation 속성을 추가하여 새로운 객체를 생성합니다.
+            const newProps = {
+              x: node.x(),
+              y: node.y(),
+              width: width,
+              height: height,
+              rotation: node.rotation(),
+            };
+
+            setDecorativeImageProps(newProps);
+          }}
+        />
       </Layer>
     </Stage>
   );

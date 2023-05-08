@@ -43,7 +43,7 @@ const GroupList = () => {
                 <div className="col-span-2 mr-[2vw]">
                   <Image
                     className="rounded-sm"
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${group.image}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${group.image}`}
                     alt={group.name}
                     width={400}
                     height={400}
