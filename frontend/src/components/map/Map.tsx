@@ -197,6 +197,13 @@ function Map({ markerList }: Props) {
           alt="center"
           onClick={addLetter}
         />
+        <img
+          src="/map/curPosition.png"
+          alt="curPosition"
+          className="absolute top-[90%]  left-[10%] w-[5vh]"
+          style={{ transform: "translate(-50%, -50%)" }}
+          onClick={getUserGps}
+        />
       </GoogleMap>
       <EventOptionModal
         isOpen={isOpen}
