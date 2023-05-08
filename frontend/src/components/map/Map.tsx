@@ -70,7 +70,6 @@ function Map({ markerList }: Props) {
       if (place.geometry?.location?.lat()) {
         const searchLat = place.geometry.location.lat();
         const searchLng = place.geometry.location.lng();
-        console.log(searchLat, searchLng);
         setMapCenter({ lat: searchLat, lng: searchLng });
       }
     }

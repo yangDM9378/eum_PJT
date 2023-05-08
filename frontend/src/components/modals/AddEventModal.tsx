@@ -2,7 +2,7 @@ import Modal from "react-modal";
 import { useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPin } from "@/services/pinApi";
 import { useRouter } from "next/navigation";
 
@@ -32,10 +32,15 @@ type ModalProps = {
 const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const eventtype = useAppSelector((state) => state.coordsReducer.path);
+  const eventType = useAppSelector((state) => state.coordsReducer.path);
   const coords = useAppSelector((state) => state.coordsReducer.coords);
-
-  const { mutate, isLoading } = useMutation(createPin);
+  const groupId = useAppSelector((state) => state.coordsReducer.groupId);
+  const queryClient = useQueryClient();
+  const { mutate, isLoading } = useMutation(createPin, {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["initial-map"] });
+    },
+  });
 
   const router = useRouter();
 
@@ -48,15 +53,15 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
       content: content,
       latitude: coords.lat,
       longitude: coords.lng,
-      type: eventtype,
-      groupId: 2,
+      type: eventType,
+      groupId: groupId,
     };
 
-    if (eventtype === "aging") {
+    if (eventType === "aging") {
       const blobRes = await axios.get(image, { responseType: "blob" });
       formData.append("image", blobRes.data, "image.png");
     }
-    if (eventtype === "pose") {
+    if (eventType === "pose") {
       const blobRes = await (await fetch(image)).blob();
       formData.append("image", blobRes, "image.png");
     }
@@ -67,7 +72,7 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
     );
 
     await mutate(formData);
-    await router.push("/map");
+    await router.push(`/map/${groupId}`);
   };
   return (
     <Modal

@@ -8,6 +8,7 @@ const initialState = {
   },
   path: "",
   groupId: 0,
+  pinId: -1,
 };
 
 export const coords = createSlice({
