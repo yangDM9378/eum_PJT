@@ -10,6 +10,7 @@ import com.eumpyo.eum.db.entity.Pin;
 import com.eumpyo.eum.db.entity.User;
 import com.eumpyo.eum.db.repository.GroupRepository;
 import com.eumpyo.eum.db.repository.PinRepository;
+import com.eumpyo.eum.db.repository.UserRepository;
 import com.eumpyo.eum.db.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class PinServiceImpl implements PinService {
+    private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final UserRoleRepository userRoleRepository;
     private final PinRepository pinRepository;
@@ -144,6 +146,13 @@ public class PinServiceImpl implements PinService {
 
         // 유저롤값 읽어오기
         String userRole = userRoleRepository.getUserRole(user.getUserId(), pin.getUser().getUserId());
+
+        if(userRole == null) {
+            User author = userRepository.findById(pin.getUser().getUserId())
+                    .orElseThrow(() -> new IllegalStateException("해당하는 유저가 존재하지 않습니다."));
+
+            userRole = author.getName();
+        }
 
         PinAlarmRes pinAlarmRes = PinAlarmRes.builder()
                 .title(pin.getTitle())
