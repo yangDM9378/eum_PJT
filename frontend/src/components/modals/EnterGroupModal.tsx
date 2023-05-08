@@ -1,11 +1,21 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Modal from "react-modal";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { enterGroup } from "@/services/groupApi";
+import axios, { AxiosResponse } from "axios";
+
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+interface Result {
+  result: null;
+  resultCode: string;
+  resultMsg: string;
+}
 
 const customStyles = {
   overlay: {
@@ -26,6 +36,48 @@ const customStyles = {
 };
 
 const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
+  const queryClient = useQueryClient();
+  // 그룹코드
+  const [groupCode, setgroupCode] = useState<string>("");
+
+  // 코드 응답
+  const [response, setResponse] = useState<Result | null>(null);
+
+  // API 응답 데이터를 상태로 저장
+  const handleSuccess = (data: Result) => {
+    setResponse(data);
+  };
+
+  const reset = () => {
+    setResponse(null);
+  };
+
+  //useMutation 타입 순서대로 응답 타입, 오류 타입, 보내는 값 타입
+  const enterGroupMutation = useMutation(enterGroup, {
+    onSuccess: (data) => {
+      handleSuccess(data);
+      queryClient.invalidateQueries({ queryKey: ["initial-group"] });
+    },
+  });
+
+  // 그룹코드를 입력하면 서버에 axios 보내는 코드
+  const enterCode = () => {
+    enterGroupMutation.mutate(groupCode);
+  };
+
+  // 코드를 입력해서 setgroupCode에 저장하는
+  const onchange = (event: React.FormEvent<HTMLInputElement>) => {
+    setgroupCode(event.currentTarget.value);
+  };
+
+  // 그룹코드가 맞을때 확인
+  useEffect(() => {
+    if (response?.resultCode === "Created") {
+      setIsOpen(false);
+      reset();
+    }
+  }, [response]);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -46,10 +98,16 @@ const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
         <input
           type="text"
           className=" mt-[5%] pt-[10%] bg-transparent border border-brand-baige-2"
+          onChange={onchange}
         />
-        <button className="bg-brand-red w-[70%] h-[5vh] mt-[10%] font-gmarket-thin">
+        <button
+          type="button"
+          onClick={enterCode}
+          className="bg-brand-red w-[70%] h-[5vh] mt-[10%] font-gmarket-thin"
+        >
           들어가기
         </button>
+        {response && <p>API Response: {JSON.stringify(response)}</p>}
       </div>
     </Modal>
   );

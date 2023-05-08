@@ -1,82 +1,58 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Poppins } from "next/font/google";
+import { getGroupList } from "@/services/groupApi";
+import { useRouter } from "next/navigation";
 
 const poppins = Poppins({
   weight: ["200", "300", "500"],
   preload: false,
 });
 
-// 타입
-type Group = {
-  id: string;
-  name: string;
-  description: string;
-  image: string;
-};
-
 const GroupList = () => {
-  // const [groups, setGroups] = useState<Group[]>([]);
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const getGroup = async () => {
+    const response = await getGroupList();
+    return response;
+  };
 
-  const groupList: Group[] = [
-    {
-      id: "1",
-      name: "사랑하는 엄마 아빠",
-      description: "사랑하는 엄마아빠랑 여행 추억 남기는 곳",
-      image: "GroupSample.png",
-    },
-    {
-      id: "2",
-      name: "삼형제와 함께",
-      description: "말썽꾸러기들의 추억을 남겨보겠다",
-      image: "GroupSample.png",
-    },
-    {
-      id: "3",
-      name: "사랑하는 엄마 아빠",
-      description: "사랑하는 엄마아빠랑 여행 추억 남기는 곳",
-      image: "GroupSample.png",
-    },
-  ];
-
-  //   let list: Group[] = [];
-
-  //   groupList.forEach((item: Group) => {
-  //     list.push({
-  //       id: item.id,
-  //       name: item.name,
-  //       description: item.description,
-  //       image: item.image,
-  //     });
-  //     setGroups(list);
-  //   });
-
+  const { data, isLoading, isFetching, error } = useQuery({
+    queryKey: ["initial-group"],
+    queryFn: async () => await getGroup(),
+  });
+  const goToMap = async (groupId: number) => {
+    await router.push(`/map/${groupId}`);
+  };
   return (
     <>
       <ul className="pt-[2vh] ">
-        {groupList.map((group, index) => (
-          <li key={index}>
-            <div className="grid grid-cols-10 pl-[3vw] place-content-around py-3">
-              <div className="col-span-8 font-brand-poppins">
-                <p className="font-brand-poppins text-[1rem]">{group.name}</p>
-                <p className="text-[0.8rem] pt-[0.5vh] font-thin">{group.description}</p>
+        {data &&
+          data.map((group, index) => (
+            <li key={index} onClick={() => goToMap(group.groupId)}>
+              <div className="grid grid-cols-10 pl-[3vw] place-content-around py-3">
+                <div className="col-span-8 font-brand-poppins">
+                  <p className="font-brand-poppins text-[1rem]">{group.name}</p>
+                  <p className="text-[0.8rem] pt-[0.5vh] font-thin">
+                    {group.description}
+                  </p>
+                </div>
+                <div className="col-span-2 mr-[2vw]">
+                  <Image
+                    className="rounded-sm"
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${group.image}`}
+                    alt={group.name}
+                    width={400}
+                    height={400}
+                  />
+                </div>
               </div>
-              <div className="col-span-2 mr-[2vw]">
-                <Image
-                  className="rounded-sm"
-                  src={`/images/${group.image}`}
-                  alt={group.name}
-                  width={400}
-                  height={400}
-                />
-              </div>
-            </div>
-            <hr className="border" />
-          </li>
-        ))}
+              <hr className="border" />
+            </li>
+          ))}
       </ul>
     </>
   );

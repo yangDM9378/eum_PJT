@@ -1,12 +1,8 @@
 package com.eumpyo.eum.config.oauth2.handler;
 
-import com.eumpyo.eum.api.response.UserResponse;
 import com.eumpyo.eum.common.util.TokenUtil;
-import com.eumpyo.eum.config.oauth2.PrincipalDetails;
-import com.eumpyo.eum.db.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;

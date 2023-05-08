@@ -3,34 +3,31 @@
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { poseimageurl } from "@/redux/doevent/DoEventSlice";
+import { pictureimg } from "@/redux/doevent/eventSlice";
 import { captureImage, startCamera, stopCamera } from "@/utils/getCamera";
 import { AiOutlineCamera } from "react-icons/ai";
 import { AiOutlineInfoCircle } from "react-icons/ai";
-import InfoModal from '../modals/InfoModal'
+import InfoModal from "../modals/InfoModal";
 
 const EventCamera = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  // const pathSelector = useAppSelector((state) => state.coordsReducer.path);
   const [isCameraReady, setIsCameraReady] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-
+  const eventType = useAppSelector((state) => state.eventReducer.eventtype);
   //모달관련 상태
-  const [modalOpen,setModalOpen] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   //모달 열기
   const OpenInfoModal = () => {
     setModalOpen(true);
-  }
+  };
 
   //등록한 포즈 사진 가져오기
 
-  
   useEffect(() => {
     // 자동으로 켜져있는 camera 시작
     startCamera(videoRef, setIsCameraReady);
-    localStorage.setItem("pathOption", "aging");
   }, []);
 
   //사진 찰영 버튼 클릭 시
@@ -39,9 +36,8 @@ const EventCamera = () => {
     const dataURL = await captureImage(videoRef);
     // 카메라 끄기
     stopCamera(videoRef);
-    // 이미지 redux를 통해 aging or pose로 이동시키기
-    dispatch(poseimageurl(dataURL));
-    router.push(`/eventcamera/${localStorage.getItem("pathOption")}`);
+    dispatch(pictureimg(dataURL)); // base 64파일
+    await router.push(`/eventcamera/${eventType}`);
   };
 
   return (
@@ -62,10 +58,15 @@ const EventCamera = () => {
         />
       </div>
 
-      <div>
-          <AiOutlineInfoCircle onClick={OpenInfoModal} className="h-[10%] w-[10%]"/>
-      </div>
-      <InfoModal isOpen={modalOpen} setIsOpen={setModalOpen}/>
+      {eventType == "pose" && (
+        <div>
+          <AiOutlineInfoCircle
+            onClick={OpenInfoModal}
+            className="h-[10%] w-[10%]"
+          />
+        </div>
+      )}
+      <InfoModal isOpen={modalOpen} setIsOpen={setModalOpen} />
     </div>
   );
 };
