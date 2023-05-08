@@ -10,15 +10,15 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 def MAPS_API_KEY = properties.getProperty('MAPS_API_KEY')
 
 android {
-    namespace 'com.example.ieum'
+    namespace 'com.ieumpyo.ieum'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.ieum"
+        applicationId "com.ieumpyo.ieum"
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
