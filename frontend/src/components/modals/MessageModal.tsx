@@ -10,6 +10,7 @@ import { eventimageurl, eventtype } from "@/redux/doevent/eventSlice";
 import Image from "next/image";
 import { getpinImages } from "@/services/galleryApi";
 import { Picture } from "@/types/picture";
+import GroupPhotoModal from "./GroupPhotoModal";
 
 const customStyles = {
   overlay: {
@@ -34,6 +35,7 @@ type ModalProps = {
   setMessageOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+// 메세지 모달
 const MessageModal = ({
   messageOpen,
   setMessageOpen,
@@ -41,6 +43,10 @@ const MessageModal = ({
 }: ModalProps) => {
   const [detailData, setDetailData] = useState<PindetailResult>();
   const dispatch = useAppDispatch();
+
+  // 상세이미지 모달 상태
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   // messageId로 핀 상세 조회 데이터 가져오기
   useEffect(() => {
     // detailpin axios 호출부분
@@ -53,13 +59,13 @@ const MessageModal = ({
     }
   }, [messageId]);
 
-  const [imagesUrl, setImagesUrl] = useState<[] | Picture[]>([]);
+  // 찍은 사진들 보여주기
+  const [imagesUrls, setImagesUrls] = useState<[] | Picture[]>([]);
 
   // messageId로 핀 이미지들 불러오기
   const getpinImagesData = async (messageId: number) => {
     const images = await getpinImages(messageId);
-    setImagesUrl(images);
-    console.log(images[0]);
+    setImagesUrls(images);
     setSelectedImage(images[0].image);
   };
 
@@ -77,11 +83,22 @@ const MessageModal = ({
   };
 
   // 선택된 이미지 인덱스
-  const [selectedidx, setSelectedIdx] = useState<number>(0);
+  const [selectedIdx, setSelectedIdx] = useState<number>(0);
 
   // 선택된 이미지
-  const [selectedImage, setSelectedImage] = useState<string>("");
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
+  // 이미지 선택하기
+  const selecteimage = (id: number, image: string) => {
+    setSelectedIdx(id);
+    setSelectedImage(image);
+  };
+
+  // 메세지 모달 닫고 상세 이미지 모달 열기
+  const CloseModal = () => {
+    setMessageOpen(false);
+    setIsOpen(true);
+  };
   return (
     <Modal
       isOpen={messageOpen}
@@ -108,8 +125,10 @@ const MessageModal = ({
           />
           <div className="flex flex-row justify-center mb-3">
             <div className="flex flex-col flex-col-reverse pr-7">
-              {imagesUrl &&
-                imagesUrl.map((image) => (
+              {selectedImage === null ? (
+                <div>Loading...</div>
+              ) : (
+                imagesUrls.map((image) => (
                   <img
                     key={image.pictureId}
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${image.image}`}
@@ -117,17 +136,21 @@ const MessageModal = ({
                     width={60}
                     height={60}
                     className="my-2"
-                    onClick={() => setSelectedImage(image.image)}
+                    onClick={() => selecteimage(image.pictureId, image.image)}
                   />
-                ))}
+                ))
+              )}
             </div>
-            {selectedImage && (
+            {selectedImage !== null && (
               <img
                 src={`${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${selectedImage}`}
                 alt="선택된 이미지"
                 height={150}
                 width={150}
                 className="rounded-lg"
+                onClick={() => {
+                  CloseModal;
+                }}
               />
             )}
           </div>
@@ -140,6 +163,11 @@ const MessageModal = ({
           </div>
         </section>
       )}
+      <GroupPhotoModal
+        isOpen={isOpen}
+        selectedIdx={selectedIdx}
+        setIsOpen={setIsOpen}
+      />
     </Modal>
   );
 };

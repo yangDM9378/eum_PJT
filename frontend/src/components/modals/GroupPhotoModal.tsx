@@ -7,6 +7,7 @@ import Image from "next/image";
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedIdx: number;
 };
 
 const customStyles = {
@@ -27,7 +28,7 @@ const customStyles = {
   },
 };
 
-const GroupPhotoModal = ({ isOpen, setIsOpen }: ModalProps) => {
+const GroupPhotoModal = ({ isOpen, setIsOpen, selectedIdx }: ModalProps) => {
   return (
     <Modal
       isOpen={isOpen}
