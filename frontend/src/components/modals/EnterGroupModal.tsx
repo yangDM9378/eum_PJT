@@ -10,12 +10,12 @@ type ModalProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
 interface Result {
   result: null;
   resultCode: string;
   resultMsg: string;
-};
-
+}
 
 const customStyles = {
   overlay: {
@@ -34,7 +34,6 @@ const customStyles = {
     background: "#F8F9F3",
   },
 };
-
 
 const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
   const queryClient = useQueryClient();
@@ -71,11 +70,13 @@ const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
     setgroupCode(event.currentTarget.value);
   };
 
-
-  // 응답 코드가 Created이면 모달 닫기
-  if (response.resultCode === 'Created') {
-    setIsOpen(false);
-  }
+  // 그룹코드가 맞을때 확인
+  useEffect(() => {
+    if (response?.resultCode === "Created") {
+      setIsOpen(false);
+      reset();
+    }
+  }, [response]);
 
   return (
     <Modal
