@@ -37,12 +37,12 @@ interface Props {
 
 function Map({ markerList }: Props) {
   const [curCenter, setCurCenter] = useState({
-    lat: 35.205331,
-    lng: 126.811123,
+    lat: 0,
+    lng: 0,
   });
   const [mapCenter, setMapCenter] = useState({
-    lat: 35.221305123331,
-    lng: 126.811123,
+    lat: 0,
+    lng: 0,
   });
   // const mapCenter = useMemo(
   //   () => ({ lat: 35.221305123331, lng: 126.811123 }),
@@ -50,8 +50,8 @@ function Map({ markerList }: Props) {
   // );
   const [mapref, setMapRef] = useState<google.maps.Map | null>(null);
   const [changeCenter, setChangeCenter] = useState({
-    lat: 35.205331,
-    lng: 126.811123,
+    lat: 0,
+    lng: 0,
   });
 
   const [isOpen, setIsOpen] = useState(false);
@@ -123,6 +123,7 @@ function Map({ markerList }: Props) {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
         setCurCenter({ lat, lng });
+        setMapCenter({ lat, lng });
       }
     });
   };
