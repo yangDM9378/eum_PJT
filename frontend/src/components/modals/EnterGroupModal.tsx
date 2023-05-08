@@ -10,11 +10,14 @@ type ModalProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+
 interface Result {
   result: null;
   resultCode: string;
   resultMsg: string;
-}
+};
+
 
 const customStyles = {
   overlay: {
@@ -34,6 +37,7 @@ const customStyles = {
   },
 };
 
+
 const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
   // 그룹코드
   const [groupCode, setgroupCode] = useState<string>("");
@@ -52,7 +56,7 @@ const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
   };
 
   //useMutation 타입 순서대로 응답 타입, 오류 타입, 보내는 값 타입
-  const enterGroupMutation = useMutation<Result, unknown, string>(enterGroup, {
+  const enterGroupMutation = useMutation(enterGroup, {
     onSuccess: (data) => {
       handleSuccess(data);
     },
@@ -69,11 +73,11 @@ const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
     console.log(groupCode, "🎈🎈");
   };
 
-
   // 응답 코드가 Created이면 모달 닫기
   if (response.resultCode === 'Created') {
     setIsOpen(false);
-  }
+  };
+
 
   return (
     <Modal

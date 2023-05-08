@@ -8,6 +8,8 @@ interface Result {
   resultMsg: string;
 }
 
+
+
 // 그룹 생성하기
 const createGroup = async (data: Group) => {
   await multipartAuthApi.post(`/groups`, data);
