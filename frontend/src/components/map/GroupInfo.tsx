@@ -34,7 +34,7 @@ const GroupInfo = ({ groupId }: Props) => {
         <div className="flex justify-center items-center w-[90%] h-[80%] m-auto shadow-xl rounded-lg bg-white">
           <div className="w-[30%] h-[80%] flex">
             <img
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${data.image}`}
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${data.image}`}
               className="w-[80%] m-auto border rounded-xl"
             />
           </div>
