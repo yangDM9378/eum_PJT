@@ -29,37 +29,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GroupController {
 
-    @Value("${cloud.aws.directory}")
-    String rootPath;
-
     private final GroupService groupService;
-
-    private final S3Uploader s3Uploader;
 
     @PostMapping()
     ResponseEntity<ApiResponse> groupAdd(Authentication authentication, @RequestPart GroupAddReq groupAddReq, @RequestPart(value = "image", required = false) MultipartFile image) {
         User user = (User)authentication.getPrincipal();
 
-        // 파일 S3에 저장
-        if (image != null) {
-            //make upload folder
-            String uploadPath = rootPath + "/" + "group" + "/" + "image" + "/";
-            File uploadFilePath = new File(rootPath, uploadPath);
-
-            String fileName = image.getOriginalFilename();
-
-            UUID uuid = UUID.randomUUID();
-            String uploadFileName = uuid.toString() + "_" + fileName;
-
-            try {
-                log.debug(s3Uploader.upload(image, uploadPath + uploadFileName));
-                groupAddReq.setImage(uploadFileName);
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
-        }
-
-        groupService.addGroup(user, groupAddReq);
+        groupService.addGroup(user, groupAddReq, image);
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
                 .result(null)
