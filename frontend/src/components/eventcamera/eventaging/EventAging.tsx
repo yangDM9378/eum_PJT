@@ -1,7 +1,7 @@
 "use client";
 import { useAppSelector } from "@/redux/hooks";
-import { useState } from "react";
-import { Stage, Layer, Image, Transformer, Group } from "react-konva";
+import { useEffect, useState } from "react";
+import { Stage, Layer, Image, Group, Transformer } from "react-konva";
 
 const EventAging = () => {
   const pictureImg = useAppSelector((state) => state.eventReducer.pictureimg);
@@ -13,18 +13,39 @@ const EventAging = () => {
     height: 300,
   });
   const [selected, setSelected] = useState(false);
+  const [decorativeImage, setDecorativeImage] =
+    useState<HTMLImageElement | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [backgroundImage, setBackgroundImage] = useState<
+    HTMLImageElement | undefined
+  >(undefined);
 
-  const backgroundImage = new window.Image();
-  backgroundImage.src = pictureImg;
+  useEffect(() => {
+    if (isLoading) {
+      const img = new window.Image();
+      img.src = `${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${agingImg}`;
+      img.onload = () => {
+        setIsLoading(false);
+        setDecorativeImage(img);
+      };
+    }
+  }, [agingImg, isLoading]);
 
-  const decorativeImage = new window.Image();
-  decorativeImage.src = `${process.env.NEXT_PUBLIC_IMAGE_URL}group/image/${agingImg}`;
+  useEffect(() => {
+    const img = new window.Image();
+    img.src = pictureImg;
+    img.onload = () => {
+      setBackgroundImage(img);
+    };
+  }, [pictureImg]);
 
   return (
     <Stage width={300} height={300}>
       <Layer>
         {/* 배경 이미지 */}
-        <Image image={backgroundImage} width={300} height={300} />
+        {backgroundImage && (
+          <Image image={backgroundImage} width={300} height={300} />
+        )}
 
         {/* 꾸밀 이미지 */}
         <Group
@@ -36,12 +57,14 @@ const EventAging = () => {
             setSelected(false);
           }}
         >
-          <Image
-            image={decorativeImage}
-            {...decorativeImageProps}
-            draggable={false}
-          />
-          {/* <Transformer
+          {decorativeImage && (
+            <Image
+              image={decorativeImage}
+              {...decorativeImageProps}
+              draggable={false}
+            />
+          )}
+          <Transformer
             keepRatio={true}
             anchorSize={10}
             borderEnabled={true} // 변경된 부분
@@ -73,7 +96,7 @@ const EventAging = () => {
 
               setDecorativeImageProps(newProps);
             }}
-          /> */}
+          />
         </Group>
       </Layer>
     </Stage>
