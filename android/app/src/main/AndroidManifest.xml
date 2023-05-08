@@ -56,11 +56,6 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-4728228463704876~7696936623"/>
-        <activity
-            android:name=".MapsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light"
-            android:label="@string/title_activity_maps" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 

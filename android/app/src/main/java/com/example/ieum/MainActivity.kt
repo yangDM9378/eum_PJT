@@ -34,6 +34,7 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
+import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -158,6 +159,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     var accessToken: MutableLiveData<String> = MutableLiveData()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -168,7 +170,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val adRequest=AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
 
-        val testDeviceIds = Arrays.asList("ca-app-pub-3940256099942544/6300978111")
+        val testDeviceIds = Arrays.asList("ca-app-pub-4728228463704876~7696936623")
         val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
         MobileAds.setRequestConfiguration(configuration)
 
@@ -199,7 +201,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         accessToken=getCookie(target_url,"accessToken")
         accessToken.observe(this){
             initList("Bearer "+it)
-            Log.d("Token","ACCESSTOKEN OBSERVE!!"+it)
+//            Log.d("Token","ACCESSTOKEN OBSERVE!!"+it)
         }
 
         web.setWebViewClient(object : WebViewClient() {
@@ -207,7 +209,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 super.onPageFinished(view, url);
 //               Log.d("Main",token+"!!")
                 accessToken=getCookie(target_url,"accessToken")
-                Log.d("OnPageFinished",accessToken.value.toString()+"!!")
+//                Log.d("OnPageFinished",accessToken.value.toString()+"!!")
             }
 
 //            override fun onLoadResource(view: WebView?, url: String?) {
@@ -222,23 +224,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //                }
 //            }
         })
-
         val db= Room.databaseBuilder(applicationContext, notifiedLocationDB::class.java,"pin").allowMainThreadQueries().build()
         db.dao().getAll().observe(this ){ tmp ->
             val StrArr = tmp.map{it.toString()}
             removeGeofence(StrArr)
+
             Log.d("OBSERVER",tmp.toString()+"!!") }
 
         val intent = intent
         val bundle = intent.extras
-        Log.d("OBSERVER!!",bundle?.getInt("pin_id").toString())
+//        Log.d("OBSERVER!!",bundle?.getInt("pin_id").toString())
         if (bundle != null) {
             if (bundle.getString("url") != null && !bundle.getString("url")
                     .equals("", ignoreCase = true)
             ) {
                 target_url = bundle.getString("url")!!
 
-                Log.d("main",target_url+"!!")
+//                Log.d("main",target_url+"!!")
             }
             if(bundle.getInt("pin_id")!=null){
                 db.dao().insert(notifiedLocationEntity(bundle.getInt("pin_id")))
@@ -261,7 +263,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             return MutableLiveData(CookieValue)
         }
 
-        Log.d("ACCESSTOKEN","cookie : "+cookies+"!!")
+//        Log.d("ACCESSTOKEN","cookie : "+cookies+"!!")
         val temp = cookies.split(";".toRegex()).dropLastWhile { it.isEmpty() }
             .toTypedArray()
         for (ar1 in temp) {
@@ -276,6 +278,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     private fun initList(token: String){
 
+//        Log.d("Geofence","InitLIST START!!"+token)
         RetrofitImpl.service.getPinAll(token).enqueue(object : retrofit2.Callback<Pin>{
             override fun onFailure(call: Call<Pin>, t: Throwable) {
                 Log.e("Failed",t.toString()+"!!")
@@ -289,14 +292,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     val rawlist = response.body()
                     val listGeofence = rawlist?.result
-                    Log.d("Success",listGeofence.toString()+"!!")
+//                    Log.d("Success",listGeofence.toString()+"!!")
                     listGeofence?.forEach{
                         val tmp = geofenceHelper.getGeofence(it.pinId.toString(), Pair(it.latitude, it.longitude),1000.0f)
                         addGeofence(tmp)
-                        Log.d("MAIN",it.toString()+"!!")
+//                        Log.d("MAIN",it.toString()+"!!")
 
                     }
-                    Log.d("MAIN","INIT LIST END!!")
 
                 }else{
                     Log.d("Response errorBody", response.errorBody()?.string()+"!!");

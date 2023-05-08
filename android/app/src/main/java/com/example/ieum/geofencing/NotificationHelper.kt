@@ -19,15 +19,15 @@ class NotificationHelper (context: Context): ContextWrapper(context){
     private val CHANNEL_NAME = "메시지 알람"
 
     fun displayNotification(reqId: Int, title: String, body : String, activityName : Class<*>){
-        Log.d(ContentValues.TAG, title+body+"display notification!!")
+//        Log.d(ContentValues.TAG, title+body+"display notification!!")
 
         //알람 콘텐츠 설정
         val intent = Intent(this, activityName)
 //        상태 저장
         val bundle = Bundle()
-        bundle.putString("url","https://www.daum.net/")
+        bundle.putString("url","http://i-eum-u.com/map/${reqId}")
         bundle.putInt("pin_id",reqId)
-        Log.d("OBSERVER",reqId.toString())
+//        Log.d("OBSERVER",reqId.toString())
         intent.putExtras(bundle)
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
