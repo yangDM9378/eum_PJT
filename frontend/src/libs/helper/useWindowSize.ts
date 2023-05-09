@@ -8,7 +8,6 @@ const useWindowSize = () => {
   useLayoutEffect(() => {
     const updateSize = () => {
       setSize(window.innerWidth);
-      console.log("사이즈 변화");
     };
     updateSize();
     window.addEventListener("resize", updateSize);
