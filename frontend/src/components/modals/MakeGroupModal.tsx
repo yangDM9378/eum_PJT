@@ -44,6 +44,7 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
   const [groupState, setGroupState] = useState(initialGroupState);
   const [uploadImg, setUploadImg] = useState<Blob | string>("");
 
+
   // 그룹 생성하기
   const makeGroup = () => {
     console.log(groupState);
