@@ -12,7 +12,9 @@ import android.os.Bundle
 import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.CookieSyncManager
+import android.webkit.GeolocationPermissions
 import android.webkit.JavascriptInterface
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -20,10 +22,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
-import com.ieumpyo.ieum.api.RetrofitImpl
-import com.ieumpyo.ieum.geofencing.GeofenceHelper
-import com.ieumpyo.ieum.roomdb.notifiedLocationDB
-import com.ieumpyo.ieum.roomdb.notifiedLocationEntity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -34,6 +32,10 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.ieumpyo.ieum.api.RetrofitImpl
+import com.ieumpyo.ieum.geofencing.GeofenceHelper
+import com.ieumpyo.ieum.roomdb.notifiedLocationDB
+import com.ieumpyo.ieum.roomdb.notifiedLocationEntity
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Arrays
@@ -112,35 +114,35 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         Log.d("Main","${location?.latitude} ${location?.longitude}!!")
 
     }
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode==locationCode){
-            if(grantResults.isNotEmpty()&& grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                if((ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    )!=PackageManager.PERMISSION_GRANTED)&&(ActivityCompat.checkSelfPermission(
-                        this, android.Manifest.permission.ACCESS_COARSE_LOCATION
-                    )!=PackageManager.PERMISSION_GRANTED)){
-                    return
-                }
-            }
-
-        }
-        if(requestCode==locationCode1){
-            if(grantResults.isNotEmpty()&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                if(ActivityCompat.checkSelfPermission(
-                        this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                    )!=PackageManager.PERMISSION_GRANTED && (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED)){
-                    return
-                }
-                Toast.makeText(this,"You can add Geofences", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int,
+//        permissions: Array<out String>,
+//        grantResults: IntArray
+//    ) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        if(requestCode==locationCode){
+//            if(grantResults.isNotEmpty()&& grantResults[0]==PackageManager.PERMISSION_GRANTED){
+//                if((ActivityCompat.checkSelfPermission(this,
+//                        Manifest.permission.ACCESS_FINE_LOCATION
+//                    )!=PackageManager.PERMISSION_GRANTED)&&(ActivityCompat.checkSelfPermission(
+//                        this, android.Manifest.permission.ACCESS_COARSE_LOCATION
+//                    )!=PackageManager.PERMISSION_GRANTED)){
+//                    return
+//                }
+//            }
+//
+//        }
+//        if(requestCode==locationCode1){
+//            if(grantResults.isNotEmpty()&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
+//                if(ActivityCompat.checkSelfPermission(
+//                        this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
+//                    )!=PackageManager.PERMISSION_GRANTED && (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED)){
+//                    return
+//                }
+//                Toast.makeText(this,"You can add Geofences", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
 
     inner class WebAppInterface(private val mContext: Context) {
         @JavascriptInterface
@@ -165,7 +167,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val adRequest=AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
 
-        val testDeviceIds = Arrays.asList("ca-app-pub-4728228463704876~7696936623")
+        val testDeviceIds = Arrays.asList("ca-app-pub-4728228463704876/6896938382")
+//        val testDeviceIds = Arrays.asList("ca-app-pub-3940256099942544/6300978111")
+
         val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
         MobileAds.setRequestConfiguration(configuration)
 
@@ -208,6 +212,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         })
+        web.webChromeClient= WebChromeClient()
+        web.webChromeClient=object: WebChromeClient(){
+            override fun onGeolocationPermissionsShowPrompt(
+                origin: String?,
+                callback: GeolocationPermissions.Callback?
+            ) {
+                super.onGeolocationPermissionsShowPrompt(origin, callback)
+                callback?.invoke(origin,true,false)
+            }
+
+        }
         val db= Room.databaseBuilder(applicationContext, notifiedLocationDB::class.java,"pin").allowMainThreadQueries().build()
         db.dao().getAll().observe(this ){ tmp ->
             val StrArr = tmp.map{it.toString()}
@@ -262,7 +277,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     private fun initList(token: String){
 
-//        Log.d("Geofence","InitLIST START!!"+token)
+        val db= Room.databaseBuilder(applicationContext, notifiedLocationDB::class.java,"pin").allowMainThreadQueries().build()
+        val notifiedList=db.dao().getAll()
+        Log.d("Geofence","InitLIST START!!"+token)
         RetrofitImpl.service.getPinAll(token).enqueue(object : retrofit2.Callback<Pin>{
             override fun onFailure(call: Call<Pin>, t: Throwable) {
                 Log.e("Failed",t.toString()+"!!")
@@ -278,7 +295,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     val listGeofence = rawlist?.result
 //                    Log.d("Success",listGeofence.toString()+"!!")
                     listGeofence?.forEach{
-                        val tmp = geofenceHelper.getGeofence(it.pinId.toString(), Pair(it.latitude, it.longitude),1000.0f)
+                        val tmp = geofenceHelper.getGeofence(it.pinId.toString(), Pair(it.latitude, it.longitude),500.0f)
+
                         addGeofence(tmp)
 //                        Log.d("MAIN",it.toString()+"!!")
 
@@ -350,8 +368,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             )
         }
     }
+    private var backBtnTime: Long = 0
 
-
+    override fun onBackPressed() {
+        val curTime = System.currentTimeMillis()
+        val gapTime = curTime - backBtnTime
+        val web = findViewById<WebView>(R.id.web)
+        if (web.canGoBack()) {
+            web.goBack()
+        } else if (0 <= gapTime && 2000 >= gapTime) {
+            super.onBackPressed()
+        } else {
+            backBtnTime = curTime
+            Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
     override fun onResume() {
         super.onResume()
         CookieSyncManager.getInstance().startSync()

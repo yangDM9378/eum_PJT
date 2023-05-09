@@ -47,8 +47,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-4728228463704876~7696936623"
-            />
+                    ads:adUnitId="ca-app-pub-4728228463704876/6896938382"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
