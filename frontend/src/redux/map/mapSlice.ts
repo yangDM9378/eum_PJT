@@ -25,8 +25,12 @@ export const coords = createSlice({
     setGroupId: (state, action: PayloadAction<number>) => {
       state.groupId = action.payload;
     },
+    setPinId: (state, action: PayloadAction<number>) => {
+      state.pinId = action.payload;
+    },
   },
 });
 
-export const { reset, assign, destination, setGroupId } = coords.actions;
+export const { reset, assign, destination, setGroupId, setPinId } =
+  coords.actions;
 export default coords.reducer;

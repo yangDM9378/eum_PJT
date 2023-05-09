@@ -9,7 +9,7 @@ import {
 } from "@react-google-maps/api";
 import EventOptionModal from "../modals/EventOptionModal";
 import MessageModal from "../modals/MessageModal";
-import { assign } from "@/redux/map/mapSlice";
+import { assign, setPinId } from "@/redux/map/mapSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { Pin } from "@/types/pin";
 
@@ -93,8 +93,9 @@ function Map({ markerList }: Props) {
   };
 
   // 메시지 마커 클릭 이벤트입니다.
-  const clickMarker = (pinId: number) => {
+  const clickMarker = async (pinId: number) => {
     setMessageId(pinId);
+    dispatch(setPinId(pinId));
     setMessageOpen(true);
   };
 
