@@ -8,10 +8,7 @@ import MainMap from "./MainMap";
 
 const LoginButton = () => {
   const size = useWindowSize();
-  console.log(size);
-  if (size && size > 500) {
-    console.log("hi");
-  }
+
   const oauthlogin =
     process.env.NEXT_PUBLIC_OUATH_KAKAO_HOSTNAME +
     "?redirect_url=" +
