@@ -5,7 +5,9 @@ import { useState, useRef, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { pictureimg } from "@/redux/doevent/eventSlice";
 import { captureImage, startCamera, stopCamera } from "@/utils/getCamera";
+
 import { AiOutlineCamera } from "react-icons/ai";
+
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import InfoModal from "../modals/InfoModal";
 
