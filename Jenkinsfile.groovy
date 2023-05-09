@@ -26,22 +26,31 @@ pipeline {
         stage ('docker garbage collection') {
             steps {
                 sh 'docker container prune -f'
-                sh 'docker image prune -f'
+                sh 'docker image prune -af'
             }
         }
 
-        stage ('docker frontend run') {
+        stage ('docker frontend build') {
             steps {
                 sh 'cd /var/jenkins_home/workspace/eum'
-                sh 'docker-compose stop frontend && docker-compose rm -f frontend'
-                sh 'docker-compose up --build -d frontend'
+                sh 'docker-compose build frontend'
             }
         }
-        stage ('docker backend run') {
+        stage ('docker backend build') {
             steps {
                 sh 'cd /var/jenkins_home/workspace/eum'
+                sh 'docker-compose build backend'
+            }
+        }
+        stage ('docker deploy') {
+            steps {
+                sh 'cd /var/jenkins_home/workspace/eum'
+
+                sh 'docker-compose stop frontend && docker-compose rm -f frontend'
                 sh 'docker-compose stop backend && docker-compose rm -f backend'
-                sh 'docker-compose up --build -d backend'
+
+                sh 'docker-compose up -d frontend '
+                sh 'docker-compose up -d backend '
             }
         }
     }
