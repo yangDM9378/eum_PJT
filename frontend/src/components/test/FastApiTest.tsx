@@ -8,16 +8,20 @@ const FastApiTest = () => {
   useEffect(() => {
     const fastapidata = async () => {
       const data = await getFastApiData();
-      setTestData(data?.message)
+      setTestData(data?.message);
     };
     fastapidata();
   }, []);
 
   const click = () => {
-     console.log(testData)
-  }
+    console.log(testData);
+  };
 
-  return <div><button onClick={click}>111</button></div>;
+  return (
+    <div>
+      <button onClick={click}>111</button>
+    </div>
+  );
 };
 
 export default FastApiTest;

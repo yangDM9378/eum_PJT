@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 const GroupGallery = () => {
-  const images:string[] = [
+  const images: string[] = [
     "/images/gallery1.png",
     "/images/gallery2.png",
     "/images/gallery3.png",
@@ -20,7 +20,7 @@ const GroupGallery = () => {
   ];
   const [angle, setAngle] = useState(0);
 
-  const galleryspin = (sign:boolean) => {
+  const galleryspin = (sign: boolean) => {
     let newAngle = angle;
     if (!sign) {
       newAngle = newAngle + 45;
@@ -35,7 +35,7 @@ const GroupGallery = () => {
       <div
         id="carousel"
         style={{
-          paddingTop:'50%',
+          paddingTop: "50%",
           perspective: "1200px",
           background: "#100000",
           fontSize: 0,
@@ -52,7 +52,7 @@ const GroupGallery = () => {
             transform: `rotateY(${angle}deg)`,
           }}
         >
-          {images.map((image:string, i: number) => (
+          {images.map((image: string, i: number) => (
             <Image
               key={i}
               src={image}
@@ -60,14 +60,14 @@ const GroupGallery = () => {
               width={300}
               height={300}
               style={{
-              width: "60%",
-              paddingTop:'10%',
-              maxWidth: "425px",
-              position: "absolute",
-              left: "30%",
-              transformOrigin: "50% 50% -500px",
-              outline: "1px solid transparent",
-              transform: `rotateY(${-45 * i}deg)`,
+                width: "60%",
+                paddingTop: "10%",
+                maxWidth: "425px",
+                position: "absolute",
+                left: "30%",
+                transformOrigin: "50% 50% -500px",
+                outline: "1px solid transparent",
+                transform: `rotateY(${-45 * i}deg)`,
               }}
             />
           ))}
