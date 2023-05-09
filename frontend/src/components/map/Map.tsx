@@ -45,10 +45,7 @@ function Map({ markerList }: Props) {
     lat: 0,
     lng: 0,
   });
-  // const mapCenter = useMemo(
-  //   () => ({ lat: 35.221305123331, lng: 126.811123 }),
-  //   []
-  // );
+
   const [mapref, setMapRef] = useState<google.maps.Map | null>(null);
   const [changeCenter, setChangeCenter] = useState({
     lat: 0,
