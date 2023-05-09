@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import login from "../../../public/images/kakao_login.png";
 import useWindowSize from "@/libs/helper/useWindowSize";
-import MainMap from "./MainMap";
+import MapUpper from "./MainMapUpper";
 
 const LoginButton = () => {
   const size = useWindowSize();
@@ -17,7 +17,9 @@ const LoginButton = () => {
   return (
     <div>
       {size && size > 450 ? (
-        <MainMap />
+        <section className="w-[100vw] h-[100vh]">
+          <MapUpper />
+        </section>
       ) : (
         <div
           className="w-[100vw] h-[100vh] max-w-[360px]:"
