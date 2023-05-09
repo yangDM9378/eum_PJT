@@ -36,6 +36,7 @@ type ModalProps = {
   messageOpen: boolean;
   messageId: number;
   setMessageOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPhotoOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // 메세지 모달
@@ -43,12 +44,11 @@ const MessageModal = ({
   messageOpen,
   setMessageOpen,
   messageId,
+  setIsPhotoOpen,
 }: ModalProps) => {
   const [detailData, setDetailData] = useState<PindetailResult>();
   const dispatch = useAppDispatch();
 
-  // 상세이미지 모달 상태
-  const [isPhotoOpen, setIsPhotoOpen] = useState<boolean>(false);
 
   // messageId로 핀 상세 조회 데이터 가져오기
   useEffect(() => {
@@ -69,7 +69,7 @@ const MessageModal = ({
   const getpinImagesData = async (messageId: number) => {
     const images = await getpinImages(messageId);
     setImagesUrls(images);
-    setSelectedImage(images[0].image);
+    await setSelectedImage(images[0].image);
   };
 
   useEffect(() => {

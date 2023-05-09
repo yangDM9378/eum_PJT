@@ -1,8 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import Image from "next/image";
+import { getPinImage } from "@/services/galleryApi";
+import { PictureDetail } from "@/types/picture";
 
 type ModalProps = {
   isOpen: boolean;
@@ -23,12 +25,30 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
     border: "none",
     width: "80vw",
-    height: "50vh",
+    height: "60vh",
     background: "#F8F9F3",
   },
 };
 
-const GroupPhotoModal = ({ isOpen, setIsOpen, selectedIdx }: ModalProps) => {
+const GroupPhotoModal = ({ isOpen, setIsOpen, pictureId }: ModalProps) => {
+  // 핀 이미지 상태
+
+  const [photoInfo, setPhotoInfo] = useState<PictureDetail>();
+
+  // 핀 이미지 불러오기
+  const getPhotoDetail = async () => {
+    const photoRes = await getPinImage(pictureId);
+    console.log(pictureId,'👻👻')
+    setPhotoInfo(photoRes);
+    console.log(photoRes,'❔❔')
+  };
+
+
+  // 렌더링 되자마자 핀 이미지 불러오는 함수 실행
+  useEffect(() => {
+    getPhotoDetail();
+  }, []);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -49,12 +69,12 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, selectedIdx }: ModalProps) => {
           <Image
             src="/images/GroupSample.png"
             alt=""
-            width={400}
-            height={400}
+            width={300}
+            height={300}
             className="rounded-lg"
           />
         </div>
-        <button className="bg-brand-green w-[30%] h-[5vh] mt-[10%] font-gmarket-thin rounded-xl">
+        <button className="bg-brand-green w-[50%] h-[5vh] mt-[10%] font-gmarket-thin rounded-xl">
           공유
         </button>
       </div>

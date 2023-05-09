@@ -32,4 +32,9 @@ const detailGroup = async (groupId: number): Promise<GroupDetail> => {
   const detailData: GroupDetail = response.data.result;
   return detailData;
 };
+
+
+
+
+
 export { createGroup, getGroupList, enterGroup, detailGroup };

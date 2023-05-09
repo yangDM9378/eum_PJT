@@ -1,5 +1,5 @@
 import { jsonAuthApi } from "@/libs/axiosConfig";
-import { Picture } from "@/types/picture";
+import { Picture, PictureDetail } from "@/types/picture";
 
 const getGroupGallery = async (group_id: number) => {
   const {
@@ -15,4 +15,12 @@ const getpinImages = async (messageId: number): Promise<Picture[]> => {
   return data;
 };
 
-export { getGroupGallery, getpinImages };
+
+// 핀 갤러리 이미지 상세 불러오기
+const getPinImage = async (pictureId: number): Promise<PictureDetail> => {
+  const response = await jsonAuthApi.get(`pictures/${pictureId}`);
+  const data: PictureDetail = response.data;
+  return data
+}
+
+export { getGroupGallery, getpinImages,getPinImage };

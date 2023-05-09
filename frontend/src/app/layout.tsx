@@ -1,7 +1,10 @@
+
 import "./globals.css";
 import { Poppins } from "next/font/google";
 import Providers from "@/utils/provider";
 import ReduxProviders from "@/redux/provider";
+
+
 // 폰트 지정
 
 const poppins = Poppins({ weight: "600", subsets: ["latin"] });
@@ -17,7 +20,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
+    
     <html lang="en" className={poppins.className}>
+      <script
+        defer
+        src="https://developers.kakao.com/sdk/js/kakao.min.js"
+      ></script>
       <body className="w-[100vw] h-[100vh] bg-brand-baige">
         <Providers>
           <ReduxProviders>{children}</ReduxProviders>
