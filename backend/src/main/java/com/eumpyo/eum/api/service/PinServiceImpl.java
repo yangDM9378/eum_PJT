@@ -115,7 +115,7 @@ public class PinServiceImpl implements PinService {
 
     @Override
     public List<PinListRes> findUserPin(User user) {
-        List<PinListRes> pinResList = pinRepository.findByUser_UserId(user.getUserId());
+        List<PinListRes> pinResList = pinRepository.findPinList(user.getUserId());
 
         return pinResList;
     }
