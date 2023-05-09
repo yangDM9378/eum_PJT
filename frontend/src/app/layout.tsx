@@ -5,6 +5,7 @@ import ReduxProviders from "@/redux/provider";
 import RouterGuard from "@/utils/route/provider";
 
 
+
 const poppins = Poppins({ weight: "600", subsets: ["latin"] });
 
 export const metadata = {
@@ -19,10 +20,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={poppins.className}>
-      <script
-        defer
-        src="https://developers.kakao.com/sdk/js/kakao.min.js"
-      ></script>
       <body className="w-[100vw] h-[100vh] bg-brand-baige">
         <Providers>
           <ReduxProviders>

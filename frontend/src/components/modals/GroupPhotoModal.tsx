@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import Image from "next/image";
 import { getPinImage } from "@/services/galleryApi";
 import { PictureDetail } from "@/types/picture";
+import Script from "next/script";
 
 type ModalProps = {
   isOpen: boolean;
@@ -35,19 +36,56 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, pictureId }: ModalProps) => {
 
   const [photoInfo, setPhotoInfo] = useState<PictureDetail>();
 
+  const [kakaoLoaded, setKakaoLoaded] = useState<boolean>(false);
+  // 카카오 로딩 상태
+
   // 핀 이미지 불러오기
   const getPhotoDetail = async () => {
-    const photoRes = await getPinImage(pictureId);
-    console.log(pictureId,'👻👻')
-    setPhotoInfo(photoRes);
-    console.log(photoRes,'❔❔')
+    if (pictureId !== 0) {
+      const photoRes = await getPinImage(pictureId);
+      setPhotoInfo(photoRes);
+      console.log(photoRes, "❔❔");
+    }
   };
-
 
   // 렌더링 되자마자 핀 이미지 불러오는 함수 실행
   useEffect(() => {
     getPhotoDetail();
   }, []);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://developers.kakao.com/sdk/js/kakao.min.js";
+    script.async = true;
+    document.head.appendChild(script);
+
+    script.onload = () => {
+      setKakaoLoaded(true);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (kakaoLoaded) {
+      window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_API_KEY);
+    }
+  }, [kakaoLoaded]);
+
+  // 버튼 클릭하면 카카오톡 공유하기 함수 실행
+  const sharephoto = () => {
+    window.Kakao.Share.sendDefault({
+      objectType: "feed",
+      content: {
+        title: "오늘의 디저트",
+        description: "아메리카노, 빵, 케익",
+        imageUrl:
+          "https://mud-kage.kakao.com/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
+        link: {
+          mobileWebUrl: "http://localhost:3000",
+          webUrl: "http://localhost:3000",
+        },
+      },
+    });
+  };
 
   return (
     <Modal
@@ -74,7 +112,10 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, pictureId }: ModalProps) => {
             className="rounded-lg"
           />
         </div>
-        <button className="bg-brand-green w-[50%] h-[5vh] mt-[10%] font-gmarket-thin rounded-xl">
+        <button
+          className="bg-brand-green w-[50%] h-[5vh] mt-[10%] font-gmarket-thin rounded-xl"
+          onClick={sharephoto}
+        >
           공유
         </button>
       </div>

@@ -13,8 +13,6 @@ import { Picture } from "@/types/picture";
 import GroupPhotoModal from "./GroupPhotoModal";
 import { pictureid } from "@/redux/doevent/messageSlice";
 
-
-
 const customStyles = {
   overlay: {
     background: "rgba(0, 0, 0, 0.5)",
@@ -49,7 +47,6 @@ const MessageModal = ({
   const [detailData, setDetailData] = useState<PindetailResult>();
   const dispatch = useAppDispatch();
 
-
   // messageId로 핀 상세 조회 데이터 가져오기
   useEffect(() => {
     // detailpin axios 호출부분
@@ -68,8 +65,11 @@ const MessageModal = ({
   // messageId로 핀 이미지들 불러오기
   const getpinImagesData = async (messageId: number) => {
     const images = await getpinImages(messageId);
+    console.log(images, "👻");
     setImagesUrls(images);
-    await setSelectedImage(images[0].image);
+    if (images) {
+      await setSelectedImage(images[0]?.image);
+    }
   };
 
   useEffect(() => {
@@ -98,7 +98,6 @@ const MessageModal = ({
 
     // redux에 선택된 이미지 인덱스 넣어주기
     dispatch(pictureid(selectedIdx));
-
   };
 
   // 메세지 모달 닫고 상세 이미지 모달 열기
@@ -142,7 +141,11 @@ const MessageModal = ({
                     alt=""
                     width={60}
                     height={60}
-                    className={`my-1 ${selectedIdx === image.pictureId ? 'border-4 border-brand-red' : ''}`}
+                    className={`my-1 ${
+                      selectedIdx === image.pictureId
+                        ? "border-4 border-brand-red"
+                        : ""
+                    }`}
                     onClick={() => selecteimage(image.pictureId, image.image)}
                   />
                 ))
@@ -170,7 +173,6 @@ const MessageModal = ({
           </div>
         </section>
       )}
-
     </Modal>
   );
 };

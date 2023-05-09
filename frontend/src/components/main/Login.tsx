@@ -6,8 +6,11 @@ import login from "../../../public/images/kakao_login.png";
 import useWindowSize from "@/libs/helper/useWindowSize";
 import MapUpper from "./MainMapUpper";
 
+
+
 const Main = () => {
   const size = useWindowSize();
+
 
   const oauthlogin =
     process.env.NEXT_PUBLIC_OUATH_KAKAO_HOSTNAME +
