@@ -1,6 +1,5 @@
 import { jsonAuthApi, multipartAuthApi } from "@/libs/axiosConfig";
 import { Pin, PindetailResult } from "@/types/pin";
-import axios from "axios";
 
 // 핀만들기 API
 const createPin = async (formData: FormData) => {
@@ -21,4 +20,11 @@ const getPinDetail = async (pinId: number): Promise<PindetailResult> => {
   return data;
 };
 
-export { createPin, getPinList, getPinDetail };
+// 전체 핀 조회
+const getPinAll = async (): Promise<Array<Pin>> => {
+  const response = await jsonAuthApi.get(`/pins`);
+  const pinList: Array<Pin> = response.data.result;
+  return pinList;
+};
+
+export { createPin, getPinList, getPinDetail, getPinAll };
