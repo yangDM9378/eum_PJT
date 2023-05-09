@@ -37,6 +37,7 @@ public class CustomPinRepositoryImpl implements CustomPinRepository {
                 .innerJoin(pin)
                 .on(condition(userGroup.group, pin.group::eq))
                 .where(condition(userId, userGroup.user.userId::eq))
+                .orderBy(pin.pinId.asc())
                 .fetch();
     }
 }
