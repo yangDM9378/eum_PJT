@@ -3,8 +3,8 @@ package com.eumpyo.eum.db.repository;
 import com.eumpyo.eum.api.response.PinListRes;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -15,6 +15,7 @@ import static com.eumpyo.eum.db.entity.QPin.pin;
 import static com.eumpyo.eum.db.entity.QUser.user;
 import static com.eumpyo.eum.db.entity.QUserGroup.userGroup;
 
+@Slf4j
 public class CustomPinRepositoryImpl implements CustomPinRepository {
     private JPAQueryFactory queryFactory;
 
@@ -27,17 +28,15 @@ public class CustomPinRepositoryImpl implements CustomPinRepository {
     }
 
     @Override
-    public List<PinListRes> findByUser_UserId(Long userId) {
+    public List<PinListRes> findPinList(Long userId) {
         return queryFactory
                 .select(Projections.constructor(PinListRes.class, pin.pinId, pin.latitude, pin.longitude))
-                .from(pin)
-                .where(pin.group.groupId.in(
-                        JPAExpressions
-                                .select(userGroup.group.groupId)
-                                .from(user)
-                                .join(userGroup)
-                                .on(condition(user.userId, userGroup.user.userId::eq))
-                                .where(condition(userId, userGroup.user.userId::eq))))
+                .from(user)
+                .innerJoin(userGroup)
+                .on(condition(user, userGroup.user::eq))
+                .innerJoin(pin)
+                .on(condition(userGroup.group, pin.group::eq))
+                .where(condition(userId, userGroup.user.userId::eq))
                 .fetch();
     }
 }

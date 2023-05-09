@@ -40,7 +40,7 @@ public class PinController {
         return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.INSERT.getStatus()));
     }
 
-    @GetMapping("/")
+    @GetMapping()
     ResponseEntity<ApiResponse> allPinList() {
         List<PinListRes> groupListRes = pinService.findAllPin();
 
@@ -66,14 +66,14 @@ public class PinController {
         return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.SELECT.getStatus()));
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/user")
     ResponseEntity<ApiResponse> userPinList(Authentication authentication) {
         User user = (User)authentication.getPrincipal();;
 
-        List<PinListRes> groupListRes = pinService.findUserPin(user);
+        List<PinListRes> userListRes = pinService.findUserPin(user);
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
-                .result(groupListRes)
+                .result(userListRes)
                 .resultCode(SuccessCode.SELECT.getCode())
                 .resultMsg(SuccessCode.SELECT.getMessage())
                 .build();
