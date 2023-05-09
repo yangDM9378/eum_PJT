@@ -71,11 +71,11 @@ const MainMap = () => {
   // }, []);
 
   return (
-    <section className="h-[100%] relative flex justify-center items-center">
+    <section className="h-[100%] w-[60%] relative flex justify-center items-center">
       <GoogleMap
         onLoad={handleOnLoad}
         center={mapCenter}
-        zoom={8}
+        zoom={7}
         mapContainerStyle={{ width: "80%", height: "90%" }}
         options={GoogleMapOptions}
       >

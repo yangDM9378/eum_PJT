@@ -17,7 +17,18 @@ const Main = () => {
   return size ? (
     <div>
       {size > 450 ? (
-        <section className="w-[100vw] h-[100vh]">
+        // 웹페이지 버전입니다.
+        <section className="w-[100vw] h-[100vh] flex">
+          <div className="w-[40%] m-auto h-[20%] flex flex-col">
+            <div className="flex flex-col justify-center w-[60%] h-[100%] m-auto">
+              <div className="text-3xl">이음</div>
+              <div className="text-lg py-2">
+                총 100개의 메시지가 남겨져있습니다.
+              </div>
+              <div className="text-lg">당신의 메시지를 남겨주세요</div>
+              <img src="/images/mail.png" alt="" />
+            </div>
+          </div>
           <MapUpper />
         </section>
       ) : (
