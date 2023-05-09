@@ -10,11 +10,11 @@ import retrofit2.http.Path
 interface RetrofitService {
 
 
-    @GET("pins/")
+    @GET("pins/user")
     fun getPinAll(@Header("Authorization")token:String): Call<Pin>
 
     @GET("pins/alarm/{pin_id}")
-    fun getPinDetail(@Header("Authorization")token: String, @Path("pin_id")pin_id:Int): Call<PinDetail>
+    fun getPinDetail(@Header("Authorization")token: String, @Path("pin_id")id:Int): Call<PinDetail>
 
 //
 //    @GET("groups/{group_id}")
