@@ -2,9 +2,7 @@ package com.ieumpyo.ieum
 
 import Pin
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -15,12 +13,12 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.Settings
 import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.CookieSyncManager
 import android.webkit.GeolocationPermissions
 import android.webkit.JavascriptInterface
+import android.webkit.JsResult
 import android.webkit.PermissionRequest
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -228,12 +226,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
 
-            override fun onPageFinished(view: WebView, url: String) {
-                super.onPageFinished(view, url);
-//               Log.d("Main",token+"!!")
-                accessToken=getCookie(target_url,"accessToken")
+//            override fun onPageFinished(view: WebView, url: String) {
+//                super.onPageFinished(view, url);
+////               Log.d("Main",token+"!!")
+//                accessToken=getCookie(target_url,"accessToken")
 //                Log.d("OnPageFinished",accessToken.value.toString()+"!!")
-            }
+//            }
 
         })
 
@@ -251,6 +249,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     request.grant(request.resources)
                 }
+            }
+//           알람창 권한
+            override fun onJsAlert(
+                view: WebView?,
+                url: String?,
+                message: String?,
+                result: JsResult?
+            ): Boolean {
+                return super.onJsAlert(view, url, message, result)
+            }
+
+            override fun onJsConfirm(
+                view: WebView?,
+                url: String?,
+                message: String?,
+                result: JsResult?
+            ): Boolean {
+                return super.onJsConfirm(view, url, message, result)
             }
 
 
@@ -279,7 +295,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
 
-        db= Room.databaseBuilder(applicationContext, notifiedLocationDB::class.java,"pin").allowMainThreadQueries().build()
+        db= Room.databaseBuilder(applicationContext, notifiedLocationDB::class.java,"pin").allowMainThreadQueries().fallbackToDestructiveMigration().build()
         db.dao().getAll().observe(this ){ tmp ->
             val StrArr = tmp.map{it.toString()}
             intLst=tmp
@@ -298,7 +314,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //                Log.d("main",target_url+"!!")
             }
             if(bundle.getInt("pin_id")!=null){
-                db.dao().insert(notifiedLocationEntity(bundle.getInt("pin_id")))
+                try{
+                    db.dao().insert(notifiedLocationEntity(bundle.getInt("pin_id")))
+
+                }
+                catch(e:Exception){
+                    Log.d("DB",e.toString())
+                }
                 Log.d("DB",bundle.getInt("pin_id").toString()+"!!")
             }
         }

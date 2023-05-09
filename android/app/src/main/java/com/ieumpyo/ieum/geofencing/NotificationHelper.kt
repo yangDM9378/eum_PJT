@@ -35,9 +35,9 @@ class NotificationHelper (context: Context): ContextWrapper(context){
 
 
         //Activity 중복실행 방지
-//        intent.setAction(ACTION_MAIN)
-//        intent.addCategory(Intent.CATEGORY_LAUNCHER)
-//        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.setAction(ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_LAUNCHER)
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
