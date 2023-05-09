@@ -11,6 +11,8 @@ import EventOptionModal from "../modals/EventOptionModal";
 import MessageModal from "../modals/MessageModal";
 import { assign } from "@/redux/map/mapSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { assign, setPinId } from "@/redux/map/mapSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { Pin } from "@/types/pin";
 import GroupPhotoModal from "../modals/GroupPhotoModal";
 
@@ -106,8 +108,9 @@ function Map({ markerList }: Props) {
   };
 
   // 메시지 마커 클릭 이벤트입니다.
-  const clickMarker = (pinId: number) => {
+  const clickMarker = async (pinId: number) => {
     setMessageId(pinId);
+    dispatch(setPinId(pinId));
     setMessageOpen(true);
   };
 

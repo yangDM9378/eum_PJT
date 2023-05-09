@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
     <!--권한 획득-->
     <!--    웹뷰 -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,6 +25,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 <!--    알림 정책에 접근-->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+<!--    저장소 파일 접근 권한-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<!--    카메라-->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA2"/>
 
 
     <meta-data

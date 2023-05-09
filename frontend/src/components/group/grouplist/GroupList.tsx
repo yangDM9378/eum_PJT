@@ -1,10 +1,10 @@
 "use client";
-
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { GroupCodeResult } from "@/types/group";
 import { Poppins } from "next/font/google";
-import { getGroupList } from "@/services/groupApi";
+import { deleteGroup, getGroupList } from "@/services/groupApi";
 import { useRouter } from "next/navigation";
 
 const poppins = Poppins({
@@ -29,13 +29,29 @@ const GroupList = () => {
   const goToMap = async (groupId: number) => {
     await router.push(`/map/${groupId}`);
   };
+
+  // 그룹 나가기
+  const outGroup = async (groupId: number) => {
+    alert("삭제");
+    deleteGroupMutation.mutate(groupId);
+  };
+
+  const deleteGroupMutation = useMutation(deleteGroup, {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["initial-group"] });
+    },
+  });
+
   return (
     <>
       <ul className="pt-[2vh] ">
         {data &&
           data.map((group, index) => (
-            <li key={index} onClick={() => goToMap(group.groupId)}>
-              <div className="grid grid-cols-10 pl-[3vw] place-content-around py-3">
+            <li key={index}>
+              <div
+                className="grid grid-cols-10 pl-[3vw] place-content-around py-3"
+                onClick={() => goToMap(group.groupId)}
+              >
                 <div className="col-span-8 font-brand-poppins">
                   <p className="font-brand-poppins text-[1rem]">{group.name}</p>
                   <p className="text-[0.8rem] pt-[0.5vh] font-thin">
@@ -52,6 +68,7 @@ const GroupList = () => {
                   />
                 </div>
               </div>
+              <div onClick={() => outGroup(group.groupId)}>그룹 나가기</div>
               <hr className="border" />
             </li>
           ))}

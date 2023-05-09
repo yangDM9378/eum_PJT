@@ -33,8 +33,9 @@ const detailGroup = async (groupId: number): Promise<GroupDetail> => {
   return detailData;
 };
 
+const deleteGroup = async (groupId: number): Promise<Result> => {
+  const result = await jsonAuthApi.delete(`/groups/${groupId}`);
+  return result.data;
+};
 
-
-
-
-export { createGroup, getGroupList, enterGroup, detailGroup };
+export { createGroup, getGroupList, enterGroup, detailGroup, deleteGroup };
