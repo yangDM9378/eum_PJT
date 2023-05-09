@@ -6,7 +6,7 @@ import login from "../../../public/images/kakao_login.png";
 import useWindowSize from "@/libs/helper/useWindowSize";
 import MapUpper from "./MainMapUpper";
 
-const LoginButton = () => {
+const Main = () => {
   const size = useWindowSize();
 
   const oauthlogin =
@@ -14,9 +14,9 @@ const LoginButton = () => {
     "?redirect_url=" +
     process.env.NEXT_PUBLIC_OUATH_KAKAO_REDIRECT_URL;
 
-  return (
+  return size ? (
     <div>
-      {size && size > 450 ? (
+      {size > 450 ? (
         <section className="w-[100vw] h-[100vh]">
           <MapUpper />
         </section>
@@ -42,7 +42,9 @@ const LoginButton = () => {
         </div>
       )}
     </div>
+  ) : (
+    <div>로딩중입니다.</div>
   );
 };
 
-export default LoginButton;
+export default Main;
