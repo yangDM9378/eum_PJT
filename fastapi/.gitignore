@@ -1,5 +1,5 @@
 # venv
-.venv
+venv/**
 
 # cache
-._pycache_
+__pycache__/**
