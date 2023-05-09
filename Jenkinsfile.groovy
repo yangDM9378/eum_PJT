@@ -33,14 +33,12 @@ pipeline {
         stage ('docker frontend build') {
             steps {
                 sh 'cd /var/jenkins_home/workspace/eum'
-                sh 'docker-compose stop frontend && docker-compose rm -f frontend'
                 sh 'docker-compose build frontend'
             }
         }
         stage ('docker backend build') {
             steps {
                 sh 'cd /var/jenkins_home/workspace/eum'
-                sh 'docker-compose stop backend && docker-compose rm -f backend'
                 sh 'docker-compose build backend'
             }
         }

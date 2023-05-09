@@ -41,8 +41,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         val transitionTypes = geofencingEvent?.geofenceTransition
 
         lateinit var rawlist : PinDetail
-
-        RetrofitImpl.service.getPinDetail("Bearer "+MainActivity.accessToken.value!!,geofenceId!!).enqueue(object : retrofit2.Callback<PinDetail>{
+//        Log.d("API",geofenceId.toString() + MainActivity.accessToken.value.toString())
+        RetrofitImpl.service.getPinDetail("Bearer "+MainActivity.accessToken.value.toString()!!,geofenceId!!).enqueue(object : retrofit2.Callback<PinDetail>{
             override fun onFailure(call: Call<PinDetail>, t: Throwable) {
                 Log.e("Failed",t.toString()+"!!")
             }
@@ -71,7 +71,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                             notificationHelper.displayNotification(
                                 geofenceId!!,
                                 "${title}",
-                                "${role}님이 남긴 메시지에 접근했어요!",
+                                "${role}님이 남긴 메시지가 있어요!",
                                 MainActivity().javaClass
                             )
                         }
