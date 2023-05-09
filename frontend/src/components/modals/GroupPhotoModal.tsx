@@ -80,8 +80,8 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, pictureId }: ModalProps) => {
         imageUrl:
           "https://mud-kage.kakao.com/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
         link: {
-          mobileWebUrl: "http://localhost:3000",
-          webUrl: "http://localhost:3000",
+          mobileWebUrl: "https://i-eum-u.com",
+          webUrl: "https://i-eum-u.com",
         },
       },
     });

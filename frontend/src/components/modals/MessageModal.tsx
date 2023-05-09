@@ -65,10 +65,9 @@ const MessageModal = ({
   // messageId로 핀 이미지들 불러오기
   const getpinImagesData = async (messageId: number) => {
     const images = await getpinImages(messageId);
-    console.log(images, "👻");
-    setImagesUrls(images);
-    if (images) {
-      await setSelectedImage(images[0]?.image);
+    await setImagesUrls(images);
+    if (imagesUrls.length !== 0) {
+      await setSelectedImage(imagesUrls[0].image);
     }
   };
 
@@ -131,8 +130,8 @@ const MessageModal = ({
           />
           <div className="flex flex-row justify-center mb-3">
             <div className="flex flex-col-reverse pr-7">
-              {selectedImage === null ? (
-                <div>Loading...</div>
+              {imagesUrls.length === 0 ? (
+                <p className="my-5 ">아직 함께 찍은 사진이 없어요😭</p>
               ) : (
                 imagesUrls.map((image) => (
                   <img
@@ -141,7 +140,7 @@ const MessageModal = ({
                     alt=""
                     width={60}
                     height={60}
-                    className={`my-1 ${
+                    className={`my-1 overflow-y-scroll ${
                       selectedIdx === image.pictureId
                         ? "border-4 border-brand-red"
                         : ""
@@ -151,6 +150,7 @@ const MessageModal = ({
                 ))
               )}
             </div>
+
             {selectedImage !== null && (
               <img
                 src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${selectedImage}`}

@@ -9,10 +9,8 @@ import {
 } from "@react-google-maps/api";
 import EventOptionModal from "../modals/EventOptionModal";
 import MessageModal from "../modals/MessageModal";
-import { assign } from "@/redux/map/mapSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { assign, setPinId } from "@/redux/map/mapSlice";
-import { useAppDispatch } from "@/redux/hooks";
 import { Pin } from "@/types/pin";
 import GroupPhotoModal from "../modals/GroupPhotoModal";
 
