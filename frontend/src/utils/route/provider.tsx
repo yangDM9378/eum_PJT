@@ -7,9 +7,7 @@ import Cookies from "js-cookie";
 const RouterGuard = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
-  console.log(pathname);
   const accesstoken = Cookies.get("accessToken");
-  console.log(accesstoken);
 
   useEffect(() => {
     if (pathname !== "/" && accesstoken === undefined) {

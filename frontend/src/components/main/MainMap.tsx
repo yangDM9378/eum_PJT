@@ -29,8 +29,8 @@ const GoogleMapOptions: google.maps.MapOptions = {
 const MainMap = () => {
   // 지도 상태 값
   const [mapCenter, setMapCenter] = useState({
-    lat: 0,
-    lng: 0,
+    lat: 36.28179677050536,
+    lng: 127.7571724919414,
   });
 
   //지도가 로드되면 매핑합니다.
@@ -40,19 +40,35 @@ const MainMap = () => {
   };
 
   // 현재 위치를 가져옵니다.
-  const getUserGps = () => {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      if (position) {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        setMapCenter({ lat, lng });
-      }
-    });
-  };
+  // const getUserGps = () => {
+  //   navigator.geolocation.getCurrentPosition(function (position) {
+  //     if (position) {
+  //       const lat = position.coords.latitude;
+  //       const lng = position.coords.longitude;
+  //       setMapCenter({ lat, lng });
+  //     }
+  //   });
+  // };
 
-  useEffect(() => {
-    getUserGps();
-  }, []);
+  // 지도를 움직일때 지도 중간 지점의 좌표입니다.
+  // const [changeCenter, setChangeCenter] = useState({
+  //   lat: 0,
+  //   lng: 0,
+  // });
+  // const handleCenterChanged = () => {
+  //   if (mapref) {
+  //     const newCenter = mapref.getCenter();
+  //     if (newCenter) {
+  //       const center = { lat: newCenter.lat(), lng: newCenter.lng() };
+  //       console.log(center);
+  //       setChangeCenter(center);
+  //     }
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getUserGps();
+  // }, []);
 
   return (
     <section className="h-[100%] relative flex justify-center items-center">
