@@ -71,12 +71,12 @@ const MainMap = () => {
   // }, []);
 
   return (
-    <section className="h-[100%] w-[60%] relative flex justify-center items-center">
+    <section className="h-[100%] w-[50%] relative flex justify-center items-center">
       <GoogleMap
         onLoad={handleOnLoad}
         center={mapCenter}
-        zoom={7}
-        mapContainerStyle={{ width: "80%", height: "90%" }}
+        zoom={8}
+        mapContainerStyle={{ width: "100%", height: "100%" }}
         options={GoogleMapOptions}
       >
         {/* <MarkerF position={{ lat: mapCenter.lat, lng: mapCenter.lng }} /> */}
