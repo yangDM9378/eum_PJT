@@ -36,7 +36,7 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
   const coords = useAppSelector((state) => state.coordsReducer.coords);
   const groupId = useAppSelector((state) => state.coordsReducer.groupId);
   const queryClient = useQueryClient();
-  
+
   const { mutate, isLoading } = useMutation(createPin, {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["initial-map"] });

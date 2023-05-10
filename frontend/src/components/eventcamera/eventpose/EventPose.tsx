@@ -22,10 +22,12 @@ const EventPose = () => {
 
   return (
     <>
-    <p className=" font-gmarket-thin text-center text-lg">두 사진이 포즈가 같나요?</p>
+      <p className=" font-gmarket-thin text-center text-lg">
+        두 사진이 포즈가 같나요?
+      </p>
       <div className="flex-col justify-center h-[60%] pt-[3%]">
         {/* 핀 이미지 */}
-        
+
         <Image
           src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${pinImg}`}
           alt="pinImg"

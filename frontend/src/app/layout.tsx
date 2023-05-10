@@ -4,8 +4,6 @@ import Providers from "@/utils/provider";
 import ReduxProviders from "@/redux/provider";
 import RouterGuard from "@/utils/route/provider";
 
-
-
 const poppins = Poppins({ weight: "600", subsets: ["latin"] });
 
 export const metadata = {
