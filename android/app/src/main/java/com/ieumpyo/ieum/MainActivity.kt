@@ -31,6 +31,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var NEXT_PUBLIC_OUATH_KAKAO_HOSTNAME="http://i-eum-u.com/api/v1/oauth2/authorize/kakao"
     private var NEXT_PUBLIC_OUATH_KAKAO_REDIRECT_URL="http://i-eum-u.com/api/v1/oauth2/callback/kakao"
-//    var target_url="http://10.0.2.2:8080"
+//    var target_url="http://10.0.2.2:3000/"
        var target_url="http://i-eum-u.com/"
     private val MY_PERMISSIONS_REQ_ACCESS_FINE_LOCATION = 100
     private val MY_PERMISSIONS_REQ_ACCESS_BACKGROUND_LOCATION = 101
@@ -168,6 +169,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     lateinit var mAdView : AdView
     lateinit var intLst : List<Int>
+    lateinit var web : WebView
 
     companion object{
 
@@ -186,8 +188,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val adRequest=AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
 
-        val testDeviceIds = Arrays.asList("ca-app-pub-4728228463704876/6896938382")
-//        val testDeviceIds = Arrays.asList("ca-app-pub-3940256099942544/6300978111")
+//        val testDeviceIds = Arrays.asList("ca-app-pub-4728228463704876/6896938382")
+        val testDeviceIds = Arrays.asList("ca-app-pub-3940256099942544/6300978111")
 
         val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
         MobileAds.setRequestConfiguration(configuration)
@@ -196,8 +198,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment)as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+
+
 //        웹뷰 생성
-        var web= findViewById<WebView>(R.id.web)
+        web= findViewById<WebView>(R.id.web)
         web.apply {
             webViewClient = WebViewClient()
             settings.javaScriptEnabled = true
@@ -288,7 +292,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
 
+        val refreshLayout = findViewById<SwipeRefreshLayout>(R.id.contentSwipeLayout)
+        refreshLayout.setOnRefreshListener { web.reload() }
+        refreshLayout.viewTreeObserver.addOnScrollChangedListener {
+            if (web.getScrollY() === 0) {
+                refreshLayout.isEnabled = true
+            } else {
+                refreshLayout.isEnabled = false
+            }
+        }
+
         accessToken=getCookie(target_url,"accessToken")
+        accessToken=MutableLiveData("eyJyZWdEYXRlIjoxNjgzNjc4MDgzMzk4LCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyRW1haWwiOiJxb3J3bGRuanMxMDBAbmF2ZXIuY29tIiwidXNlckdlbmRlciI6MSwidXNlckJpcnRoWWVhciI6MTk5NCwidXNlck5hbWUiOiLrsLHsp4Dsm5AiLCJ1c2VySWQiOjIsInN1YiI6InFvcndsZG5qczEwMEBuYXZlci5jb20iLCJleHAiOjE2ODM2OTYwODN9.NNEJCOGQEbmBCcECJFZWwXr1DqTdppeHLY-_GFYnegI")
+
         accessToken.observe(this){
             initList("Bearer "+it)
             Log.d("Token","ACCESSTOKEN OBSERVE!!"+it)
@@ -302,29 +318,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             removeGeofence(StrArr)
             Log.d("OBSERVER",tmp.toString()+"!!") }
 
-        val intent = getIntent()
-        val bundle = intent.extras
-//        Log.d("OBSERVER!!",bundle?.getInt("pin_id").toString())
-        if (bundle != null) {
-            if (bundle.getString("url") != null && !bundle.getString("url")
-                    .equals("", ignoreCase = true)
-            ) {
-                target_url = bundle.getString("url")!!
 
-//                Log.d("main",target_url+"!!")
-            }
-            if(bundle.getInt("pin_id")!=null){
-                try{
-                    db.dao().insert(notifiedLocationEntity(bundle.getInt("pin_id")))
-
-                }
-                catch(e:Exception){
-                    Log.d("DB",e.toString())
-                }
-                Log.d("DB",bundle.getInt("pin_id").toString()+"!!")
-            }
-        }
-
+        getBundle()
         web.loadUrl(target_url) // 웹뷰에 표시할 웹사이트 주소, 웹뷰 시작
 
         geofencingClient= LocationServices.getGeofencingClient(this)
@@ -349,6 +344,34 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             mWebViewImageUpload = null
         }
     }
+
+    fun getBundle(){
+        Log.d("BUNDLE","getBundle!!!")
+        val intent = getIntent()
+        val bundle = intent.extras
+//        Log.d("OBSERVER!!",bundle?.getInt("pin_id").toString())
+        if (bundle != null) {
+            if (bundle.getString("url") != null && !bundle.getString("url")
+                    .equals("", ignoreCase = true)
+            ) {
+                target_url = bundle.getString("url")!!
+
+                Log.d("main",target_url+"!!")
+            }
+            if(bundle.getInt("pin_id")!=null){
+                try{
+                    db.dao().insert(notifiedLocationEntity(bundle.getInt("pin_id")))
+                    Log.d("BUNDLE",bundle.getInt("pin_id").toString()+"!!")
+
+                }
+                catch(e:Exception){
+                    Log.d("DB",e.toString())
+                }
+                Log.d("DB",bundle.getInt("pin_id").toString()+"!!")
+            }
+        }
+    }
+
 
     fun getCookie(siteName: String, cookieName: String): MutableLiveData<String> {
         var CookieValue: String=""
