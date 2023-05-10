@@ -23,7 +23,6 @@ const GroupInfo = ({ groupId }: Props) => {
   const handleCopyClipBoard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      (window as any).Android.copyToClipboard(text);
       setIsOpen(true);
     } catch {
       console.log("error");
