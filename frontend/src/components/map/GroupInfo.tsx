@@ -21,12 +21,11 @@ const GroupInfo = ({ groupId }: Props) => {
   });
 
   const handleCopyClipBoard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setIsOpen(true);
-    } catch {
-      console.log("error");
+    await navigator.clipboard.writeText(text);
+    if ((window as any).Android) {
+      (window as any).Android.copyToClipboard(text);
     }
+    setIsOpen(true);
   };
   return (
     <section className="h-[25%] flex ">
