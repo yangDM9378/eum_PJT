@@ -44,7 +44,7 @@ const EventCamera = () => {
 
   return (
     <div className="w-full h-full">
-      <div className="h-[88%] flex items-center justify-center">
+      <div className="h-[88%] mt-[30%] flex items-center justify-center">
         <video
           className="rounded-3xl px-[2%]"
           ref={videoRef}
@@ -55,7 +55,8 @@ const EventCamera = () => {
       </div>
       <div className="flex items-center justify-center h-[12%]">
         <AiOutlineCamera
-          className="bg-white rounded-full text-brand-green text-[50px] p-[2%]"
+          className="bg-white rounded-full text-brand-green text-[50px] my-[8%] p-[2%]
+          "
           onClick={handleTakePicture}
         />
       </div>
