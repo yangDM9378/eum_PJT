@@ -59,12 +59,12 @@ function Map({ markerList }: Props) {
   //groupphotomodal 관련 state
   const [isPhotoOpen, setIsPhotoOpen] = useState<boolean>(false);
 
- // 선택한 사진 인덱스
+  // 선택한 사진 인덱스
   const [pidctureId, setPictureId] = useState<number>(0);
 
   // redux에 넣은 groupphotomodal 인덱스 가져오기
   const pictureId = useAppSelector((state) => state.messageReducer.pictureid);
-  console.log(pictureId,'🎈🎈🎈')
+  console.log(pictureId, "🎈🎈🎈");
   // pictureId에 넣어주기
   useEffect(() => {
     setPictureId(pictureId);
@@ -230,9 +230,7 @@ function Map({ markerList }: Props) {
       <GroupPhotoModal
         isOpen={isPhotoOpen}
         setIsOpen={setIsPhotoOpen}
-        pictureId={pidctureId}        
-        
-
+        pictureId={pidctureId}
       />
     </section>
   );

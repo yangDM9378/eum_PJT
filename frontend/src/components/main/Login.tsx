@@ -6,11 +6,21 @@ import login from "../../../public/images/kakao_login.png";
 import useWindowSize from "@/libs/helper/useWindowSize";
 import MapUpper from "./MainMapUpper";
 
-
+import { useQuery } from "@tanstack/react-query";
+import { getPinAll } from "@/services/pinApi";
 
 const Main = () => {
-  const size = useWindowSize();
+  const getMainMap = async () => {
+    const pinList = await getPinAll();
+    return pinList;
+  };
 
+  const { data, isLoading } = useQuery({
+    queryKey: ["initial-main-pin"],
+    queryFn: async () => await getMainMap(),
+  });
+
+  const size = useWindowSize();
 
   const oauthlogin =
     process.env.NEXT_PUBLIC_OUATH_KAKAO_HOSTNAME +
@@ -21,7 +31,7 @@ const Main = () => {
   const [count, setCount] = useState(0);
   const rate = 200;
 
-  const end = 100;
+  const end = data ? data.length : 0;
   const start = 0;
   const duration = 3000;
   const frameRate = 1000 / 80;
@@ -71,7 +81,7 @@ const Main = () => {
               </a>
             </div>
           </div>
-          <MapUpper />
+          <MapUpper markerList={data} />
         </section>
       ) : (
         <div
