@@ -9,12 +9,7 @@ function Providers({ children }: React.PropsWithChildren) {
     new QueryClient({ defaultOptions: { queries: { staleTime: 5000 } } })
   );
 
-  return (
-    <QueryClientProvider client={client}>
-      {children}
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  );
+  return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 }
 
 export default Providers;
