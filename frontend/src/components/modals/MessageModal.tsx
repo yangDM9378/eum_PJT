@@ -7,6 +7,11 @@ import { PindetailResult } from "@/types/pin";
 import { getPinDetail } from "@/services/pinApi";
 import { useAppDispatch } from "@/redux/hooks";
 import { eventimageurl, eventtype } from "@/redux/doevent/eventSlice";
+import Image from "next/image";
+import { getpinImages } from "@/services/galleryApi";
+import { Picture } from "@/types/picture";
+import GroupPhotoModal from "./GroupPhotoModal";
+import { pictureid } from "@/redux/doevent/messageSlice";
 
 const customStyles = {
   overlay: {
@@ -29,15 +34,19 @@ type ModalProps = {
   messageOpen: boolean;
   messageId: number;
   setMessageOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPhotoOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+// 메세지 모달
 const MessageModal = ({
   messageOpen,
   setMessageOpen,
   messageId,
+  setIsPhotoOpen,
 }: ModalProps) => {
   const [detailData, setDetailData] = useState<PindetailResult>();
   const dispatch = useAppDispatch();
+
   // messageId로 핀 상세 조회 데이터 가져오기
   useEffect(() => {
     // detailpin axios 호출부분
@@ -50,6 +59,22 @@ const MessageModal = ({
     }
   }, [messageId]);
 
+  // 찍은 사진들 보여주기
+  const [imagesUrls, setImagesUrls] = useState<[] | Picture[]>([]);
+
+  // messageId로 핀 이미지들 불러오기
+  const getpinImagesData = async (messageId: number) => {
+    const images = await getpinImages(messageId);
+    await setImagesUrls(images);
+    if (imagesUrls.length !== 0) {
+      await setSelectedImage(imagesUrls[0].image);
+    }
+  };
+
+  useEffect(() => {
+    getpinImagesData(messageId);
+  }, [messageId]);
+
   const router = useRouter();
   const moveEvent = async () => {
     if (detailData) {
@@ -59,6 +84,26 @@ const MessageModal = ({
     await router.push("/eventcamera");
   };
 
+  // 선택된 이미지 인덱스
+  const [selectedIdx, setSelectedIdx] = useState<number>(0);
+
+  // 선택된 이미지
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  // 이미지 선택하기
+  const selecteimage = (id: number, image: string) => {
+    setSelectedIdx(id);
+    setSelectedImage(image);
+
+    // redux에 선택된 이미지 인덱스 넣어주기
+    dispatch(pictureid(selectedIdx));
+  };
+
+  // 메세지 모달 닫고 상세 이미지 모달 열기
+  const CloseModal = () => {
+    setMessageOpen(false);
+    setIsPhotoOpen(true);
+  };
   return (
     <Modal
       isOpen={messageOpen}
@@ -83,13 +128,45 @@ const MessageModal = ({
             alt="이벤트사진"
             className="h-[25vh] my-4 rounded-[10px] shadow-xl"
           />
-          <img
-            src="/images/GroupSample.png"
-            alt="예시사진"
-            className="h-[25vh] mb-4 rounded-[10px] shadow-xl"
-          />
+          <div className="flex flex-row justify-center mb-3">
+            <div className="flex flex-col-reverse pr-7">
+              {imagesUrls.length === 0 ? (
+                <p className="my-5 ">아직 함께 찍은 사진이 없어요😭</p>
+              ) : (
+                imagesUrls.map((image) => (
+                  <img
+                    key={image.pictureId}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.image}`}
+                    alt=""
+                    width={60}
+                    height={60}
+                    className={`my-1 overflow-y-scroll ${
+                      selectedIdx === image.pictureId
+                        ? "border-4 border-brand-red"
+                        : ""
+                    }`}
+                    onClick={() => selecteimage(image.pictureId, image.image)}
+                  />
+                ))
+              )}
+            </div>
+
+            {selectedImage !== null && (
+              <img
+                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${selectedImage}`}
+                alt="선택된 이미지"
+                height={150}
+                width={150}
+                className="rounded-lg"
+                onClick={() => {
+                  CloseModal();
+                }}
+              />
+            )}
+          </div>
+
           <div
-            className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl "
+            className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl"
             onClick={moveEvent}
           >
             함께 찍기

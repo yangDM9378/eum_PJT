@@ -5,8 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName="pin")
 data class notifiedLocationEntity(
+    @PrimaryKey
     val pin_id:Int
-){
-    @PrimaryKey(autoGenerate = true)
-    var notified_id:Int=0
-}
+)

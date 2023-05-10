@@ -6,15 +6,8 @@ pipeline {
     }
 
     stages {
-        stage ('git pull') {
-            steps {
-
-            }
-        }
         stage ('docker frontend run') {
             steps {
-                sh 'cd /var/jenkins_home/workspace/eum'
-
                 echo 'git pull'
                 git branch: 'develop', credentialsId: 'admin', url: 'https://lab.ssafy.com/s08-final/S08P31C103.git'
 
@@ -29,8 +22,7 @@ pipeline {
         }
         stage ('docker backend run') {
             steps {
-                sh 'cd /var/jenkins_home/workspace'
-                sh 'ssh -i "C103.pem" ubuntu@3.22.167.196'
+                sh 'ssh -i /var/jenkins_home/workspace/C103.pem ubuntu@3.22.167.196'
                 sh 'cd /home/S08P31C103'
 
                 echo 'git pull'

@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface UserGroupRepository extends JpaRepository<UserGroup,Long>, CustomUserGroupRepository {
     Optional<UserGroup> findByUser_UserIdAndGroup_GroupId(Long userId, Long groupId);
+
+    void deleteByUser_UserIdAndGroup_GroupId(Long userId, Long groupId);
 }

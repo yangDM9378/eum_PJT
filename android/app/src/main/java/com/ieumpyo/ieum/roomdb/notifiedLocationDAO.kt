@@ -11,6 +11,6 @@ interface notifiedLocationDAO {
     @Query("SELECT pin_id FROM pin ORDER BY pin_id asc")
     fun getAll(): LiveData<List<Int>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(notifiedPinEntity: notifiedLocationEntity)
 }

@@ -6,22 +6,35 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 const EventPose = () => {
-  const [PoseImage, setPoseImage] = useState("");
+  // 핀 이미지 들어가는곳
+  const [pinImg, setPinImg] = useState("");
+  const [picImg, setPicImg] = useState("");
 
-  const originImageUrl = useAppSelector(
-    (state) => state.eventReducer.eventimageurl
-  );
+  // 핀이미지
+  const eventImg = useAppSelector((state) => state.eventReducer.eventimageurl);
+  // 사진찍은 이미지
+  const picturImg = useAppSelector((state) => state.eventReducer.pictureimg);
 
   useEffect(() => {
-    setPoseImage(originImageUrl);
+    setPinImg(eventImg);
+    setPicImg(picturImg);
   });
 
   return (
     <>
       <div className="flex justify-center h-[60%] pt-[3%]">
+        {/* 핀 이미지 */}
         <Image
-          src={PoseImage}
-          alt=""
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${pinImg}`}
+          alt="pinImg"
+          width={400}
+          height={700}
+          className="pt-[10%] h-[50vh] px-3"
+        />
+        {/* 사진찍은 이미지 */}
+        <Image
+          src={`${picImg}`}
+          alt="picImg"
           width={400}
           height={700}
           className="pt-[10%] h-[50vh] px-3"

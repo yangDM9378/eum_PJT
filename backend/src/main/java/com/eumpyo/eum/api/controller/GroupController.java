@@ -101,4 +101,19 @@ public class GroupController {
 
         return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.DELETE.getStatus()));
     }
+
+    @DeleteMapping("/exit/{groupId}")
+    ResponseEntity<ApiResponse> groupExit(Authentication authentication, @PathVariable("groupId") Long groupId) {
+        User user = (User)authentication.getPrincipal();
+
+        groupService.exitGroup(user, groupId);
+
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .result(null)
+                .resultCode(SuccessCode.DELETE.getCode())
+                .resultMsg(SuccessCode.DELETE.getMessage())
+                .build();
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.valueOf(SuccessCode.DELETE.getStatus()));
+    }
 }

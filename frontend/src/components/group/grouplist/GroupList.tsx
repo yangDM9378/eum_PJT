@@ -24,6 +24,8 @@ const GroupList = () => {
     queryKey: ["initial-group"],
     queryFn: async () => await getGroup(),
   });
+
+  
   const goToMap = async (groupId: number) => {
     await router.push(`/map/${groupId}`);
   };
