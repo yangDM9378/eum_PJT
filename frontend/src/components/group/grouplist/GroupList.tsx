@@ -67,7 +67,14 @@ const GroupList = () => {
                   />
                 </div>
               </div>
-              <div onClick={() => outGroupList(group.groupId)}>그룹 나가기</div>
+              <div className="flex justify-end ">
+                <div
+                  onClick={() => outGroup(group.groupId)}
+                  className="bg-brand-red rounded text-sm p-1 m-2"
+                >
+                  그룹 나가기
+                </div>
+              </div>
               <hr className="border" />
             </li>
           ))}

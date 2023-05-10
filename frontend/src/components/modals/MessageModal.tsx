@@ -66,10 +66,13 @@ const MessageModal = ({
   const getpinImagesData = async (messageId: number) => {
     const images = await getpinImages(messageId);
     await setImagesUrls(images);
-    if (imagesUrls.length !== 0) {
-      await setSelectedImage(imagesUrls[0].image);
-    }
   };
+
+  useEffect(() => {
+    imagesUrls.length === 0
+      ? setSelectedImage("")
+      : setSelectedImage(imagesUrls[0].image);
+  }, [imagesUrls]);
 
   useEffect(() => {
     getpinImagesData(messageId);
@@ -129,18 +132,19 @@ const MessageModal = ({
             className="h-[25vh] my-4 rounded-[10px] shadow-xl"
           />
           <div className="flex flex-row justify-center mb-3">
-            <div className="flex flex-col-reverse pr-7">
+            <div className="flex flex-col-reverse h-[20vh] overflow-y-scroll justify-center">
               {imagesUrls.length === 0 ? (
-                <p className="my-5 ">아직 함께 찍은 사진이 없어요😭</p>
-              ) : (
+                <p className="flex ">아직 함께 찍은 사진이 없어요😭</p>
+              ) :
+               (
                 imagesUrls.map((image) => (
                   <img
                     key={image.pictureId}
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.image}`}
                     alt=""
-                    width={60}
+                    width={70}
                     height={60}
-                    className={`my-1 overflow-y-scroll ${
+                    className={`my-[5%] mr-[8vw] ${
                       selectedIdx === image.pictureId
                         ? "border-4 border-brand-red"
                         : ""
@@ -148,10 +152,11 @@ const MessageModal = ({
                     onClick={() => selecteimage(image.pictureId, image.image)}
                   />
                 ))
-              )}
+              )
+              }
             </div>
 
-            {selectedImage !== null && (
+            {selectedImage !== "" && (
               <img
                 src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${selectedImage}`}
                 alt="선택된 이미지"
