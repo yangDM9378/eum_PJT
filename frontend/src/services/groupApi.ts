@@ -33,9 +33,23 @@ const detailGroup = async (groupId: number): Promise<GroupDetail> => {
   return detailData;
 };
 
+// 그룹 삭제하기
 const deleteGroup = async (groupId: number): Promise<Result> => {
   const result = await jsonAuthApi.delete(`/groups/${groupId}`);
   return result.data;
 };
 
-export { createGroup, getGroupList, enterGroup, detailGroup, deleteGroup };
+// 그룹 나가기
+const outGroup = async (groupId: number): Promise<Result> => {
+  const result = await jsonAuthApi.delete(`/groups/exit/${groupId}`);
+  return result.data;
+};
+
+export {
+  createGroup,
+  getGroupList,
+  enterGroup,
+  detailGroup,
+  deleteGroup,
+  outGroup,
+};

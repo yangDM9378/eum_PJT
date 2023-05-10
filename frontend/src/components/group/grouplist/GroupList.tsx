@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { GroupCodeResult } from "@/types/group";
 import { Poppins } from "next/font/google";
-import { deleteGroup, getGroupList } from "@/services/groupApi";
+import { deleteGroup, getGroupList, outGroup } from "@/services/groupApi";
 import { useRouter } from "next/navigation";
 
 const poppins = Poppins({
@@ -25,18 +25,17 @@ const GroupList = () => {
     queryFn: async () => await getGroup(),
   });
 
-  
   const goToMap = async (groupId: number) => {
     await router.push(`/map/${groupId}`);
   };
 
   // 그룹 나가기
-  const outGroup = async (groupId: number) => {
+  const outGroupList = async (groupId: number) => {
     alert("삭제");
     deleteGroupMutation.mutate(groupId);
   };
 
-  const deleteGroupMutation = useMutation(deleteGroup, {
+  const deleteGroupMutation = useMutation(outGroup, {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["initial-group"] });
     },
@@ -68,7 +67,7 @@ const GroupList = () => {
                   />
                 </div>
               </div>
-              <div onClick={() => outGroup(group.groupId)}>그룹 나가기</div>
+              <div onClick={() => outGroupList(group.groupId)}>그룹 나가기</div>
               <hr className="border" />
             </li>
           ))}
