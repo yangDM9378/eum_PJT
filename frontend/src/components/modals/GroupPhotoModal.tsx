@@ -41,11 +41,10 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, pictureId }: ModalProps) => {
 
   // 핀 이미지 불러오기
   const getPhotoDetail = async () => {
-    if (pictureId !== 0) {
+    console.log(pictureId,'?❔')
       const photoRes = await getPinImage(pictureId);
       setPhotoInfo(photoRes);
-      console.log(photoRes, "❔❔");
-    }
+  
   };
 
   // 렌더링 되자마자 핀 이미지 불러오는 함수 실행

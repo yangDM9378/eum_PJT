@@ -97,16 +97,20 @@ const MessageModal = ({
   const selecteimage = (id: number, image: string) => {
     setSelectedIdx(id);
     setSelectedImage(image);
-
-    // redux에 선택된 이미지 인덱스 넣어주기
-    dispatch(pictureid(selectedIdx));
   };
 
   // 메세지 모달 닫고 상세 이미지 모달 열기
-  const CloseModal = () => {
+  const CloseModal = async () => {
+    // redux에 선택된 이미지 인덱스 넣어주기
     setMessageOpen(false);
     setIsPhotoOpen(true);
   };
+
+
+  useEffect(() => {
+    
+    dispatch(pictureid(selectedIdx));
+  },[selectedIdx])
   return (
     <Modal
       isOpen={messageOpen}
@@ -135,8 +139,7 @@ const MessageModal = ({
             <div className="flex flex-col-reverse h-[20vh] overflow-y-scroll justify-center">
               {imagesUrls.length === 0 ? (
                 <p className="flex text-lg">아직 함께 찍은 사진이 없어요😭</p>
-              ) :
-               (
+              ) : (
                 imagesUrls.map((image) => (
                   <img
                     key={image.pictureId}

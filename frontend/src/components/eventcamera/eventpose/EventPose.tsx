@@ -7,7 +7,6 @@ import React, { useEffect, useState } from "react";
 import { pictureEventApi, postPose } from "@/services/eventApi";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { isNull } from "util";
 
 const EventPose = () => {
   // 핀 이미지 들어가는곳
@@ -53,7 +52,6 @@ const EventPose = () => {
   // 포즈 사진 비교하는 함수
   const checkpose = async () => {
     await convertURLtoFile(eventImg, picturImg);
-    console.log(formData);
     const response = await postPose(formData);
     setResult(response.result);
   };
@@ -70,13 +68,13 @@ const EventPose = () => {
 
     const jsonReq = { groupId: groupId, pinId: pinId };
 
-    const formData1 = new FormData();
-    formData1.append("image", imgBlob, "image.png");
-    formData1.append(
+    const formData2  = new FormData();
+    formData2.append("image", imgBlob, "image.png");
+    formData2.append(
       "pictureAddReq",
       new Blob([JSON.stringify(jsonReq)], { type: "application/json" })
     );
-    await poseEventMutation.mutate(formData1);
+    await poseEventMutation.mutate(formData2);
     await router.push(`/group/${groupId}`);
   };
 
@@ -116,21 +114,18 @@ const EventPose = () => {
         >
           확인하기
         </button>
-        {result ? (
-          <button
-            className="w-[50%] h-[2.5rem] absolute bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
-            onClick={savepicture}
-          >
-            저장하기
-          </button>
-        ) : (
-          <button
-            className="w-[50%] h-[2.5rem] absolute bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
-            onClick={returnPicture}
-          >
-            다시찍기
-          </button>
-        )}
+        <button
+          className="w-[50%] h-[2.5rem] absolute bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
+          onClick={savepicture}
+        >
+          저장하기
+        </button>
+        <button
+          className="w-[50%] h-[2.5rem] absolute bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
+          onClick={returnPicture}
+        >
+          다시찍기
+        </button>
       </div>
     </>
   );
