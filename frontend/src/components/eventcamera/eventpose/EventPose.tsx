@@ -4,6 +4,7 @@ import { eventimageurl } from "@/redux/doevent/eventSlice";
 import { useAppSelector } from "@/redux/hooks";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { postPose } from "@/services/eventApi";
 
 const EventPose = () => {
   // 핀 이미지 들어가는곳
@@ -15,10 +16,42 @@ const EventPose = () => {
   // 사진찍은 이미지
   const picturImg = useAppSelector((state) => state.eventReducer.pictureimg);
 
+  const formData = new FormData();
+  // ulr을 blob으로 바꾸기
+  const convertURLtoFile = async (image1: string, image2: string) => {
+    console.log(`${process.env.NEXT_PUBLIC_IMAGE_URL}${image1}`);
+    const response1 = await fetch(
+      `${process.env.NEXT_PUBLIC_IMAGE_URL}${image1}`
+    );
+    // url -> blob으로 바꾸기
+    const data1 = await response1.blob();
+    console.log(data1,'👻')
+    // base64 -> blob으로 바꾸기
+    const data2 = await (await fetch(image2)).blob();
+    console.log(data2,'❤');
+
+    // formdata에 넣어주기
+    formData.append("image1", data1, "image1.png");
+    formData.append("image2", data2, "image2.png");
+  };
+
   useEffect(() => {
+    // url -> blob
     setPinImg(eventImg);
+    // base64파일 -> blob
     setPicImg(picturImg);
-  });
+    convertURLtoFile(eventImg, picturImg);
+  }, []);
+
+  // 포즈 결과 상태
+  const [result, setResult] = useState<boolean>(false);
+
+  // 포즈 사진 비교하는 함수
+  const checkpose = async () => {
+    const response = await postPose(formData);
+    console.log(response);
+    // setResult(response.data);
+  };
 
   return (
     <>
@@ -29,7 +62,7 @@ const EventPose = () => {
         {/* 핀 이미지 */}
 
         <Image
-          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${pinImg}`}
+          src={pinImg}
           alt="pinImg"
           width={400}
           height={500}
@@ -37,7 +70,7 @@ const EventPose = () => {
         />
         {/* 사진찍은 이미지 */}
         <Image
-          src={`${picImg}`}
+          src={picImg}
           alt="picImg"
           width={400}
           height={700}
@@ -45,7 +78,10 @@ const EventPose = () => {
         />
       </div>
       <div className="flex justify-center  pt-[5%] ">
-        <button className="w-[50%] h-[2.5rem] absolute bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin ">
+        <button
+          className="w-[50%] h-[2.5rem] absolute bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
+          onClick={checkpose}
+        >
           확인하기
         </button>
       </div>

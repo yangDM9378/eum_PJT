@@ -3,3 +3,7 @@ export type AgingEventResult = {
   resultCode: string;
   resultMsg: string;
 };
+
+export type PoseEventResult = {
+  result: boolean;
+}

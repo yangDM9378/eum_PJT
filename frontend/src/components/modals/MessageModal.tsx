@@ -134,8 +134,9 @@ const MessageModal = ({
           <div className="flex flex-row justify-center mb-3">
             <div className="flex flex-col-reverse h-[20vh] overflow-y-scroll justify-center">
               {imagesUrls.length === 0 ? (
-                <p className="flex ">아직 함께 찍은 사진이 없어요😭</p>
-              ) : (
+                <p className="flex text-lg">아직 함께 찍은 사진이 없어요😭</p>
+              ) :
+               (
                 imagesUrls.map((image) => (
                   <img
                     key={image.pictureId}
