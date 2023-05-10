@@ -128,4 +128,9 @@ public class GroupServiceImpl implements GroupService {
         groupRepository.deleteById(groupId);
     }
 
+    @Override
+    public void exitGroup(User user, Long groupId) {
+        userGroupRepository.deleteByUser_UserIdAndGroup_GroupId(user.getUserId(), groupId);
+    }
+
 }
