@@ -2,6 +2,8 @@ package com.ieumpyo.ieum
 
 import Pin
 import android.Manifest
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -18,6 +20,7 @@ import android.webkit.CookieManager
 import android.webkit.CookieSyncManager
 import android.webkit.GeolocationPermissions
 import android.webkit.JavascriptInterface
+import android.webkit.JsPromptResult
 import android.webkit.JsResult
 import android.webkit.PermissionRequest
 import android.webkit.ValueCallback
@@ -162,7 +165,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     inner class WebAppInterface(private val mContext: Context) {
         @JavascriptInterface
-        fun test(){}
+        fun copyToClipboard(text: String?) {
+            val clipboard: ClipboardManager =
+                getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("demo", text)
+            clipboard.setPrimaryClip(clip)
+        }
     }
     var cameraPath = ""
     var mWebViewImageUpload: ValueCallback<Array<Uri>>? = null
@@ -273,6 +281,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 return super.onJsConfirm(view, url, message, result)
             }
 
+            override fun onJsPrompt(
+                view: WebView?,
+                url: String?,
+                message: String?,
+                defaultValue: String?,
+                result: JsPromptResult?
+            ): Boolean {
+                return super.onJsPrompt(view, url, message, defaultValue, result)
+            }
 
             override fun onShowFileChooser(webView: WebView?, filePathCallback: ValueCallback<Array<Uri>>?, fileChooserParams: FileChooserParams?): Boolean {
                 try{
