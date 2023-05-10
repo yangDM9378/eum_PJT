@@ -20,15 +20,16 @@ const EventPose = () => {
   // ulr을 blob으로 바꾸기
   const convertURLtoFile = async (image1: string, image2: string) => {
     console.log(`${process.env.NEXT_PUBLIC_IMAGE_URL}${image1}`);
+    const data2 = await (await fetch(image2)).blob();
+
     const response1 = await fetch(
       `${process.env.NEXT_PUBLIC_IMAGE_URL}${image1}`
     );
+
     // url -> blob으로 바꾸기
     const data1 = await response1.blob();
-    console.log(data1,'👻')
+
     // base64 -> blob으로 바꾸기
-    const data2 = await (await fetch(image2)).blob();
-    console.log(data2,'❤');
 
     // formdata에 넣어주기
     formData.append("image1", data1, "image1.png");
@@ -40,7 +41,6 @@ const EventPose = () => {
     setPinImg(eventImg);
     // base64파일 -> blob
     setPicImg(picturImg);
-    convertURLtoFile(eventImg, picturImg);
   }, []);
 
   // 포즈 결과 상태
@@ -48,6 +48,8 @@ const EventPose = () => {
 
   // 포즈 사진 비교하는 함수
   const checkpose = async () => {
+    await convertURLtoFile(eventImg, picturImg);
+    console.log(formData);
     const response = await postPose(formData);
     console.log(response);
     // setResult(response.data);
@@ -62,7 +64,7 @@ const EventPose = () => {
         {/* 핀 이미지 */}
 
         <Image
-          src={pinImg}
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${pinImg}`}
           alt="pinImg"
           width={400}
           height={500}

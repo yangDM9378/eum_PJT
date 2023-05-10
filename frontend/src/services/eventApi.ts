@@ -11,7 +11,7 @@ const agingEventApi = async (formData: FormData): Promise<AgingEventResult> => {
 //pose 이벤트
 const fastApiUrl = process.env.NEXT_PUBLIC_FASTAPI_BASE_URL_DEFAULT || "";
 const postPose = async (formdata: FormData): Promise<PoseEventResult> => {
-  const result = await axios.post(fastApiUrl + "post", formdata, {
+  const result = await axios.post(fastApiUrl + "pose", formdata, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
