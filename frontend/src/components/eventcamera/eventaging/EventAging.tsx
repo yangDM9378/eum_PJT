@@ -4,6 +4,7 @@ import { pictureEventApi } from "@/services/eventApi";
 import { AgingEventResult } from "@/types/event";
 import { useMutation } from "@tanstack/react-query";
 import Konva from "konva";
+import { useRouter } from "next/navigation";
 import React, { useEffect, createRef, useRef, useState } from "react";
 
 const EventAging = (): JSX.Element => {
@@ -85,7 +86,7 @@ const EventAging = (): JSX.Element => {
   // 사진 저장
   // aging결과
   const [response, setResponse] = useState<AgingEventResult | null>(null);
-
+  const router = useRouter();
   const handleSave = async () => {
     if (stageRef.current) {
       const dataURL = await stageRef.current.toDataURL({ pixelRatio: 1 });
@@ -102,6 +103,7 @@ const EventAging = (): JSX.Element => {
         new Blob([JSON.stringify(jsonReq)], { type: "application/json" })
       );
       await agingEventMutation.mutate(formData);
+      await router.push(`/addeventcamera/aging/removebg`);
     }
   };
 

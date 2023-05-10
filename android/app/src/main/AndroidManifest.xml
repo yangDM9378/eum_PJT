@@ -30,7 +30,11 @@
 <!--    카메라-->
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.CAMERA2"/>
+<!--클립보드 허용-->
 
+    <uses-permission android:name="android.permission.READ_CLIPBOARD" />
+    <uses-permission android:name="android.permission.WRITE_CLIPBOARD" />
+    <uses-permission android:name="android.webkit.PermissionRequest" />
 
     <meta-data
         android:name="com.google.android.gms.version"

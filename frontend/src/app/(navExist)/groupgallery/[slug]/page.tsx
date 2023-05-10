@@ -1,23 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import { getGroupGallery } from "@/services/galleryApi";
+import { useQuery } from "@tanstack/react-query";
 
-const GroupGallery = () => {
-  const images: string[] = [
-    "/images/gallery1.png",
-    "/images/gallery2.png",
-    "/images/gallery3.png",
-    "/images/gallery1.png",
-    "/images/gallery2.png",
-    "/images/gallery3.png",
-    "/images/gallery1.png",
-    "/images/gallery2.png",
-    "/images/gallery3.png",
-    "/images/gallery1.png",
-    "/images/gallery2.png",
-    "/images/gallery3.png",
-  ];
+const GroupGallery = ({ params }: { params: { slug: number } }) => {
+  const getGallery = async () => {
+    const picture = await getGroupGallery(1);
+    return picture;
+  };
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["initial-gallery"],
+    queryFn: getGallery,
+  });
+  console.log(data);
   const [angle, setAngle] = useState(0);
 
   const galleryspin = (sign: boolean) => {
@@ -52,25 +49,26 @@ const GroupGallery = () => {
             transform: `rotateY(${angle}deg)`,
           }}
         >
-          {images.map((image: string, i: number) => (
-            <Image
-              key={i}
-              src={image}
-              alt=""
-              width={300}
-              height={300}
-              style={{
-                width: "60%",
-                paddingTop: "10%",
-                maxWidth: "425px",
-                position: "absolute",
-                left: "30%",
-                transformOrigin: "50% 50% -500px",
-                outline: "1px solid transparent",
-                transform: `rotateY(${-45 * i}deg)`,
-              }}
-            />
-          ))}
+          {data &&
+            data.map((picture, idx) => (
+              <img
+                key={idx}
+                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${picture.image}`}
+                alt=""
+                width={300}
+                height={300}
+                style={{
+                  width: "60%",
+                  paddingTop: "10%",
+                  maxWidth: "425px",
+                  position: "absolute",
+                  left: "30%",
+                  transformOrigin: "50% 50% -500px",
+                  outline: "1px solid transparent",
+                  transform: `rotateY(${-45 * idx}deg)`,
+                }}
+              />
+            ))}
         </figure>
       </div>
       <span
