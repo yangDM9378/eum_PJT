@@ -135,8 +135,7 @@ const MessageModal = ({
             <div className="flex flex-col-reverse h-[20vh] overflow-y-scroll justify-center">
               {imagesUrls.length === 0 ? (
                 <p className="flex ">아직 함께 찍은 사진이 없어요😭</p>
-              ) :
-               (
+              ) : (
                 imagesUrls.map((image) => (
                   <img
                     key={image.pictureId}
@@ -152,8 +151,7 @@ const MessageModal = ({
                     onClick={() => selecteimage(image.pictureId, image.image)}
                   />
                 ))
-              )
-              }
+              )}
             </div>
 
             {selectedImage !== "" && (
