@@ -6,48 +6,40 @@ pipeline {
     }
 
     stages {
-        stage ('git pull') {
+        stage ('docker frontend run') {
             steps {
                 echo 'git pull'
                 git branch: 'develop', credentialsId: 'admin', url: 'https://lab.ssafy.com/s08-final/S08P31C103.git'
-            }
-        }
-        stage ('verify tool') {
-            steps {
-                sh '''
-                    docker info
-                    docker version
-                    docker-compose version
-                '''
-            }
-        }
 
-        // 사용하지 않는 container와 image를 삭제합니다.
-        stage ('docker garbage collection') {
-            steps {
+                echo 'frontend container, image remove'
                 sh 'docker container prune -f'
                 sh 'docker image prune -af'
+
+                echo 'frontend build and up'
+                sh 'docker-compose build frontend'
+                sh 'docker-compose up -d frontend'
             }
         }
 
-        stage ('docker frontend build') {
+        stage ('docker backend run') {
             steps {
-                sh 'cd /var/jenkins_home/workspace/eum'
-                sh 'docker-compose build frontend'
+                sshagent (credentials: ['ssh_admin']) {
+                sh """
+                    ssh -o StrictHostKeyChecking=no ${TARGET_HOST} '
+                    cd /home/S08P31C103/
+                    sudo git pull origin develop
+                    sudo docker container prune -f
+                    sudo docker image prune -af
+                    sudo docker-compose build backend
+                    sudo docker-compose up -d backend
+                     '
+                """
+                }
             }
         }
-        stage ('docker backend build') {
-            steps {
-                sh 'cd /var/jenkins_home/workspace/eum'
-                sh 'docker-compose build backend'
-            }
-        }
-        stage ('docker deploy') {
-            steps {
-                sh 'cd /var/jenkins_home/workspace/eum'
-                sh 'docker-compose up -d frontend '
-                sh 'docker-compose up -d backend '
-            }
-        }
+    }
+
+    environment {
+        TARGET_HOST = "ubuntu@3.22.167.196"
     }
 }
