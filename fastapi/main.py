@@ -60,15 +60,15 @@ async def checkPose(image1: UploadFile = File(...), image2: UploadFile = File(..
 
     # plt 이미지 크기 설정
     plt.figure(figsize = [10, 10])
-    plt.title("Sample Image");plt.axis('off');plt.imshow(base_image[:,:,::-1]);plt.show()
+    # plt.title("Sample Image");plt.axis('off');plt.imshow(base_image[:,:,::-1]);plt.show()
 
     # plt 이미지 크기 설정
     plt.figure(figsize = [10, 10])
-    plt.title("Sample Image");plt.axis('off');plt.imshow(input_image[:,:,::-1]);plt.show()
+    # plt.title("Sample Image");plt.axis('off');plt.imshow(input_image[:,:,::-1]);plt.show()
 
     # # 이미지 rgb로 변환
-    # base_image_rgb = cv2.cvtColor(base_image, cv2.COLOR_BGR2RGB)
-    # input_image_rgb = cv2.cvtColor(input_image, cv2.COLOR_BGR2RGB)
+    base_image_rgb = cv2.cvtColor(base_image, cv2.COLOR_BGR2RGB)
+    input_image_rgb = cv2.cvtColor(input_image, cv2.COLOR_BGR2RGB)
 
     # pose detection
     result1 = pose.process(base_image_rgb)
@@ -113,112 +113,114 @@ async def checkPose(image1: UploadFile = File(...), image2: UploadFile = File(..
     input_landmark = makeLandmark(result2.pose_landmarks.landmark, input_image)
 
     result = classifyPose(base_landmark, input_landmark)
-    testresult = '땡'
-    if result:
-       testresult = '정답'
-    return {"message": testresult}
+    return {"result": result }
 
-    def makeLandmark(src_landmark, image) :
-        # detection landmarks를 저장할 빈 list 초기화
-        dest_landmark = []
+def makeLandmark(src_landmark, image) :
+    # detection landmarks를 저장할 빈 list 초기화
+    dest_landmark = []
 
-        height, width, _ = image.shape
+    height, width, _ = image.shape
 
-        # landmark가 감지 되었는지 확인
-        if src_landmark:
+    # landmark가 감지 되었는지 확인
+    if src_landmark:
 
-            # 감지된 landmark 반복
-            for landmark in src_landmark:
+        # 감지된 landmark 반복
+        for landmark in src_landmark:
 
-                # landmark를 list에 추가하기
-                dest_landmark.append((int(landmark.x * width), int(landmark.y * height), (landmark.z * width)))
-        
-        return dest_landmark
+            # landmark를 list에 추가하기
+            dest_landmark.append((int(landmark.x * width), int(landmark.y * height), (landmark.z * width)))
+    
+    return dest_landmark
 
-    # 앵글 계산 함수
-    def calculateAngle(landmark1, landmark2, landmark3):
+# 앵글 계산 함수
+def calculateAngle(landmark1, landmark2, landmark3):
 
-        # Get the required landmarks coordinates.
-        x1, y1, _ = landmark1
-        x2, y2, _ = landmark2
-        x3, y3, _ = landmark3
+    # Get the required landmarks coordinates.
+    x1, y1, _ = landmark1
+    x2, y2, _ = landmark2
+    x3, y3, _ = landmark3
 
-        # Calculate the angle between the three points
-        angle = math.degrees(math.atan2(y3 - y2, x3 - x2) - math.atan2(y1 - y2, x1 - x2))
-        
-        # Check if the angle is less than zero.
-        if angle < 0:
+    # Calculate the angle between the three points
+    angle = math.degrees(math.atan2(y3 - y2, x3 - x2) - math.atan2(y1 - y2, x1 - x2))
+    
+    # Check if the angle is less than zero.
+    if angle < 0:
 
-            # Add 360 to the found angle.
-            angle += 360
-        
-        # Return the calculated angle.
-        return angle
+        # Add 360 to the found angle.
+        angle += 360
+    
+    # Return the calculated angle.
+    return angle
 
-    def classifyPose(base_landmark, input_landmark):
-        isSamePose = False
+def classifyPose(base_landmark, input_landmark):
+    isSamePose = False
 
-        approximationError = 360 * 0.05
+    mp_pose = mp.solutions.pose
 
-        print(approximationError)
+    approximationError = 360 * 0.1
 
-        # Calculate the required angles.
-        #----------------------------------------------------------------------------------------------------------------
-        
-        # Get the angle between the left shoulder, elbow and wrist points. 
-        # 11번, 13번, 15번 landmark 
-        # 왼쪽 어깨, 왼쪽 팔꿈치, 왼쪽 손목 landmark angle 값 계산 
-        left_elbow_angle_diff = calculateAngle(base_landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
-                                        base_landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value],
-                                        base_landmark[mp_pose.PoseLandmark.LEFT_WRIST.value]) - calculateAngle(input_landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
-                                        input_landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value],
-                                        input_landmark[mp_pose.PoseLandmark.LEFT_WRIST.value])
-        
-        # 12번, 14번, 16번 landmark 
-        # 오른쪽 어깨, 오른쪽 팔꿈치, 오른쪽 손목 landmark angle 값 계산 
-        right_elbow_angle_diff = calculateAngle(base_landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
-                                        base_landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value],
-                                        base_landmark[mp_pose.PoseLandmark.RIGHT_WRIST.value]) - calculateAngle(input_landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
-                                        input_landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value],
-                                        input_landmark[mp_pose.PoseLandmark.RIGHT_WRIST.value])
-        
-        # 13번, 15번, 23번 landmark 
-        # 왼쪽 어깨, 왼쪽 팔꿈치, 왼쪽 엉덩이, landmark angle 값 계산 
-        left_shoulder_angle_diff = calculateAngle(base_landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value],
-                                            base_landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
-                                            base_landmark[mp_pose.PoseLandmark.LEFT_HIP.value]) - calculateAngle(input_landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value],
-                                            input_landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
-                                            input_landmark[mp_pose.PoseLandmark.LEFT_HIP.value])
+    print(approximationError)
 
-        # 12번, 14번, 24번 landmark 
-        # 오른쪽 어깨, 오른쪽 팔꿈치, 오른쪽 엉덩이 landmark angle 값 계산  
-        right_shoulder_angle_diff = calculateAngle(base_landmark[mp_pose.PoseLandmark.RIGHT_HIP.value],
-                                            base_landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
-                                            base_landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value]) - calculateAngle(input_landmark[mp_pose.PoseLandmark.RIGHT_HIP.value],
-                                            input_landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
-                                            input_landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value])
+    # Calculate the required angles.
+    #----------------------------------------------------------------------------------------------------------------
+    
+    # Get the angle between the left shoulder, elbow and wrist points. 
+    # 11번, 13번, 15번 landmark 
+    # 왼쪽 어깨, 왼쪽 팔꿈치, 왼쪽 손목 landmark angle 값 계산 
+    left_elbow_angle_diff = calculateAngle(base_landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
+                                    base_landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value],
+                                    base_landmark[mp_pose.PoseLandmark.LEFT_WRIST.value]) - calculateAngle(input_landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
+                                    input_landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value],
+                                    input_landmark[mp_pose.PoseLandmark.LEFT_WRIST.value])
+    
+    # 12번, 14번, 16번 landmark 
+    # 오른쪽 어깨, 오른쪽 팔꿈치, 오른쪽 손목 landmark angle 값 계산 
+    right_elbow_angle_diff = calculateAngle(base_landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
+                                    base_landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value],
+                                    base_landmark[mp_pose.PoseLandmark.RIGHT_WRIST.value]) - calculateAngle(input_landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
+                                    input_landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value],
+                                    input_landmark[mp_pose.PoseLandmark.RIGHT_WRIST.value])
+    
+    # 13번, 15번, 23번 landmark 
+    # 왼쪽 어깨, 왼쪽 팔꿈치, 왼쪽 엉덩이, landmark angle 값 계산 
+    left_shoulder_angle_diff = calculateAngle(base_landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value],
+                                        base_landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
+                                        base_landmark[mp_pose.PoseLandmark.LEFT_HIP.value]) - calculateAngle(input_landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value],
+                                        input_landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
+                                        input_landmark[mp_pose.PoseLandmark.LEFT_HIP.value])
 
-        # 23번, 25번, 27번 landmark 
-        # 왼쪽 엉덩이, 왼쪽 무릎, 왼쪽 발목 landmark angle 값 계산 
-        left_knee_angle_diff = calculateAngle(base_landmark[mp_pose.PoseLandmark.LEFT_HIP.value],
-                                        base_landmark[mp_pose.PoseLandmark.LEFT_KNEE.value],
-                                        base_landmark[mp_pose.PoseLandmark.LEFT_ANKLE.value]) - calculateAngle(input_landmark[mp_pose.PoseLandmark.LEFT_HIP.value],
-                                        input_landmark[mp_pose.PoseLandmark.LEFT_KNEE.value],
-                                        input_landmark[mp_pose.PoseLandmark.LEFT_ANKLE.value])
+    # 12번, 14번, 24번 landmark 
+    # 오른쪽 어깨, 오른쪽 팔꿈치, 오른쪽 엉덩이 landmark angle 값 계산  
+    right_shoulder_angle_diff = calculateAngle(base_landmark[mp_pose.PoseLandmark.RIGHT_HIP.value],
+                                        base_landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
+                                        base_landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value]) - calculateAngle(input_landmark[mp_pose.PoseLandmark.RIGHT_HIP.value],
+                                        input_landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
+                                        input_landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value])
 
-        # 24번, 26번, 28번 landmark 
-        # 오른쪽 엉덩이, 오른쪽 무릎, 오른쪽 발목  landmark angle 값 계산 
-        right_knee_angle_diff = calculateAngle(base_landmark[mp_pose.PoseLandmark.RIGHT_HIP.value],
-                                        base_landmark[mp_pose.PoseLandmark.RIGHT_KNEE.value],
-                                        base_landmark[mp_pose.PoseLandmark.RIGHT_ANKLE.value]) - calculateAngle(input_landmark[mp_pose.PoseLandmark.RIGHT_HIP.value],
-                                        input_landmark[mp_pose.PoseLandmark.RIGHT_KNEE.value],
-                                        input_landmark[mp_pose.PoseLandmark.RIGHT_ANKLE.value])
+    # 23번, 25번, 27번 landmark 
+    # 왼쪽 엉덩이, 왼쪽 무릎, 왼쪽 발목 landmark angle 값 계산 
+    left_knee_angle_diff = calculateAngle(base_landmark[mp_pose.PoseLandmark.LEFT_HIP.value],
+                                    base_landmark[mp_pose.PoseLandmark.LEFT_KNEE.value],
+                                    base_landmark[mp_pose.PoseLandmark.LEFT_ANKLE.value]) - calculateAngle(input_landmark[mp_pose.PoseLandmark.LEFT_HIP.value],
+                                    input_landmark[mp_pose.PoseLandmark.LEFT_KNEE.value],
+                                    input_landmark[mp_pose.PoseLandmark.LEFT_ANKLE.value])
 
-        print(left_elbow_angle_diff)
-        print(right_elbow_angle_diff)
-        print(left_shoulder_angle_diff)
-        print(right_shoulder_angle_diff)
-        print(left_knee_angle_diff)
-        print(right_knee_angle_diff)
-        
-        return isSamePose
+    # 24번, 26번, 28번 landmark 
+    # 오른쪽 엉덩이, 오른쪽 무릎, 오른쪽 발목  landmark angle 값 계산 
+    right_knee_angle_diff = calculateAngle(base_landmark[mp_pose.PoseLandmark.RIGHT_HIP.value],
+                                    base_landmark[mp_pose.PoseLandmark.RIGHT_KNEE.value],
+                                    base_landmark[mp_pose.PoseLandmark.RIGHT_ANKLE.value]) - calculateAngle(input_landmark[mp_pose.PoseLandmark.RIGHT_HIP.value],
+                                    input_landmark[mp_pose.PoseLandmark.RIGHT_KNEE.value],
+                                    input_landmark[mp_pose.PoseLandmark.RIGHT_ANKLE.value])
+
+    print(left_elbow_angle_diff)
+    print(right_elbow_angle_diff)
+    print(left_shoulder_angle_diff)
+    print(right_shoulder_angle_diff)
+    print(left_knee_angle_diff)
+    print(right_knee_angle_diff)
+
+    if abs(left_elbow_angle_diff) < approximationError and abs(right_elbow_angle_diff) < approximationError and abs(left_shoulder_angle_diff) < approximationError and abs(right_shoulder_angle_diff) < approximationError and abs(left_knee_angle_diff) < approximationError and abs(right_knee_angle_diff) < approximationError :
+        isSamePose = True
+    
+    return isSamePose

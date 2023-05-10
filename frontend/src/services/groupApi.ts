@@ -40,9 +40,8 @@ const deleteGroup = async (groupId: number): Promise<Result> => {
 };
 
 // 그룹 나가기
-const outGroup = async (groupId: number): Promise<Result> => {
-  const result = await jsonAuthApi.delete(`/groups/exit/${groupId}`);
-  return result.data;
+const outGroup = async (groupId: number) => {
+  await jsonAuthApi.delete(`/groups/exit/${groupId}`);
 };
 
 export {
