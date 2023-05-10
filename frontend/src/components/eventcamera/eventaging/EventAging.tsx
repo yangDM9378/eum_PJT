@@ -1,6 +1,6 @@
 "use client";
 import { useAppSelector } from "@/redux/hooks";
-import { agingEventApi } from "@/services/eventApi";
+import { pictureEventApi } from "@/services/eventApi";
 import { AgingEventResult } from "@/types/event";
 import { useMutation } from "@tanstack/react-query";
 import Konva from "konva";
@@ -75,7 +75,7 @@ const EventAging = (): JSX.Element => {
   }, []);
 
   // 사진 저장 API 통신
-  const agingEventMutation = useMutation(agingEventApi, {
+  const agingEventMutation = useMutation(pictureEventApi, {
     onSuccess: (data) => {
       console.log(data);
       setResponse(data);

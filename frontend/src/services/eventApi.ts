@@ -3,7 +3,7 @@ import { AgingEventResult, PoseEventResult } from "@/types/event";
 import axios from "axios";
 
 // Aging 이벤트 후 picture 만들기
-const agingEventApi = async (formData: FormData): Promise<AgingEventResult> => {
+const pictureEventApi = async (formData: FormData): Promise<AgingEventResult> => {
   const { data } = await multipartAuthApi.post("/pictures", formData);
   return data;
 };
@@ -21,4 +21,4 @@ const postPose = async (formdata: FormData): Promise<PoseEventResult> => {
   return poseResult;
 };
 
-export { agingEventApi, postPose };
+export { pictureEventApi, postPose };
