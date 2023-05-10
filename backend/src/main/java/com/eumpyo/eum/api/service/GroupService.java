@@ -18,4 +18,6 @@ public interface GroupService {
     List<GroupListRes> findGroupList(User user);
 
     void joinGroup(User user, String groupCode);
+
+    void exitGroup(User user, Long groupId);
 }

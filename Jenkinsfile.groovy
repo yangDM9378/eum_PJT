@@ -6,47 +6,41 @@ pipeline {
     }
 
     stages {
-        stage ('git pull') {
+        stage ('docker frontend run') {
             steps {
                 echo 'git pull'
                 git branch: 'develop', credentialsId: 'admin', url: 'https://lab.ssafy.com/s08-final/S08P31C103.git'
-            }
-        }
-        stage ('verify tool') {
-            steps {
-                sh '''
-                    docker info
-                    docker version
-                    docker-compose version
-                '''
-            }
-        }
 
-        // 사용하지 않는 container와 image를 삭제합니다.
-        stage ('docker garbage collection') {
-            steps {
+                echo 'frontend container, image remove'
                 sh 'docker container prune -f'
                 sh 'docker image prune -af'
-            }
-        }
 
-        stage ('docker frontend build') {
-            steps {
-                sh 'cd /var/jenkins_home/workspace/eum'
+                echo 'frontend build and up'
                 sh 'docker-compose build frontend'
+                sh 'docker-compose up -d frontend'
             }
         }
-        stage ('docker backend build') {
+        stage ('docker backend run') {
             steps {
-                sh 'cd /var/jenkins_home/workspace/eum'
-                sh 'docker-compose build backend'
+                sh 'ssh -i /var/jenkins_home/workspace/C103.pem ubuntu@3.22.167.196'
+                sh 'cd /home/S08P31C103'
+
+                echo 'git pull'
+                git branch: 'develop', credentialsId: 'admin', url: 'https://lab.ssafy.com/s08-final/S08P31C103.git'
+
+                echo 'backend container, image remove'
+                sh 'sudo docker container prune -f'
+                sh 'sudo docker image prune -af'
+
+                echo 'backend build and up'
+                sh 'sudo docker-compose build backend'
+                sh 'sudo docker-compose up -d backend'
             }
-        }
-        stage ('docker deploy') {
-            steps {
-                sh 'cd /var/jenkins_home/workspace/eum'
-                sh 'docker-compose up -d frontend '
-                sh 'docker-compose up -d backend '
+
+            post {
+                always {
+                    sh 'exit'
+                }
             }
         }
     }
