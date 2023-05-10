@@ -320,8 +320,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         accessToken=getCookie(target_url,"accessToken")
-        accessToken=MutableLiveData("eyJyZWdEYXRlIjoxNjgzNjc4MDgzMzk4LCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyRW1haWwiOiJxb3J3bGRuanMxMDBAbmF2ZXIuY29tIiwidXNlckdlbmRlciI6MSwidXNlckJpcnRoWWVhciI6MTk5NCwidXNlck5hbWUiOiLrsLHsp4Dsm5AiLCJ1c2VySWQiOjIsInN1YiI6InFvcndsZG5qczEwMEBuYXZlci5jb20iLCJleHAiOjE2ODM2OTYwODN9.NNEJCOGQEbmBCcECJFZWwXr1DqTdppeHLY-_GFYnegI")
-
         accessToken.observe(this){
             initList("Bearer "+it)
             Log.d("Token","ACCESSTOKEN OBSERVE!!"+it)

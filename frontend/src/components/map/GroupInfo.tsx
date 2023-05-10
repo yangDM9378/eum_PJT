@@ -22,12 +22,11 @@ const GroupInfo = ({ groupId }: Props) => {
   });
 
   const handleCopyClipBoard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setIsOpen(true);
-    } catch {
-      console.log("error");
+    await navigator.clipboard.writeText(text);
+    if ((window as any).Android) {
+      (window as any).Android.copyToClipboard(text);
     }
+    setIsOpen(true);
   };
   const router = useRouter();
   const goToGallery = async (groupId: number) => {
