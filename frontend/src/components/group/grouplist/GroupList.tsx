@@ -22,7 +22,7 @@ const GroupList = () => {
 
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["initial-group"],
-    queryFn: async () => await getGroup(),
+    queryFn: getGroup,
   });
 
   const goToMap = async (groupId: number) => {
@@ -31,15 +31,10 @@ const GroupList = () => {
 
   // 그룹 나가기
   const outGroupList = async (groupId: number) => {
-    alert("삭제");
-    deleteGroupMutation.mutate(groupId);
+    await outGroup(groupId);
+    await queryClient.invalidateQueries({ queryKey: ["initial-group"] });
+    alert("그룹에서 탈퇴하였습니다.");
   };
-
-  const deleteGroupMutation = useMutation(outGroup, {
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["initial-group"] });
-    },
-  });
 
   return (
     <>
@@ -69,7 +64,7 @@ const GroupList = () => {
               </div>
               <div className="flex justify-end ">
                 <div
-                  onClick={() => outGroup(group.groupId)}
+                  onClick={() => outGroupList(group.groupId)}
                   className="bg-brand-red rounded text-sm p-1 m-2"
                 >
                   그룹 나가기
