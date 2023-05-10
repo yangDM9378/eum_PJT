@@ -6,8 +6,6 @@ interface Result {
   resultMsg: string;
 }
 
-
-
 import { Group, GroupCodeResult, GroupDetail } from "@/types/group";
 
 // 그룹 생성하기
