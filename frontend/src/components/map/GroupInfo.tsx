@@ -4,6 +4,7 @@ import { detailGroup } from "@/services/groupApi";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import GroupCodeModal from "../modals/GroupCodeModal";
+import { useRouter } from "next/navigation";
 
 interface Props {
   groupId: number;
@@ -27,6 +28,11 @@ const GroupInfo = ({ groupId }: Props) => {
     }
     setIsOpen(true);
   };
+  const router = useRouter();
+  const goToGallery = async (groupId: number) => {
+    await router.push(`/groupgallery/${groupId}`);
+  };
+
   return (
     <section className="h-[25%] flex ">
       {data && (
@@ -38,7 +44,15 @@ const GroupInfo = ({ groupId }: Props) => {
             />
           </div>
           <div className="w-[70%] h-[80%] flex flex-col justify-center">
-            <div className="py-2 text-lg">{data.name}</div>
+            <div className="flex justify-between items-center">
+              <div className="py-2 text-lg">{data.name}</div>
+              <div
+                className="p-2 text-sm "
+                onClick={() => goToGallery(groupId)}
+              >
+                갤러리
+              </div>
+            </div>
             <div className="text-xs">{data.description}</div>
             <div className="flex justify-end p-2">
               <div
