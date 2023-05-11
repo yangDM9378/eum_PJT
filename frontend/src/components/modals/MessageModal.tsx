@@ -180,9 +180,6 @@ const MessageModal = ({
           >
             함께 찍기
           </div>
-          <GroupPhotoModal
-          selectedIdx={selectedIdx}
-          />
         </section> 
       )}
     </Modal>
