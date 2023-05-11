@@ -38,7 +38,7 @@ const GroupList = () => {
 
   return (
     <>
-      <ul className="pt-[2vh] ">
+      <ul className="pt-[2vh] h-[70vh] overflow-scroll">
         {data &&
           data.map((group, index) => (
             <li key={index}>
@@ -46,19 +46,17 @@ const GroupList = () => {
                 className="grid grid-cols-10 pl-[3vw] place-content-around py-3"
                 onClick={() => goToMap(group.groupId)}
               >
-                <div className="col-span-8 font-brand-poppins">
+                <div className="col-span-7 font-brand-poppins">
                   <p className="font-brand-poppins text-[1rem]">{group.name}</p>
                   <p className="text-[0.8rem] pt-[0.5vh] font-thin">
                     {group.description}
                   </p>
                 </div>
-                <div className="col-span-2 mr-[2vw]">
-                  <Image
-                    className="rounded-sm"
+                <div className="col-span-3 mr-[2vw] h-[13vh] w-[13vh]">
+                  <img
+                    className="rounded-sm w-[100%] h-[100%]"
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${group.image}`}
                     alt={group.name}
-                    width={400}
-                    height={400}
                   />
                 </div>
               </div>
