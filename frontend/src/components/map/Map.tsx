@@ -202,7 +202,7 @@ function Map({ markerList }: Props) {
         </MarkerClustererF>
         {/* 지도에 메시지 추가하기. */}
         <img
-          className="absolute top-[90%] left-[89%] w-[10vh]"
+          className="absolute top-[90%] left-[89%] w-[11vh]"
           style={{ transform: "translate(-50%, -50%)" }}
           src="/map/plus.png"
           alt="center"
