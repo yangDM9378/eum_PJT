@@ -10,7 +10,7 @@ export default function groupnav() {
         <UserInfo />
         <p className="font-brand-gmarketsans font-light">님과 이어진 모임</p>
       </div>
-      <div className="flex flex-row pt-[1vh] pl-[10vw]">
+      <div className="flex flex-row pt-[3vh] pl-[10vw]">
         <MakeButton />
         <EnterButton />
       </div>
