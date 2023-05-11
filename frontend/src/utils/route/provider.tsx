@@ -11,7 +11,7 @@ const RouterGuard = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (pathname !== "/" && accesstoken === undefined) {
-      router.push("/");
+      router.replace("/");
     }
   }, []);
 
