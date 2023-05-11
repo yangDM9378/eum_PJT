@@ -35,6 +35,7 @@ type ModalProps = {
   messageId: number;
   setMessageOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPhotoOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelected : React.Dispatch<React.SetStateAction<number>>;
 };
 
 // 메세지 모달
@@ -43,6 +44,7 @@ const MessageModal = ({
   setMessageOpen,
   messageId,
   setIsPhotoOpen,
+  setSelected,
 }: ModalProps) => {
   const [detailData, setDetailData] = useState<PindetailResult>();
   const dispatch = useAppDispatch();
@@ -102,15 +104,15 @@ const MessageModal = ({
   // 메세지 모달 닫고 상세 이미지 모달 열기
   const CloseModal = async () => {
     // redux에 선택된 이미지 인덱스 넣어주기
+    setSelected(selectedIdx)
     setMessageOpen(false);
     setIsPhotoOpen(true);
   };
 
-
   useEffect(() => {
-    
     dispatch(pictureid(selectedIdx));
-  },[selectedIdx])
+  }, [selectedIdx]);
+
   return (
     <Modal
       isOpen={messageOpen}
@@ -178,7 +180,10 @@ const MessageModal = ({
           >
             함께 찍기
           </div>
-        </section>
+          <GroupPhotoModal
+          selectedIdx={selectedIdx}
+          />
+        </section> 
       )}
     </Modal>
   );

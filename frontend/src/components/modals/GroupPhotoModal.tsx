@@ -5,12 +5,15 @@ import Modal from "react-modal";
 import Image from "next/image";
 import { getPinImage } from "@/services/galleryApi";
 import { PictureDetail } from "@/types/picture";
-import Script from "next/script";
+import GroupInfo from "../map/GroupInfo";
+import { Result } from "postcss";
+import { isConstructorDeclaration } from "typescript";
 
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  pictureId: number;
+  messageOpen: boolean;
+  selected: number;
 };
 
 const customStyles = {
@@ -26,31 +29,27 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
     border: "none",
     width: "80vw",
-    height: "60vh",
+    height: "50vh",
     background: "#F8F9F3",
   },
 };
 
-const GroupPhotoModal = ({ isOpen, setIsOpen, pictureId }: ModalProps) => {
+const GroupPhotoModal = ({ isOpen, setIsOpen, selected }: ModalProps) => {
   // 핀 이미지 상태
 
   const [photoInfo, setPhotoInfo] = useState<PictureDetail>();
+
+  // const [photoURL, setPhoURL] = useState<string| undefined>('')
 
   const [kakaoLoaded, setKakaoLoaded] = useState<boolean>(false);
   // 카카오 로딩 상태
 
   // 핀 이미지 불러오기
   const getPhotoDetail = async () => {
-    console.log(pictureId,'?❔')
-      const photoRes = await getPinImage(pictureId);
-      setPhotoInfo(photoRes);
-  
-  };
+    const photoRes = await getPinImage(selected);
+    await setPhotoInfo(photoRes);
 
-  // 렌더링 되자마자 핀 이미지 불러오는 함수 실행
-  useEffect(() => {
-    getPhotoDetail();
-  }, []);
+  };
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -63,6 +62,11 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, pictureId }: ModalProps) => {
     };
   }, []);
 
+  // selected 가 0이 아니면 넣어주기
+  useEffect(() => {
+    getPhotoDetail();
+  }, [selected]);
+
   useEffect(() => {
     if (kakaoLoaded) {
       window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_API_KEY);
@@ -74,16 +78,20 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, pictureId }: ModalProps) => {
     window.Kakao.Share.sendDefault({
       objectType: "feed",
       content: {
-        title: "오늘의 디저트",
-        description: "아메리카노, 빵, 케익",
+        title: `${photoInfo?.userName}이 찍은 사진`,
+        description: `${photoInfo?.createdDate}`,
         imageUrl:
-          "https://mud-kage.kakao.com/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
+          `${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`,
         link: {
           mobileWebUrl: "https://i-eum-u.com",
           webUrl: "https://i-eum-u.com",
         },
       },
     });
+  };
+  const aaa = () => {
+    console.log(photoInfo);
+
   };
 
   return (
@@ -104,7 +112,7 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, pictureId }: ModalProps) => {
         />
         <div className="pt-[10%]">
           <Image
-            src="/images/GroupSample.png"
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`}
             alt=""
             width={300}
             height={300}
@@ -117,6 +125,7 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, pictureId }: ModalProps) => {
         >
           공유
         </button>
+        <button onClick={aaa}>11111</button>
       </div>
     </Modal>
   );

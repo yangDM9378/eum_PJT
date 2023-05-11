@@ -61,20 +61,7 @@ function Map({ markerList }: Props) {
   const [isPhotoOpen, setIsPhotoOpen] = useState<boolean>(false);
 
   // 선택한 사진 인덱스
-
-  // 선택한 사진 인덱스
-  const [pictureId, setPictureId] = useState<number>(0);
-
-  // redux에 넣은 groupphotomodal 인덱스 가져오기
-  const pictureid = useAppSelector((state) => state.messageReducer.pictureid);
-
-  // pictureId에 넣어주기
-  useEffect(() => {
-    if (pictureid !== 0) {
-      setPictureId(pictureid);
-      console.log(pictureId, "----");
-    }
-  }, [pictureid]);
+  const [selected, setSelected] = useState(0);
 
   // 검색기능입니다.
   const [changePlaces, setChangePlaces] =
@@ -148,6 +135,10 @@ function Map({ markerList }: Props) {
   useEffect(() => {
     getUserGps();
   }, []);
+
+  useEffect(() => {
+    console.log(selected);
+  }, [selected]);
 
   return (
     <section className="h-[75%] relative flex justify-center items-center">
@@ -227,17 +218,22 @@ function Map({ markerList }: Props) {
         setIsOpen={setIsOpen}
         changeCenter={changeCenter}
       />
-      <MessageModal
-        messageOpen={messageOpen}
-        setMessageOpen={setMessageOpen}
-        messageId={messageId}
-        setIsPhotoOpen={setIsPhotoOpen}
-      />
-      <GroupPhotoModal
-        isOpen={isPhotoOpen}
-        setIsOpen={setIsPhotoOpen}
-        pictureId={pictureId}
-      />
+      {selected === 0 ? (
+        <MessageModal
+          messageOpen={messageOpen}
+          setMessageOpen={setMessageOpen}
+          messageId={messageId}
+          setIsPhotoOpen={setIsPhotoOpen}
+          setSelected={setSelected}
+        />
+      ) : (
+        <GroupPhotoModal
+          isOpen={isPhotoOpen}
+          setIsOpen={setIsPhotoOpen}
+          messageOpen={messageOpen}
+          selected={selected}
+        />
+      )}
     </section>
   );
 }

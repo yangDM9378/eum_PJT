@@ -17,7 +17,7 @@ const getpinImages = async (messageId: number): Promise<Picture[]> => {
 // 핀 갤러리 이미지 상세 불러오기
 const getPinImage = async (pictureId: number): Promise<PictureDetail> => {
   const response = await jsonAuthApi.get(`pictures/${pictureId}`);
-  const data: PictureDetail = response.data;
+  const data: PictureDetail = response.data.result
   return data;
 };
 
