@@ -22,11 +22,17 @@ const GroupInfo = ({ groupId }: Props) => {
   });
 
   const handleCopyClipBoard = async (text: string) => {
-    await navigator.clipboard.writeText(text);
     if ((window as any).Android) {
       (window as any).Android.copyToClipboard(text);
+    } else {
+      const clipboardPermission = await navigator.permissions.query({ name: "clipboard-write" });
+      if (clipboardPermission.state === "granted") {
+        await navigator.clipboard.writeText(text);
+        setIsOpen(true);
+      } else {
+        console.log("Clipboard write permission denied.");
+      }
     }
-    setIsOpen(true);
   };
   const router = useRouter();
   const goToGallery = async (groupId: number) => {
