@@ -89,10 +89,6 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, selected }: ModalProps) => {
       },
     });
   };
-  const aaa = () => {
-    console.log(photoInfo);
-
-  };
 
   return (
     <Modal
@@ -125,7 +121,7 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, selected }: ModalProps) => {
         >
           공유
         </button>
-        <button onClick={aaa}>11111</button>
+  
       </div>
     </Modal>
   );

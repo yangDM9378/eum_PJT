@@ -25,7 +25,6 @@ const EventPose = () => {
   const formData = new FormData();
   // ulr을 blob으로 바꾸기
   const convertURLtoFile = async (image1: string, image2: string) => {
-    console.log(`${process.env.NEXT_PUBLIC_IMAGE_URL}${image1}`);
 
     const response1 = await fetch(
       `${process.env.NEXT_PUBLIC_IMAGE_URL}${image1}`
