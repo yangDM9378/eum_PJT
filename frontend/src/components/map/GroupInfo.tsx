@@ -25,7 +25,9 @@ const GroupInfo = ({ groupId }: Props) => {
     if ((window as any).Android) {
       (window as any).Android.copyToClipboard(text);
     } else {
-      const clipboardPermission = await navigator.permissions.query({ name: "clipboard-write" });
+      const clipboardPermission = await navigator.permissions.query({
+        name: "clipboard-write" as PermissionName,
+      });
       if (clipboardPermission.state === "granted") {
         await navigator.clipboard.writeText(text);
         setIsOpen(true);
