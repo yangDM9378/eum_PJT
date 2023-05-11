@@ -40,7 +40,7 @@ const GroupInfo = ({ groupId }: Props) => {
           <div className="w-[30%] h-[80%] flex">
             <img
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${data.image}`}
-              className="w-[80%] h-[80%] m-auto  rounded-xl"
+              className="w-[80%] h-[80%] m-auto rounded-xl"
             />
           </div>
           <div className="w-[70%] h-[80%] flex flex-col justify-center overflow-scroll">
