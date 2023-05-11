@@ -39,7 +39,11 @@ const MainDescription = ({ markerList }: Props) => {
         <div className="text-4xl">이음</div>
         <div className="text-lg pt-5 pb-3">
           총 &nbsp;
-          <span className="text-brand-blue text-xl">{rate ? count : "0"}</span>
+          {markerList && (
+            <span className="text-brand-blue text-xl">
+              {rate ? count : "0"}
+            </span>
+          )}
           개의 메시지가 남겨져있습니다.
         </div>
         <div className="text-lg">당신의 메시지를 남겨주세요</div>
