@@ -2,6 +2,8 @@ import axios from "axios";
 
 export const removebgApi = async (imageUrl: string) => {
   const formData = new FormData();
+  
+
   // base64를 blob형태로변환
   const blob = await (await fetch(imageUrl)).blob();
   formData.append("image", blob, "image.png");

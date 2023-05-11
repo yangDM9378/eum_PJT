@@ -1,6 +1,6 @@
 "use client";
 import { useAppSelector } from "@/redux/hooks";
-import { agingEventApi } from "@/services/eventApi";
+import { pictureEventApi } from "@/services/eventApi";
 import { AgingEventResult } from "@/types/event";
 import {
   QueryClient,
@@ -77,11 +77,12 @@ const EventAging = (): JSX.Element => {
   const handleLayer = async () => {};
 
   // 사진 저장 API 통신
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
-  const agingEventMutation = useMutation(agingEventApi, {
+  const agingEventMutation = useMutation(pictureEventApi
+    , {
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["initial-map"] });
+      // queryClient.invalidateQueries({ queryKey: ["initial-map"] });
     },
   });
 

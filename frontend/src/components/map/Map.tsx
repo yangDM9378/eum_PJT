@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { assign, setPinId } from "@/redux/map/mapSlice";
 import { Pin } from "@/types/pin";
 import GroupPhotoModal from "../modals/GroupPhotoModal";
+import { pictureid } from "@/redux/doevent/messageSlice";
 
 // 지도 옵션입니다.
 const GoogleMapOptions: google.maps.MapOptions = {
@@ -60,14 +61,7 @@ function Map({ markerList }: Props) {
   const [isPhotoOpen, setIsPhotoOpen] = useState<boolean>(false);
 
   // 선택한 사진 인덱스
-  const [pidctureId, setPictureId] = useState<number>(0);
-
-  // redux에 넣은 groupphotomodal 인덱스 가져오기
-  const pictureId = useAppSelector((state) => state.messageReducer.pictureid);
-  // pictureId에 넣어주기
-  useEffect(() => {
-    setPictureId(pictureId);
-  }, []);
+  const [selected, setSelected] = useState(0);
 
   // 검색기능입니다.
   const [changePlaces, setChangePlaces] =
@@ -141,6 +135,10 @@ function Map({ markerList }: Props) {
   useEffect(() => {
     getUserGps();
   }, []);
+
+  useEffect(() => {
+    console.log(selected);
+  }, [selected]);
 
   return (
     <section className="h-[75%] relative flex justify-center items-center">
@@ -220,17 +218,22 @@ function Map({ markerList }: Props) {
         setIsOpen={setIsOpen}
         changeCenter={changeCenter}
       />
-      <MessageModal
-        messageOpen={messageOpen}
-        setMessageOpen={setMessageOpen}
-        messageId={messageId}
-        setIsPhotoOpen={setIsPhotoOpen}
-      />
-      <GroupPhotoModal
-        isOpen={isPhotoOpen}
-        setIsOpen={setIsPhotoOpen}
-        pictureId={pidctureId}
-      />
+      {selected === 0 ? (
+        <MessageModal
+          messageOpen={messageOpen}
+          setMessageOpen={setMessageOpen}
+          messageId={messageId}
+          setIsPhotoOpen={setIsPhotoOpen}
+          setSelected={setSelected}
+        />
+      ) : (
+        <GroupPhotoModal
+          isOpen={isPhotoOpen}
+          setIsOpen={setIsPhotoOpen}
+          messageOpen={messageOpen}
+          selected={selected}
+        />
+      )}
     </section>
   );
 }
