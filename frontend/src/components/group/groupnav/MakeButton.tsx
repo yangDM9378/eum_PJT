@@ -16,7 +16,7 @@ const MakeButton = () => {
   return (
     <div className="font-brand-gmarketsans">
       <button
-        className="bg-brand-pink w-[35vw] h-[3vh] rounded-md font-brand-gmarketsans text-[15px]"
+        className="bg-brand-pink w-[35vw] rounded-md font-brand-gmarketsans text-[15px] h-[5vh]"
         onClick={openModal}
       >
         그룹 만들기
