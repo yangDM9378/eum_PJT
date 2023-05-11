@@ -58,10 +58,10 @@ import java.util.Arrays
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
-    private var NEXT_PUBLIC_OUATH_KAKAO_HOSTNAME="http://i-eum-u.com/api/v1/oauth2/authorize/kakao"
-    private var NEXT_PUBLIC_OUATH_KAKAO_REDIRECT_URL="http://i-eum-u.com/api/v1/oauth2/callback/kakao"
+    private var NEXT_PUBLIC_OUATH_KAKAO_HOSTNAME="https://i-eum-u.com/api/v1/oauth2/authorize/kakao"
+    private var NEXT_PUBLIC_OUATH_KAKAO_REDIRECT_URL="https://i-eum-u.com/api/v1/oauth2/callback/kakao"
 //    var target_url="http://10.0.2.2:3000/"
-       var target_url="http://i-eum-u.com/"
+       var target_url="https://i-eum-u.com/"
     private val MY_PERMISSIONS_REQ_ACCESS_FINE_LOCATION = 100
     private val MY_PERMISSIONS_REQ_ACCESS_BACKGROUND_LOCATION = 101
 
