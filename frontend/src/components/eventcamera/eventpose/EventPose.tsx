@@ -22,12 +22,10 @@ const EventPose = () => {
   const groupId = useAppSelector((state) => state.coordsReducer.groupId);
   const pinId = useAppSelector((state) => state.coordsReducer.pinId);
 
-
-  const FormData = require('form-data')
+  const FormData = require("form-data");
   const formData = new FormData();
   // ulr을 blob으로 바꾸기
   const convertURLtoFile = async (image1: string, image2: string) => {
-
     const response1 = await fetch(
       `${process.env.NEXT_PUBLIC_IMAGE_URL}${image1}`
     );
@@ -69,7 +67,7 @@ const EventPose = () => {
 
     const jsonReq = { groupId: groupId, pinId: pinId };
 
-    const formData2  = new FormData();
+    const formData2 = new FormData();
     formData2.append("image", imgBlob, "image.png");
     formData2.append(
       "pictureAddReq",
