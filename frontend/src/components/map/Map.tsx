@@ -176,7 +176,7 @@ function Map({ markerList }: Props) {
         </Autocomplete>
         {/* 지도의 센터 좌표 이미지입니다. */}
         <img
-          className="absolute top-[50%] left-[50%] w-[10vh]"
+          className="absolute top-[50%] left-[50%] w-[5vh]"
           style={{ transform: "translate(-50%, -50%)" }}
           src="/map/centerTarget.png"
           alt="center"
@@ -199,7 +199,7 @@ function Map({ markerList }: Props) {
         </MarkerClustererF>
         {/* 지도에 메시지 추가하기. */}
         <img
-          className="absolute top-[90%] left-[85%] w-[13vh]"
+          className="absolute top-[90%] left-[89%] w-[10vh]"
           style={{ transform: "translate(-50%, -50%)" }}
           src="/map/plus.png"
           alt="center"
@@ -208,7 +208,7 @@ function Map({ markerList }: Props) {
         <img
           src="/map/curPosition.png"
           alt="curPosition"
-          className="absolute top-[90%]  left-[10%] w-[5vh]"
+          className="absolute top-[78%] left-[89%] w-[7vh]"
           style={{ transform: "translate(-50%, -50%)" }}
           onClick={getUserGps}
         />
