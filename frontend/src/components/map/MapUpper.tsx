@@ -7,6 +7,7 @@ import { getPinList } from "@/services/pinApi";
 import { QueryClient, useQuery } from "@tanstack/react-query";
 import { useAppDispatch } from "@/redux/hooks";
 import { setGroupId } from "@/redux/map/mapSlice";
+import Loading from "../common/Loading";
 
 const libraries: LoadScriptProps["libraries"] = ["places"];
 interface Props {
@@ -32,7 +33,13 @@ const MapUpper = ({ groupId }: Props) => {
   const dispatch = useAppDispatch();
   dispatch(setGroupId(groupId));
 
-  return isLoaded ? <Map markerList={data} /> : <div>로딩중입니다.</div>;
+  return isLoaded ? (
+    <Map markerList={data} />
+  ) : (
+    <div className=" h-[75%]  flex items-center justify-center">
+      <Loading />
+    </div>
+  );
 };
 
 export default MapUpper;

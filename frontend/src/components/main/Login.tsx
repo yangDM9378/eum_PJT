@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import login from "../../../public/images/kakao_login.png";
 import useWindowSize from "@/libs/helper/useWindowSize";
 import MapUpper from "./MainMapUpper";
+import Loading from "../common/Loading";
 
 import { useQuery } from "@tanstack/react-query";
 import { getPinAll } from "@/services/pinApi";
@@ -59,7 +60,9 @@ const Main = () => {
       )}
     </div>
   ) : (
-    <div>로딩중입니다.</div>
+    <div className="w-[100vw] h-[100vh] flex items-center justify-center">
+      <Loading />
+    </div>
   );
 };
 
