@@ -2,7 +2,11 @@
 import { useAppSelector } from "@/redux/hooks";
 import { agingEventApi } from "@/services/eventApi";
 import { AgingEventResult } from "@/types/event";
-import { useMutation } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import Konva from "konva";
 import { useRouter } from "next/navigation";
 import React, { useEffect, createRef, useRef, useState } from "react";
@@ -14,18 +18,13 @@ const EventAging = (): JSX.Element => {
   const pinId = useAppSelector((state) => state.coordsReducer.pinId);
   const stageRef = useRef<Konva.Stage>();
 
-  const makeInitStage = () => {
+  useEffect(() => {
     const stage = new Konva.Stage({
       container: "container",
       width: window.innerWidth,
       height: 300,
       ref: stageRef,
     });
-    return stage;
-  };
-
-  useEffect(() => {
-    const stage = makeInitStage();
     const layer = new Konva.Layer();
     stage.add(layer);
     const bgimage = new window.Image();
@@ -75,20 +74,25 @@ const EventAging = (): JSX.Element => {
     };
   }, []);
 
+  const handleLayer = async () => {};
+
   // 사진 저장 API 통신
+  const queryClient = useQueryClient();
+
   const agingEventMutation = useMutation(agingEventApi, {
     onSuccess: (data) => {
-      console.log(data);
-      setResponse(data);
+      queryClient.invalidateQueries({ queryKey: ["initial-map"] });
     },
   });
 
   // 사진 저장
   // aging결과
-  const [response, setResponse] = useState<AgingEventResult | null>(null);
   const router = useRouter();
   const handleSave = async () => {
     if (stageRef.current) {
+      const tr = stageRef.current.children[0].findOne("Transformer");
+      tr.visible(false);
+      stageRef.current.draw();
       const dataURL = await stageRef.current.toDataURL({ pixelRatio: 1 });
       console.log(dataURL);
 
