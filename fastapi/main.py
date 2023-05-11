@@ -153,7 +153,7 @@ def calculateAngle(landmark1, landmark2, landmark3):
     return angle
 
 def classifyPose(base_landmark, input_landmark):
-    isSamePose = False
+    isSamePose = 0
 
     mp_pose = mp.solutions.pose
 
@@ -221,6 +221,6 @@ def classifyPose(base_landmark, input_landmark):
     print(right_knee_angle_diff)
 
     if abs(left_elbow_angle_diff) < approximationError and abs(right_elbow_angle_diff) < approximationError and abs(left_shoulder_angle_diff) < approximationError and abs(right_shoulder_angle_diff) < approximationError and abs(left_knee_angle_diff) < approximationError and abs(right_knee_angle_diff) < approximationError :
-        isSamePose = True
+        isSamePose = 1
     
     return isSamePose
