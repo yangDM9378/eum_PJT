@@ -22,6 +22,8 @@ const EventPose = () => {
   const groupId = useAppSelector((state) => state.coordsReducer.groupId);
   const pinId = useAppSelector((state) => state.coordsReducer.pinId);
 
+
+  const FormData = require('form-data')
   const formData = new FormData();
   // ulr을 blob으로 바꾸기
   const convertURLtoFile = async (image1: string, image2: string) => {
