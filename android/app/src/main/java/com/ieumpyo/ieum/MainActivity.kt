@@ -29,6 +29,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -166,10 +167,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     inner class WebAppInterface(private val mContext: Context) {
         @JavascriptInterface
         fun copyToClipboard(text: String?) {
+            Log.d("Javascript",text.toString())
             val clipboard: ClipboardManager =
                 getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("demo", text)
             clipboard.setPrimaryClip(clip)
+            Toast.makeText(mContext, "그룹코드가 복사되었습니다!", Toast.LENGTH_SHORT).show()
+
         }
     }
     var cameraPath = ""
@@ -186,6 +190,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -202,16 +207,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
         MobileAds.setRequestConfiguration(configuration)
 
-        checkPermission()
+        checkGPS()
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment)as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+
+
+        val refreshLayout = findViewById<SwipeRefreshLayout>(R.id.contentSwipeLayout)
 
 
 //        웹뷰 생성
         web= findViewById<WebView>(R.id.web)
         web.apply {
             webViewClient = WebViewClient()
+            getSettings().setJavaScriptEnabled(true)
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
             settings.setSupportMultipleWindows(true)
@@ -225,7 +234,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             settings.allowFileAccess = true
             settings.domStorageEnabled=true
             // JavaScript 인터페이스 활성화
-            addJavascriptInterface(WebAppInterface(this@MainActivity),"WebAppInterface")
+            addJavascriptInterface(WebAppInterface(this@MainActivity),"Android")
         }
 
 
@@ -233,22 +242,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         web.setWebViewClient(object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
-                if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.CAMERA), 1)
-                }
+                checkPermission()
             }
 
-//            override fun onPageFinished(view: WebView, url: String) {
-//                super.onPageFinished(view, url);
-////               Log.d("Main",token+"!!")
-//                accessToken=getCookie(target_url,"accessToken")
-//                Log.d("OnPageFinished",accessToken.value.toString()+"!!")
-//            }
+            override fun onPageFinished(view: WebView, url: String) {
+                super.onPageFinished(view, url);
+                refreshLayout.isRefreshing = false
+            }
 
         })
 
         web.webChromeClient= WebChromeClient()
         web.webChromeClient=object: WebChromeClient(){
+
             override fun onGeolocationPermissionsShowPrompt(
                 origin: String?,
                 callback: GeolocationPermissions.Callback?
@@ -309,10 +315,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
 
-        val refreshLayout = findViewById<SwipeRefreshLayout>(R.id.contentSwipeLayout)
-        refreshLayout.setOnRefreshListener { web.reload() }
+        refreshLayout.setOnRefreshListener {
+            web.reload()
+            refreshLayout.isRefreshing = true
+        }
         refreshLayout.viewTreeObserver.addOnScrollChangedListener {
-            if (web.getScrollY() === 0) {
+            if (web.getScrollY() <= 0 || web.canScrollVertically(-1)) {
                 refreshLayout.isEnabled = true
             } else {
                 refreshLayout.isEnabled = false
@@ -478,23 +486,28 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun checkPermission() {
-        val permissionAccessFineLocationApproved = ActivityCompat
-            .checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED
 
-        if (checkSelfPermission(Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(
-                Manifest.permission.ACCESS_NETWORK_STATE
-            ) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED ||  checkSelfPermission(
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
+        if (checkSelfPermission(Manifest.permission.INTERNET
+            ) != PackageManager.PERMISSION_GRANTED ||
+            checkSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE
+            ) != PackageManager.PERMISSION_GRANTED ||
+            checkSelfPermission(Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED ||
+            checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED ||
+            (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED) ||
+            (checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED) ||
+            (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED)
         ) {
+            Log.d("checkselfpermission","!!!!")
             //카메라 또는 저장공간 권한 획득 여부 확인
-            if (shouldShowRequestPermissionRationale(
-                    Manifest.permission.CAMERA
-                )
+            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) ||
+                (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS))
             ) {
                 // 카메라 및 저장공간 권한 요청
                 requestPermissions(
@@ -502,33 +515,52 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         Manifest.permission.INTERNET,
                         Manifest.permission.CAMERA,
                         Manifest.permission.ACCESS_NETWORK_STATE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.POST_NOTIFICATIONS
+//                        ,
+//                        Manifest.permission.ACCESS_FINE_LOCATION,
+//                        Manifest.permission.ACCESS_BACKGROUND_LOCATION
                     ), 1
                 )
             } else { ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.INTERNET, Manifest.permission.CAMERA,
-                Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+                arrayOf(
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.POST_NOTIFICATIONS
+//                    ,
+//                    Manifest.permission.ACCESS_FINE_LOCATION,
+//                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                                ), 1)
 
             }
         }
-        if (permissionAccessFineLocationApproved) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val backgroundLocationPermissionApproved = ActivityCompat
-                    .checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED
+    }
+    private fun checkGPS(){
+        val permissionCheck =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
 
-                if (!backgroundLocationPermissionApproved) {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
-                        MY_PERMISSIONS_REQ_ACCESS_BACKGROUND_LOCATION
-                    )
-                }
-            }
-        } else {
-            ActivityCompat.requestPermissions(this,
+        if (permissionCheck == PackageManager.PERMISSION_DENIED) { //포그라운드 위치 권한 확인
+
+            //위치 권한 요청
+            ActivityCompat.requestPermissions(
+                this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                MY_PERMISSIONS_REQ_ACCESS_FINE_LOCATION
+                0
+            )
+        }
+
+
+        val permissionCheck2 =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+
+        if (permissionCheck == PackageManager.PERMISSION_DENIED) { //백그라운드 위치 권한 확인
+            //위치 권한 요청
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
+                0
             )
         }
     }
