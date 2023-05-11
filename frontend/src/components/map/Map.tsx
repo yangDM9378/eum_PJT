@@ -64,7 +64,6 @@ function Map({ markerList }: Props) {
 
   // redux에 넣은 groupphotomodal 인덱스 가져오기
   const pictureId = useAppSelector((state) => state.messageReducer.pictureid);
-  console.log(pictureId, "🎈🎈🎈");
   // pictureId에 넣어주기
   useEffect(() => {
     setPictureId(pictureId);

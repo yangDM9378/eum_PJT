@@ -103,7 +103,7 @@ const EventAging = (): JSX.Element => {
         new Blob([JSON.stringify(jsonReq)], { type: "application/json" })
       );
       await agingEventMutation.mutate(formData);
-      await router.push(`/addeventcamera/aging/removebg`);
+      await router.push(`/map/${groupId}`);
     }
   };
 
