@@ -1,11 +1,12 @@
 // 카메라 가져오기
 const startCamera = async (
   videoRef: React.RefObject<HTMLVideoElement>,
-  setIsCameraReady: React.Dispatch<React.SetStateAction<boolean>>
+  setIsCameraReady: React.Dispatch<React.SetStateAction<boolean>>,
+  isFrontCamera: boolean // 기본값은 후면 카메라
 ) => {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
+      video: { facingMode: isFrontCamera ? "user" : "environment" },
     });
     if (videoRef.current) {
       videoRef.current.srcObject = stream;
@@ -25,9 +26,13 @@ const startCamera = async (
         videoRef.current.style.width = "auto";
         videoRef.current.style.height = "100%";
       }
+      // 좌우 반전 설정
+      videoRef.current.style.transform = isFrontCamera
+        ? "scaleX(1)"
+        : "scaleX(-1)";
     }
   } catch (err) {
-    console.error(err);
+    alert("카메라 권한이 없습니다!");
   }
 };
 

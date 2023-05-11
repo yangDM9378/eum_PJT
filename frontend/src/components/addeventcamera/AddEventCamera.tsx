@@ -15,11 +15,12 @@ const AddEventCamera = () => {
   const pathSelector = useAppSelector((state) => state.coordsReducer.path);
   const [pathOption, setPathOption] = useState(pathSelector);
   const [isCameraReady, setIsCameraReady] = useState(false);
+  const [isFrontCamera, setIsFrontCamera] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     // 자동으로 켜져있는 camera 시작
-    startCamera(videoRef, setIsCameraReady);
+    startCamera(videoRef, setIsCameraReady, isFrontCamera);
   }, []);
 
   //사진 찰영 버튼 클릭 시
@@ -49,6 +50,13 @@ const AddEventCamera = () => {
           className="bg-white rounded-full text-brand-green text-[50px] p-[2%]"
           onClick={handleTakePicture}
         />
+        <button
+          onClick={() => {
+            setIsFrontCamera(!isFrontCamera);
+          }}
+        >
+          화면전환
+        </button>
       </div>
     </div>
   );
