@@ -20,7 +20,7 @@ const MainDescription = ({ markerList }: Props) => {
   return (
     <div className="w-[50%] m-auto h-[80%] flex flex-col">
       <div className="flex flex-col justify-center w-[70%] h-[100%] m-auto">
-        <div className="text-4xl">이음</div>
+        <div className="text-4xl font-gmarket-thin items-center">이음</div>
         <div className="text-lg pt-5 pb-3">
           총 &nbsp;
           {markerList && (

@@ -35,7 +35,7 @@ type ModalProps = {
   messageId: number;
   setMessageOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPhotoOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelected : React.Dispatch<React.SetStateAction<number>>;
+  setSelected: React.Dispatch<React.SetStateAction<number>>;
 };
 
 // 메세지 모달
@@ -104,7 +104,7 @@ const MessageModal = ({
   // 메세지 모달 닫고 상세 이미지 모달 열기
   const CloseModal = async () => {
     // redux에 선택된 이미지 인덱스 넣어주기
-    setSelected(selectedIdx)
+    setSelected(selectedIdx);
     setMessageOpen(false);
     setIsPhotoOpen(true);
   };
@@ -135,10 +135,10 @@ const MessageModal = ({
           <img
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${detailData.result.image}`}
             alt="이벤트사진"
-            className="h-[25vh] my-4 rounded-[10px] shadow-xl"
+            className="h-[25vh] my-4 rounded-[10px] shadow-xl border-2 border-brand-blue"
           />
-          <div className="flex flex-row justify-center mb-3">
-            <div className="flex flex-col-reverse h-[20vh] overflow-y-scroll justify-center">
+          <div className="flex flex-row justify-center mb-3 max-h-[30vh]">
+            <div className="flex flex-col-reverse overflow-y-scroll relative ">
               {imagesUrls.length === 0 ? (
                 <p className="flex text-lg">아직 함께 찍은 사진이 없어요😭</p>
               ) : (
@@ -149,7 +149,7 @@ const MessageModal = ({
                     alt=""
                     width={70}
                     height={60}
-                    className={`my-[5%] mr-[8vw] ${
+                    className={`min-h-[10vh] my-[5%] mr-[5vw] ${
                       selectedIdx === image.pictureId
                         ? "border-4 border-brand-red"
                         : ""
@@ -164,9 +164,9 @@ const MessageModal = ({
               <img
                 src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${selectedImage}`}
                 alt="선택된 이미지"
-                height={150}
-                width={150}
-                className="rounded-lg"
+                height={270}
+                width={200}
+                className="rounded-lg h-[25vh] ml-[5%] my-auto"
                 onClick={() => {
                   CloseModal();
                 }}
@@ -180,7 +180,7 @@ const MessageModal = ({
           >
             함께 찍기
           </div>
-        </section> 
+        </section>
       )}
     </Modal>
   );
