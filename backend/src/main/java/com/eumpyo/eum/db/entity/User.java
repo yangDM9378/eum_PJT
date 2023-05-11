@@ -23,7 +23,7 @@ public class User {
     @Column(name = "birth_year")
     private int birthYear;
 
-    @Column(name = "gender", columnDefinition="TINYINT(1)")
+    @Column(name = "gender", columnDefinition="bit")
     private int gender;
 
     @Column(name = "email", length = 50)
