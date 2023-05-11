@@ -4,6 +4,7 @@ import React from "react";
 import { useLoadScript, LoadScriptProps } from "@react-google-maps/api";
 import MainMap from "./MainMap";
 import { Pin } from "@/types/pin";
+import Loading from "../common/Loading";
 
 const libraries: LoadScriptProps["libraries"] = ["places"];
 
@@ -21,7 +22,9 @@ const MapUpper = ({ markerList }: Props) => {
   return isLoaded ? (
     <MainMap markerList={markerList} />
   ) : (
-    <div>로딩중입니다.</div>
+    <div className="w-[100vw] h-[100vh] flex items-center justify-center">
+      <Loading />
+    </div>
   );
 };
 
