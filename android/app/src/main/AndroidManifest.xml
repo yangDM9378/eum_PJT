@@ -98,5 +98,7 @@
             android:enabled="true"
             android:exported="true" />
     </application>
-
+    <queries>
+        <package android:name="com.kakao.talk" />
+    </queries>
 </manifest>
