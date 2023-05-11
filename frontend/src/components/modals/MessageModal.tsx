@@ -35,6 +35,7 @@ type ModalProps = {
   messageId: number;
   setMessageOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPhotoOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelected : React.Dispatch<React.SetStateAction<number>>;
 };
 
 // 메세지 모달
@@ -43,6 +44,7 @@ const MessageModal = ({
   setMessageOpen,
   messageId,
   setIsPhotoOpen,
+  setSelected,
 }: ModalProps) => {
   const [detailData, setDetailData] = useState<PindetailResult>();
   const dispatch = useAppDispatch();
@@ -97,16 +99,20 @@ const MessageModal = ({
   const selecteimage = (id: number, image: string) => {
     setSelectedIdx(id);
     setSelectedImage(image);
-
-    // redux에 선택된 이미지 인덱스 넣어주기
-    dispatch(pictureid(selectedIdx));
   };
 
   // 메세지 모달 닫고 상세 이미지 모달 열기
-  const CloseModal = () => {
+  const CloseModal = async () => {
+    // redux에 선택된 이미지 인덱스 넣어주기
+    setSelected(selectedIdx)
     setMessageOpen(false);
     setIsPhotoOpen(true);
   };
+
+  useEffect(() => {
+    dispatch(pictureid(selectedIdx));
+  }, [selectedIdx]);
+
   return (
     <Modal
       isOpen={messageOpen}
@@ -134,7 +140,7 @@ const MessageModal = ({
           <div className="flex flex-row justify-center mb-3">
             <div className="flex flex-col-reverse h-[20vh] overflow-y-scroll justify-center">
               {imagesUrls.length === 0 ? (
-                <p className="flex ">아직 함께 찍은 사진이 없어요😭</p>
+                <p className="flex text-lg">아직 함께 찍은 사진이 없어요😭</p>
               ) : (
                 imagesUrls.map((image) => (
                   <img
@@ -174,7 +180,7 @@ const MessageModal = ({
           >
             함께 찍기
           </div>
-        </section>
+        </section> 
       )}
     </Modal>
   );
