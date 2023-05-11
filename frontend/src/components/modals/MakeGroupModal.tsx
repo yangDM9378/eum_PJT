@@ -104,6 +104,12 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
       }
     }
   };
+
+  // 모달 닫기
+  const modalClose = () => {
+    setIsOpen(false);
+    setGroupState(initialGroupState);
+  };
   return (
     <Modal
       isOpen={isOpen}
@@ -117,10 +123,10 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
         src="/modal/closeBTN.png"
         alt="닫기버튼"
         className="absolute left-[90%] top-[5%]"
-        onClick={() => setIsOpen(false)}
+        onClick={modalClose}
       />
-      <div className="pt-[20%] flex flex-col items-center h-full">
-        <span className="">만드는 모임 이름을 작성해주세요.</span>
+      <div className="pt-[10%] flex flex-col items-center h-full">
+        <span className="py-[5%]">만드는 모임 이름을 작성해주세요.</span>
         <input
           type="text"
           name="name"
@@ -128,21 +134,27 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
           onChange={handleChange}
           className="w-[80%] h-[10%] bg-transparent border border-brand-baige-2"
         />
-        <p className="pt-[10%]">당신의 모임을 설명해 주세요.</p>
-        <input
-          type="text"
+        <p className="py-[5%]">당신의 모임을 설명해 주세요.</p>
+        <textarea
           name="description"
           value={groupState.description}
           onChange={handleChange}
-          className="w-[80%] h-[30%] pt-[10%] bg-transparent border border-brand-baige-2 "
+          className="w-[80%] h-[30%] bg-transparent border border-brand-baige-2 resize-none	"
         />
 
-        <p className="pt-[10%]">모임의 사진을 올려주세요.</p>
-        <label htmlFor="groupImg">
+        <p className="py-[5%]">모임의 사진을 올려주세요.</p>
+        <label
+          htmlFor="groupImg"
+          className="w-[80%] h-[30%] flex items-center justify-center"
+        >
           {groupState.image ? (
-            <img src={groupState.image} alt="" />
+            <img
+              src={groupState.image}
+              alt=""
+              className=" w-[70%] h-[90%] rounded-sm"
+            />
           ) : (
-            <AiOutlineCamera className="pt-[5%] w-[50px] h-[50px]" />
+            <AiOutlineCamera className=" w-[50px] h-[50px]" />
           )}
         </label>
         <input
@@ -151,6 +163,7 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
           id="groupImg"
           onChange={saveGroupImg}
           ref={groupImg}
+          className="hidden"
         />
         <button
           className="bg-brand-red w-[70%] h-[10%] mt-[5%] font-gmarket-thin"

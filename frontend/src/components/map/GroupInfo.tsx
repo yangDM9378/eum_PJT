@@ -22,11 +22,10 @@ const GroupInfo = ({ groupId }: Props) => {
   });
 
   const handleCopyClipBoard = async (text: string) => {
+    await navigator.clipboard.writeText(text);
     if ((window as any).Android) {
       (window as any).Android.copyToClipboard(text);
     }
-    await navigator.clipboard.writeText(text);
-
     setIsOpen(true);
   };
   const router = useRouter();
@@ -46,9 +45,9 @@ const GroupInfo = ({ groupId }: Props) => {
           </div>
           <div className="w-[70%] h-[80%] flex flex-col justify-center">
             <div className="flex justify-between items-center">
-              <div className="py-2 text-lg">{data.name}</div>
-              <div className="p-2 text-sm " onClick={() => goToGallery(groupId)}>
-                갤러리
+              <div className="py-1 text-[90%] font-bold">{data.name}</div>
+              <div className="p-1 mr-1 " onClick={() => goToGallery(groupId)}>
+                <img src="/map/gallery.png" alt="" />
               </div>
             </div>
             <div className="text-xs">{data.description}</div>
