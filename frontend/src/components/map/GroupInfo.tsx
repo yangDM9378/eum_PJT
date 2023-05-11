@@ -40,10 +40,10 @@ const GroupInfo = ({ groupId }: Props) => {
           <div className="w-[30%] h-[80%] flex">
             <img
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${data.image}`}
-              className="w-[80%] h-[80%] m-auto border rounded-xl"
+              className="w-[80%] h-[80%] m-auto  rounded-xl"
             />
           </div>
-          <div className="w-[70%] h-[80%] flex flex-col justify-center">
+          <div className="w-[70%] h-[80%] flex flex-col justify-center overflow-scroll">
             <div className="flex justify-between items-center">
               <div className="py-1 text-[90%] font-bold">{data.name}</div>
               <div className="p-1 mr-1 " onClick={() => goToGallery(groupId)}>
