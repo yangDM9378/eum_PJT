@@ -4,7 +4,7 @@ import React from "react";
 import { useLoadScript, LoadScriptProps } from "@react-google-maps/api";
 import Map from "./Map";
 import { getPinList } from "@/services/pinApi";
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useQuery } from "@tanstack/react-query";
 import { useAppDispatch } from "@/redux/hooks";
 import { setGroupId } from "@/redux/map/mapSlice";
 
@@ -28,6 +28,7 @@ const MapUpper = ({ groupId }: Props) => {
     queryKey: ["initial-map"],
     queryFn: async () => await getGroupPin(),
   });
+
   const dispatch = useAppDispatch();
   dispatch(setGroupId(groupId));
 
