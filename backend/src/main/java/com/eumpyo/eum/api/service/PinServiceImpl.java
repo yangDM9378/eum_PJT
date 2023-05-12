@@ -134,7 +134,6 @@ public class PinServiceImpl implements PinService {
                 .createdDate(pin.getCreatedDate())
                 .userName(pin.getUser().getName())
                 .type(pin.getType())
-                .groupId(pin.getGroup().getGroupId())
                 .build();
 
         return  pinDetailsRes;
@@ -158,6 +157,7 @@ public class PinServiceImpl implements PinService {
 
         PinAlarmRes pinAlarmRes = PinAlarmRes.builder()
                 .title(pin.getTitle())
+                .groupId(pin.getGroup().getGroupId())
                 .role(userRole)
                 .build();
 
