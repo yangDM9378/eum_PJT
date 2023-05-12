@@ -51,7 +51,7 @@ const GroupInfo = ({ groupId }: Props) => {
               className="w-[80%] h-[80%] m-auto rounded-xl"
             />
           </div>
-          <div className="w-[70%] h-[80%] flex flex-col justify-center overflow-scroll">
+          <div className="w-[70%] h-[80%] flex flex-col justify-center">
             <div className="flex justify-between items-center mt-[20%]">
               <div className="py-2 text-[90%] font-bold">{data.name}</div>
               <div className="p-1 mr-3 " onClick={() => goToGallery(groupId)}>
@@ -61,7 +61,8 @@ const GroupInfo = ({ groupId }: Props) => {
             <div className="text-xs py-2">{data.description}</div>
             <div className="flex justify-end p-2">
               <div
-                className="p-2 mb-[10%]
+                className="p-2
+                mb-[15%] 
                  mr-[3%]
                   text-xs 
                   rounded-md
