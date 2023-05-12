@@ -46,7 +46,6 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
 
   // 그룹 생성하기
   const makeGroup = () => {
-    console.log(groupState);
     const formData = new FormData();
     const jsonData = {
       name: groupState.name,
@@ -97,7 +96,6 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
   const saveGroupImg = async () => {
     if (groupImg?.current?.files !== null) {
       const file = groupImg?.current?.files[0];
-      console.log(file);
       if (file) {
         setUploadImg(file);
         setGroupState({ ...groupState, image: URL.createObjectURL(file) });

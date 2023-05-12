@@ -20,7 +20,6 @@ const RemoveBg = () => {
   useEffect(() => {
     async function fetchData() {
       const response = await removebgApi(agingSelectUrl);
-      console.log(response);
       setAgingImage(agingSelectUrl);
       setRemovebgImageUrl(response.data.data.image_url);
     }
@@ -28,7 +27,6 @@ const RemoveBg = () => {
   }, []);
 
   const addEventModalOpen = () => {
-    console.log(removebgImageUrl);
     setModalOpen(true);
   };
 

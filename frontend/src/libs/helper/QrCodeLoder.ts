@@ -5,7 +5,6 @@ export async function makeQrCode(text: string): Promise<string | null> {
     const qrCode = await QRCode.toDataURL(text);
     return qrCode;
   } catch (err) {
-    console.error(err);
     return null;
   }
 }
