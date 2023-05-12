@@ -13,10 +13,13 @@ const MakeButton = () => {
     setIsopen(true);
   };
 
+  function moveGroupCss(isOpen: boolean): string {
+    return isOpen === true ? "bg-brand-pink" : "border-2 border-brand-pink";
+  }
   return (
-    <div className="font-brand-gmarketsans">
+    <div className=" font-gmarket-thin text-[15px] ">
       <button
-        className="bg-brand-pink w-[35vw] rounded-md font-brand-gmarketsans text-[15px] h-[5vh]"
+        className={`w-[35vw] h-[5vh] rounded-md  ${moveGroupCss(Isopen)}`}
         onClick={openModal}
       >
         그룹 만들기

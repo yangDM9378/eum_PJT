@@ -57,18 +57,30 @@ const GroupInfo = ({ groupId }: Props) => {
               className="w-[80%] h-[80%] m-auto rounded-xl"
             />
           </div>
-          <div className="w-[70%] h-[80%] flex flex-col justify-center overflow-scroll">
-            <div className="flex items-center justify-between">
-              <div className="py-1 text-[90%] font-bold">{data.name}</div>
-              <div className="p-1 mr-1 " onClick={() => goToGallery(groupId)}>
+          <div className="w-[70%] h-[80%] flex flex-col justify-center">
+            <div className="flex justify-between items-center mt-[20%]">
+              <div className="py-2 text-[90%] font-bold">{data.name}</div>
+              <div className="p-1 mr-3 " onClick={() => goToGallery(groupId)}>
                 <img src="/map/gallery.png" alt="" />
               </div>
             </div>
             <div className="py-2 text-xs">{data.description}</div>
             <div className="flex justify-end p-2">
               <div
-                className="p-2 text-xs rounded-md bg-brand-red"
-                onClick={() => handleCopyClipBoard(data.groupCode)}
+                className="p-2
+                mb-[15%] 
+                 mr-[3%]
+                  text-xs 
+                  rounded-md
+                   bg-transparent border-2 
+                    border-brand-red
+                     hover:bg-brand-red
+                      active:bg-brand-red
+                      focus:bg-brand-red
+                     font-gmarket-thin"
+                onClick={() => {
+                  handleCopyClipBoard(data.groupCode);
+                }}
               >
                 그룹 코드
               </div>

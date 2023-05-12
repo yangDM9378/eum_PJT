@@ -167,7 +167,7 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
           className="bg-brand-red w-[70%] h-[10%] mt-[5%] font-gmarket-thin"
           onClick={makeGroup}
         >
-          만들기
+          {makeGroupMutation.isLoading ? "그룹 생성 중" : "등록하기"}
         </button>
       </div>
     </Modal>

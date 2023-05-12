@@ -17,7 +17,7 @@ const UserInfo = () => {
 
   return (
     <div>
-      <p className="font-brand-gmarketsans text-[30px]">
+      <p className="text-[30px] font-gmarket-thin">
         {userData && userData.name}
       </p>
     </div>
