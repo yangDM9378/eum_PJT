@@ -43,7 +43,7 @@ const GroupList = () => {
         {data &&
           data.map((group, index) => (
             <li key={index}>
-              <div className="flex flex-col w-[95%] mix-blend-saturation">
+              <div className="flex flex-col w-[95%]">
                 <div className=" flex justify-end">
                   <AiOutlineClose onClick={() => outGroupList(group.groupId)} />
                 </div>
