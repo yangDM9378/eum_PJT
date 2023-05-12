@@ -6,6 +6,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.getIntent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Location
@@ -25,6 +26,7 @@ import android.webkit.JsResult
 import android.webkit.PermissionRequest
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -32,6 +34,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
@@ -46,24 +50,23 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.ieumpyo.ieum.MainActivity.Companion.db
 import com.ieumpyo.ieum.api.RetrofitImpl
 import com.ieumpyo.ieum.geofencing.GeofenceHelper
 import com.ieumpyo.ieum.roomdb.notifiedLocationDB
 import com.ieumpyo.ieum.roomdb.notifiedLocationEntity
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
+import java.net.URISyntaxException
 import java.util.Arrays
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
-    private var NEXT_PUBLIC_OUATH_KAKAO_HOSTNAME="https://i-eum-u.com/api/v1/oauth2/authorize/kakao"
-    private var NEXT_PUBLIC_OUATH_KAKAO_REDIRECT_URL="https://i-eum-u.com/api/v1/oauth2/callback/kakao"
-//    var target_url="http://10.0.2.2:3000/"
+    //    var target_url="http://10.0.2.2:3000/"
        var target_url="https://i-eum-u.com/"
-    private val MY_PERMISSIONS_REQ_ACCESS_FINE_LOCATION = 100
-    private val MY_PERMISSIONS_REQ_ACCESS_BACKGROUND_LOCATION = 101
 
     private lateinit var  geofencingClient: GeofencingClient
     private lateinit var geofenceHelper: GeofenceHelper
@@ -78,8 +81,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         override fun onLocationChanged(location: Location) {
             val longitude = location.longitude
             val latitude = location.latitude
-
-            Log.d("Location",longitude.toString()+" "+latitude.toString())
         }
 
         override fun onProviderEnabled(provider: String) {
@@ -112,62 +113,29 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this,
+            if(shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION
-                )){
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),locationCode)
+                )
+            ){
+                requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),locationCode)
             }else{
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),locationCode)
+                requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),locationCode)
             }
             return
         }
 
 
         mMap.isMyLocationEnabled=true
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         var location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10000,100.0f,locationListener)
-        Log.d("Main","${location?.latitude} ${location?.longitude}!!")
 
     }
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<String?>,
-//        grantResults: IntArray
-//    ) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        if (requestCode == 1) {
-//            if (grantResults.size > 0) {
-//                for (i in grantResults.indices) {
-//                    if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-//                        // 하나라도 거부한다면.
-//                        AlertDialog.Builder(this).setTitle("알림").setMessage("권한을 허용해주셔야 앱을 이용할 수 있습니다.")
-//                            .setPositiveButton("종료",
-//                                DialogInterface.OnClickListener { dialog, which ->
-//                                    dialog.dismiss()
-//                                    finish()
-//                                }).setNegativeButton("권한 설정",
-//                                DialogInterface.OnClickListener { dialog, which ->
-//                                    dialog.dismiss()
-//                                    val intent: Intent =
-//                                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-//                                            .setData(Uri.parse("package:" + applicationContext.packageName))
-//                                    applicationContext.startActivity(intent)
-//                                }).setCancelable(false).show()
-//                        return
-//                    }
-//                }
-//                //Toast.makeText(this, "Succeed Read/Write external storage !", Toast.LENGTH_SHORT).show();
-//                //startApp();
-//            }
-//        }
-//    }
 
 
     inner class WebAppInterface(private val mContext: Context) {
         @JavascriptInterface
         fun copyToClipboard(text: String?) {
-            Log.d("Javascript",text.toString())
             val clipboard: ClipboardManager =
                 getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("demo", text)
@@ -213,18 +181,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
 
-        val refreshLayout = findViewById<SwipeRefreshLayout>(R.id.contentSwipeLayout)
+//        val refreshLayout = findViewById<SwipeRefreshLayout>(R.id.contentSwipeLayout)
 
 
 //        웹뷰 생성
         web= findViewById<WebView>(R.id.web)
         web.apply {
             webViewClient = WebViewClient()
-            getSettings().setJavaScriptEnabled(true)
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
             settings.setSupportMultipleWindows(true)
             settings.javaScriptCanOpenWindowsAutomatically = true
+            settings.setSupportMultipleWindows(true)
             settings.loadWithOverviewMode = true
             settings.useWideViewPort = true
             settings.setSupportZoom(false)
@@ -236,7 +204,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             // JavaScript 인터페이스 활성화
             addJavascriptInterface(WebAppInterface(this@MainActivity),"Android")
         }
-
+//        refreshLayout.setOnRefreshListener {
+//            web.reload()
+//            refreshLayout.isRefreshing = true
+//        }
 
 
         web.setWebViewClient(object : WebViewClient() {
@@ -245,9 +216,46 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 checkPermission()
             }
 
-            override fun onPageFinished(view: WebView, url: String) {
-                super.onPageFinished(view, url);
-                refreshLayout.isRefreshing = false
+//            override fun onPageFinished(view: WebView, url: String) {
+//                super.onPageFinished(view, url);
+//                refreshLayout.isRefreshing = false
+//            }
+
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
+                if (request != null) {
+                    if (request.url.scheme == "intent") {
+                        try {
+                            // Intent 생성
+                            val intent =
+                                Intent.parseUri(request.url.toString(), Intent.URI_INTENT_SCHEME)
+
+                            // 카카오톡이 깔려 있으면 그대로 코드 실행, 깔려 있지 않으면 예외 발생
+                            packageManager.getPackageInfo(
+                                "com.kakao.talk",
+                                PackageManager.GET_ACTIVITIES
+                            )
+
+                            startActivity(intent)
+                            return true
+                        } catch (e: URISyntaxException) {
+                            Log.e("kakaoTalk", "Invalid intent request", e)
+                        } catch (e: Exception) {
+                            // 실행 못하면 웹뷰는 에러가 발생하므로
+                            // 본인이 원하는 사이트로 이동(보통 메인으로 redirect)
+                            web.loadUrl("http://i-eum-u.com/")
+
+                            // 플레이 스토어 - 카카오톡으로 이동
+                            val intentStore = Intent(Intent.ACTION_VIEW)
+                            intentStore.addCategory(Intent.CATEGORY_DEFAULT)
+                            intentStore.data = Uri.parse("market://details?id=com.kakao.talk")
+                            startActivity(intentStore)
+                        }
+                    }
+                }
+                return false
             }
 
         })
@@ -315,22 +323,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
 
-        refreshLayout.setOnRefreshListener {
-            web.reload()
-            refreshLayout.isRefreshing = true
-        }
-        refreshLayout.viewTreeObserver.addOnScrollChangedListener {
-            if (web.getScrollY() <= 0 || web.canScrollVertically(-1)) {
-                refreshLayout.isEnabled = true
-            } else {
-                refreshLayout.isEnabled = false
-            }
-        }
+//        refreshLayout.setOnRefreshListener {
+//            web.reload()
+//            refreshLayout.isRefreshing = true
+//        }
+//        refreshLayout.viewTreeObserver.addOnScrollChangedListener {
+//            if (web.getScrollY() <= 0 || web.canScrollVertically(-1)) {
+//                refreshLayout.isEnabled = true
+//            } else {
+//                refreshLayout.isEnabled = false
+//            }
+//        }
 
         accessToken=getCookie(target_url,"accessToken")
         accessToken.observe(this){
             initList("Bearer "+it)
-            Log.d("Token","ACCESSTOKEN OBSERVE!!"+it)
         }
 
 
@@ -338,8 +345,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         db.dao().getAll().observe(this ){ tmp ->
             val StrArr = tmp.map{it.toString()}
             intLst=tmp
-            removeGeofence(StrArr)
-            Log.d("OBSERVER",tmp.toString()+"!!") }
+            removeGeofence(StrArr) }
 
 
         getBundle()
@@ -372,7 +378,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         Log.d("BUNDLE","getBundle!!!")
         val intent = getIntent()
         val bundle = intent.extras
-//        Log.d("OBSERVER!!",bundle?.getInt("pin_id").toString())
         if (bundle != null) {
             if (bundle.getString("url") != null && !bundle.getString("url")
                     .equals("", ignoreCase = true)
@@ -384,13 +389,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             if(bundle.getInt("pin_id")!=null){
                 try{
                     db.dao().insert(notifiedLocationEntity(bundle.getInt("pin_id")))
-                    Log.d("BUNDLE",bundle.getInt("pin_id").toString()+"!!")
 
                 }
                 catch(e:Exception){
                     Log.d("DB",e.toString())
                 }
-                Log.d("DB",bundle.getInt("pin_id").toString()+"!!")
             }
         }
     }
@@ -420,9 +423,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         return MutableLiveData(CookieValue)
     }
     private fun initList(token: String){
-
-        Log.d("Geofence","InitLIST START!!"+token)
-        RetrofitImpl.service.getPinAll(token).enqueue(object : retrofit2.Callback<Pin>{
+        RetrofitImpl.service.getPinAll(token).enqueue(object : Callback<Pin>{
             override fun onFailure(call: Call<Pin>, t: Throwable) {
                 Log.e("Failed",t.toString()+"!!")
             }
@@ -434,14 +435,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 if(response.isSuccessful){
                     val rawlist = response.body()
                     val listGeofence = rawlist?.result
-                    Log.d("Success",listGeofence.toString()+"!!")
                     listGeofence?.forEach{
                         val isTrue=intLst.binarySearch(it.pinId)
                         if(isTrue<0){
-                            val tmp = geofenceHelper.getGeofence(it.pinId.toString(), Pair(it.latitude, it.longitude),500.0f)
+                            val tmp = geofenceHelper.getGeofence(it.pinId.toString(), Pair(it.latitude, it.longitude),100.0f)
                             addGeofence(tmp)
-                            Log.d("MAIN",isTrue.toString()+" "+it.toString()+"!!")
-
                         }
 
                     }
@@ -496,15 +494,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             checkSelfPermission(Manifest.permission.CAMERA
             ) != PackageManager.PERMISSION_GRANTED ||
             checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED ||
-            (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED) ||
-            (checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED) ||
-            (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED)
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Log.d("checkselfpermission","!!!!")
             //카메라 또는 저장공간 권한 획득 여부 확인
             if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) ||
                 (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS))
@@ -517,21 +508,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         Manifest.permission.ACCESS_NETWORK_STATE,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.POST_NOTIFICATIONS
-//                        ,
-//                        Manifest.permission.ACCESS_FINE_LOCATION,
-//                        Manifest.permission.ACCESS_BACKGROUND_LOCATION
                     ), 1
                 )
-            } else { ActivityCompat.requestPermissions(this,
+            } else { requestPermissions(this,
                 arrayOf(
                     Manifest.permission.INTERNET,
                     Manifest.permission.CAMERA,
                     Manifest.permission.ACCESS_NETWORK_STATE,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.POST_NOTIFICATIONS
-//                    ,
-//                    Manifest.permission.ACCESS_FINE_LOCATION,
-//                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
                                 ), 1)
 
             }
@@ -544,7 +529,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         if (permissionCheck == PackageManager.PERMISSION_DENIED) { //포그라운드 위치 권한 확인
 
             //위치 권한 요청
-            ActivityCompat.requestPermissions(
+            requestPermissions(
                 this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 0
@@ -557,7 +542,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         if (permissionCheck == PackageManager.PERMISSION_DENIED) { //백그라운드 위치 권한 확인
             //위치 권한 요청
-            ActivityCompat.requestPermissions(
+            requestPermissions(
                 this,
                 arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
                 0

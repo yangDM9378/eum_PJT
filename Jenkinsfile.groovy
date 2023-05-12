@@ -44,6 +44,7 @@ pipeline {
     }
 
     environment {
-        TARGET_HOST = "ubuntu@3.22.167.196"
+        TARGET_HOST = "ubuntu@18.118.212.73"
+
     }
 }
