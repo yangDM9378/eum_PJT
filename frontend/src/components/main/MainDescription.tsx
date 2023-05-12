@@ -25,7 +25,7 @@ const MainDescription = ({ markerList }: Props) => {
 
   useEffect(() => {
     const qrCodeValue =
-      "https://drive.google.com/file/d/17OWW07oOD9GVuwgHx1E-u_j3iJ0EsrXg/view?usp=sharing";
+      "https://drive.google.com/file/d/1CXtpzv3pCXpqr7YDm_azidbjqjGnP6ZO/view?usp=sharing";
 
     makeQrCode(qrCodeValue).then((data) => {
       setQrCode(data || "");
