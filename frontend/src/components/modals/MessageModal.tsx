@@ -12,6 +12,7 @@ import { getpinImages } from "@/services/galleryApi";
 import { Picture } from "@/types/picture";
 import GroupPhotoModal from "./GroupPhotoModal";
 import { pictureid } from "@/redux/doevent/messageSlice";
+import { getPinImage } from "@/services/galleryApi";
 
 const customStyles = {
   overlay: {
@@ -92,11 +93,28 @@ const MessageModal = ({
   // 선택된 이미지 인덱스
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
 
+  const initialInfo = {
+    name: "",
+    time: "",
+  };
+
   // 선택된 이미지
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedInfo, setSelectedInfo] = useState(initialInfo);
+
+  const getPinData = async (id: number) => {
+    const data = await getPinImage(id);
+    const dataDate = new Date(data.createdDate);
+    const newData = {
+      name: data.userName,
+      time: dataDate.toDateString(),
+    };
+    setSelectedInfo(newData);
+  };
 
   // 이미지 선택하기
   const selecteimage = (id: number, image: string) => {
+    getPinData(id);
     setSelectedIdx(id);
     setSelectedImage(image);
   };
@@ -161,16 +179,22 @@ const MessageModal = ({
             </div>
 
             {selectedImage !== "" && (
-              <img
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${selectedImage}`}
-                alt="선택된 이미지"
-                height={270}
-                width={200}
-                className="rounded-lg h-[25vh] ml-[5%] my-auto"
-                onClick={() => {
-                  CloseModal();
-                }}
-              />
+              <div>
+                <img
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${selectedImage}`}
+                  alt="선택된 이미지"
+                  height={270}
+                  width={200}
+                  className="rounded-lg h-[25vh] ml-[5%] my-auto"
+                  onClick={() => {
+                    CloseModal();
+                  }}
+                />
+                <div>
+                  <div>from {selectedInfo.name}</div>
+                  <div>{selectedInfo.time}</div>
+                </div>
+              </div>
             )}
           </div>
 
