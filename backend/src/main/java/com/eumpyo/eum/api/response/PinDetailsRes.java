@@ -1,5 +1,6 @@
 package com.eumpyo.eum.api.response;
 
+import com.eumpyo.eum.db.entity.Group;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -25,13 +26,17 @@ public class PinDetailsRes {
     // 타입
     String type;
 
+    // 그룹
+    Long groupId;
+
     @Builder
-    public PinDetailsRes(String title, String content, String image, LocalDateTime createdDate, String userName, String type) {
+    public PinDetailsRes(String title, String content, String image, LocalDateTime createdDate, String userName, String type, Long groupId) {
         this.title = title;
         this.content = content;
         this.image = image;
         this.createdDate = createdDate;
         this.userName = userName;
         this.type = type;
+        this.groupId = groupId;
     }
 }
