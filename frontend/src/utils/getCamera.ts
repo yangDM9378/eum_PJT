@@ -28,8 +28,8 @@ const startCamera = async (
       }
       // 좌우 반전 설정
       videoRef.current.style.transform = isFrontCamera
-        ? "scaleX(1)"
-        : "scaleX(-1)";
+        ? "scaleX(-1)"
+        : "scaleX(1)";
     }
   } catch (err) {
     alert("카메라 권한이 없습니다!");

@@ -59,7 +59,9 @@ const EventPose = () => {
   // 사진 저장 API 통신
   const router = useRouter();
   const poseEventMutation = useMutation(pictureEventApi, {
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      console.log("데이터 통신 성공이랩", data.result);
+    },
   });
 
   const savepicture = async () => {
@@ -85,7 +87,7 @@ const EventPose = () => {
 
   return (
     <>
-      <p className=" font-gmarket-thin text-center text-lg">
+      <p className="text-lg text-center font-gmarket-thin">
         두 사진이 포즈가 같나요?
       </p>
       <div className="flex-col justify-center h-[60%] pt-[3%]">
