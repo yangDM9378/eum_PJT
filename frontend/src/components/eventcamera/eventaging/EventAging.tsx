@@ -79,8 +79,7 @@ const EventAging = (): JSX.Element => {
   // 사진 저장 API 통신
   // const queryClient = useQueryClient();
 
-  const agingEventMutation = useMutation(pictureEventApi
-    , {
+  const agingEventMutation = useMutation(pictureEventApi, {
     onSuccess: (data) => {
       // queryClient.invalidateQueries({ queryKey: ["initial-map"] });
     },
@@ -95,7 +94,6 @@ const EventAging = (): JSX.Element => {
       tr.visible(false);
       stageRef.current.draw();
       const dataURL = await stageRef.current.toDataURL({ pixelRatio: 1 });
-      console.log(dataURL);
 
       // 캔버스 이미지를 data URL로 변환합니다.
       const jsonReq = { groupId: groupId, pinId: pinId };

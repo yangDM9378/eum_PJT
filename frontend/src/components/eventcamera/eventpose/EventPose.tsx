@@ -60,9 +60,7 @@ const EventPose = () => {
   // 사진 저장 API 통신
   const router = useRouter();
   const poseEventMutation = useMutation(pictureEventApi, {
-    onSuccess: (data) => {
-      console.log("데이터 통신 성공이랩", data.result);
-    },
+    onSuccess: (data) => {},
   });
 
   const savepicture = async () => {

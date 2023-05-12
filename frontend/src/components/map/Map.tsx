@@ -136,10 +136,6 @@ function Map({ markerList }: Props) {
     getUserGps();
   }, []);
 
-  useEffect(() => {
-    console.log(selected);
-  }, [selected]);
-
   return (
     <section className="h-[75%] relative flex justify-center items-center">
       <GoogleMap
