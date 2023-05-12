@@ -62,7 +62,7 @@ const GroupList = () => {
                   {/* 모임 정보들 */}
                   <div className="w-[70%]">
                     <p className=" font-semibold text-[1rem]">{group.name}</p>
-                    <p className="text-[0.8rem] font-normal pt-[1vh]">
+                    <p className="te xt-[0.8rem] font-normal pt-[1vh]">
                       {group.description}
                     </p>
                   </div>
