@@ -1,4 +1,5 @@
 "use client";
+import { stopCamera } from "@/utils/getCamera";
 import { useRouter } from "next/navigation";
 import BackIcon from "./common/BackIcon";
 
