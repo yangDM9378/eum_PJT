@@ -39,6 +39,7 @@ const EventPose = () => {
   };
 
   useEffect(() => {
+    setResult(-1);
     // url -> blob
     setPinImg(eventImg);
     // base64파일 -> blob
@@ -76,13 +77,13 @@ const EventPose = () => {
       new Blob([JSON.stringify(jsonReq)], { type: "application/json" })
     );
     await poseEventMutation.mutate(formData2);
-    await router.push(`/group/${groupId}`);
+    await router.replace(`/group/${groupId}`);
   };
 
   // 다시찍기
   const returnPicture = async () => {
     setResult(-1);
-    await router.push("/eventcamera");
+    await router.replace("/eventcamera");
   };
 
   return (
@@ -90,43 +91,54 @@ const EventPose = () => {
       <p className="text-lg text-center font-gmarket-thin">
         두 사진이 포즈가 같나요?
       </p>
-      <div className="flex-col justify-center h-[60%] pt-[3%]">
+      <div className="flex flex-col justify-center items-center py-[3%]">
         {/* 핀 이미지 */}
-        <Image
-          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${pinImg}`}
-          alt="pinImg"
-          width={400}
-          height={500}
-          className="pt-[5%] h-[35vh] px-3"
-        />
+        {pinImg && (
+          <Image
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${pinImg}`}
+            alt="pinImg"
+            width={400}
+            height={500}
+            className="py-[3%] h-[35vh] px-3 rounded-md"
+          />
+        )}
+
         {/* 사진찍은 이미지 */}
-        <Image
-          src={picImg}
-          alt="picImg"
-          width={400}
-          height={700}
-          className="pt-[5%] h-[35vh] px-3"
-        />
+        {picImg && (
+          <Image
+            src={picImg}
+            alt="picImg"
+            width={400}
+            height={700}
+            className="py-[3%] h-[35vh] px-3 rounded-md"
+          />
+        )}
       </div>
       <div className="flex justify-center  pt-[5%] ">
-        <button
-          className="w-[50%] h-[2.5rem] absolute bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
-          onClick={checkpose}
-        >
-          확인하기
-        </button>
-        <button
-          className="w-[50%] h-[2.5rem] absolute bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
-          onClick={savepicture}
-        >
-          저장하기
-        </button>
-        <button
-          className="w-[50%] h-[2.5rem] absolute bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
-          onClick={returnPicture}
-        >
-          다시찍기
-        </button>
+        {result === -1 && (
+          <button
+            className="w-[50%] h-[2.5rem] bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
+            onClick={checkpose}
+          >
+            확인하기
+          </button>
+        )}
+        {result === 1 && (
+          <button
+            className="w-[50%] h-[2.5rem] bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
+            onClick={savepicture}
+          >
+            저장하기
+          </button>
+        )}
+        {result === 0 && (
+          <button
+            className="w-[50%] h-[2.5rem] bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
+            onClick={returnPicture}
+          >
+            다시찍기
+          </button>
+        )}
       </div>
     </>
   );
