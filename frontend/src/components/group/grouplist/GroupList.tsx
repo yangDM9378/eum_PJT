@@ -6,6 +6,7 @@ import { GroupCodeResult } from "@/types/group";
 import { Poppins } from "next/font/google";
 import { deleteGroup, getGroupList, outGroup } from "@/services/groupApi";
 import { useRouter } from "next/navigation";
+import { AiOutlineClose } from "react-icons/ai";
 
 const poppins = Poppins({
   weight: ["200", "300", "500"],
@@ -38,34 +39,33 @@ const GroupList = () => {
 
   return (
     <>
-      <ul className="pt-[2vh] h-[70vh] overflow-scroll">
+      <ul className="pt-[1vh] h-[70vh] overflow-scroll">
         {data &&
           data.map((group, index) => (
             <li key={index}>
-              <div
-                className="grid grid-cols-10 pl-[3vw] place-content-around py-3"
-                onClick={() => goToMap(group.groupId)}
-              >
-                <div className="col-span-7 font-brand-poppins">
-                  <p className="font-brand-poppins text-[1rem]">{group.name}</p>
-                  <p className="text-[0.8rem] pt-[0.5vh] font-thin">
-                    {group.description}
-                  </p>
+              <div className="flex flex-col w-[95%] mix-blend-saturation">
+                <div className=" flex justify-end">
+                  <AiOutlineClose onClick={() => outGroupList(group.groupId)} />
                 </div>
-                <div className="col-span-3 mr-[2vw] h-[13vh] w-[13vh]">
-                  <img
-                    className="rounded-sm w-[100%] h-[100%]"
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${group.image}`}
-                    alt={group.name}
-                  />
-                </div>
-              </div>
-              <div className="flex justify-end ">
                 <div
-                  onClick={() => outGroupList(group.groupId)}
-                  className="bg-brand-red rounded text-sm p-1 m-2"
+                  className="  flex justify-between"
+                  onClick={() => goToMap(group.groupId)}
                 >
-                  그룹 나가기
+                  {/* 그룹 이미지 */}
+                  <div className=" w-[30%]">
+                    <img
+                      className="rounded-sm h-[13vh] w-[13vh] m-1 "
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${group.image}`}
+                      alt={group.name}
+                    />
+                  </div>
+                  {/* 모임 정보들 */}
+                  <div className="w-[70%]">
+                    <p className=" font-semibold text-[1rem]">{group.name}</p>
+                    <p className="text-[0.8rem] font-normal pt-[1vh]">
+                      {group.description}
+                    </p>
+                  </div>
                 </div>
               </div>
               <hr className="border" />

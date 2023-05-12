@@ -73,7 +73,6 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
       new Blob([JSON.stringify(jsonData)], { type: "application/json" })
     );
 
-    await mutate(formData);
     await router.push(`/map/${groupId}`);
   };
   return (
