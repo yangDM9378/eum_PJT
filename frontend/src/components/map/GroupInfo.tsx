@@ -2,7 +2,7 @@
 
 import { detailGroup } from "@/services/groupApi";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import GroupCodeModal from "../modals/GroupCodeModal";
 import { useRouter } from "next/navigation";
 
@@ -16,6 +16,13 @@ const GroupInfo = ({ groupId }: Props) => {
     const response = await detailGroup(groupId);
     return response;
   };
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["initial-groupInfo"] });
+  }, [groupId]);
+
   const { data, isLoading } = useQuery({
     queryKey: ["initial-groupInfo"],
     queryFn: getDetailGroup,

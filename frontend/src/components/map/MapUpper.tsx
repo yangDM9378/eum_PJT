@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useLoadScript, LoadScriptProps } from "@react-google-maps/api";
 import Map from "./Map";
 import { getPinList } from "@/services/pinApi";
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { useAppDispatch } from "@/redux/hooks";
 import { setGroupId } from "@/redux/map/mapSlice";
 import Loading from "../common/Loading";
@@ -24,6 +24,11 @@ const MapUpper = ({ groupId }: Props) => {
     const pinList = await getPinList(groupId);
     return pinList;
   };
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["initial-map"] });
+  }, [groupId]);
 
   const { data, isLoading } = useQuery({
     queryKey: ["initial-map"],
