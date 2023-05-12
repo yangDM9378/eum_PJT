@@ -205,7 +205,8 @@ function Map({ markerList }: Props) {
                       clusterer={clusterer}
                       onClick={() => clickMarker(marker.pinId)}
                       icon={{
-                        url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                        url: "/map/red.png",
+                        scaledSize: new google.maps.Size(40, 43),
                       }}
                     />
                   ) : (
@@ -215,7 +216,8 @@ function Map({ markerList }: Props) {
                       clusterer={clusterer}
                       onClick={() => clickMarker(marker.pinId)}
                       icon={{
-                        url: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+                        url: "/map/blue.png",
+                        scaledSize: new google.maps.Size(40, 43),
                       }}
                     />
                   )
