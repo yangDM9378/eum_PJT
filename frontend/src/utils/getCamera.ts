@@ -6,7 +6,7 @@ const startCamera = async (
 ) => {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: isFrontCamera ? "user" : "environment" },
+      video: { facingMode: !isFrontCamera ? "user" : { exact: "environment" } },
     });
     if (videoRef.current) {
       videoRef.current.srcObject = stream;
