@@ -15,6 +15,7 @@ const EventCamera = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [isCameraReady, setIsCameraReady] = useState(false);
+  const [isFrontCamera, setIsFrontCamera] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const eventType = useAppSelector((state) => state.eventReducer.eventtype);
   //모달관련 상태
@@ -29,7 +30,7 @@ const EventCamera = () => {
 
   useEffect(() => {
     // 자동으로 켜져있는 camera 시작
-    startCamera(videoRef, setIsCameraReady);
+    startCamera(videoRef, setIsCameraReady, isFrontCamera);
   }, []);
 
   //사진 찰영 버튼 클릭 시
@@ -69,6 +70,13 @@ const EventCamera = () => {
           />
         </div>
       )}
+      <button
+        onClick={() => {
+          setIsFrontCamera(!isFrontCamera);
+        }}
+      >
+        화면전환
+      </button>
       <InfoModal isOpen={modalOpen} setIsOpen={setModalOpen} />
     </div>
   );

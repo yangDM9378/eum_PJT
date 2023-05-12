@@ -12,7 +12,7 @@ interface Props {
 const MainDescription = ({ markerList }: Props) => {
   const [end, setEnd] = useState(0);
   const [isQr, setIsQr] = useState(false);
-  const [qrCode, setQrCode] = useState(null);
+  const [qrCode, setQrCode] = useState("");
 
   useEffect(() => {
     if (markerList) {
@@ -22,9 +22,13 @@ const MainDescription = ({ markerList }: Props) => {
   const count = useCountUp(end);
 
   // Qr코드 부분
+
   useEffect(() => {
-    makeQrCode(process.env.NEXT_PUBLIC_QR_CODE || "").then((data) => {
-      setQrCode(data);
+    const qrCodeValue =
+      "https://drive.google.com/file/d/17OWW07oOD9GVuwgHx1E-u_j3iJ0EsrXg/view?usp=sharing";
+
+    makeQrCode(qrCodeValue).then((data) => {
+      setQrCode(data || "");
     });
   }, []);
 
