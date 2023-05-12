@@ -8,7 +8,3 @@ export async function getFastApiData(): Promise<test> {
   );
   return data;
 }
-
-
-
-          

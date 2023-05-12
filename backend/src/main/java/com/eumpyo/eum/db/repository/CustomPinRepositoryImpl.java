@@ -30,7 +30,7 @@ public class CustomPinRepositoryImpl implements CustomPinRepository {
     @Override
     public List<PinListRes> findPinList(Long userId) {
         return queryFactory
-                .select(Projections.constructor(PinListRes.class, pin.pinId, pin.latitude, pin.longitude))
+                .select(Projections.constructor(PinListRes.class, pin.pinId, pin.latitude, pin.longitude, pin.type))
                 .from(user)
                 .innerJoin(userGroup)
                 .on(condition(user, userGroup.user::eq))

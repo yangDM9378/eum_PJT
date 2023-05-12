@@ -107,6 +107,7 @@ public class PinServiceImpl implements PinService {
                     .pinId(pin.getPinId())
                     .latitude(pin.getLatitude())
                     .longitude(pin.getLongitude())
+                    .type(pin.getType())
                     .build());
         }
 
@@ -156,6 +157,7 @@ public class PinServiceImpl implements PinService {
 
         PinAlarmRes pinAlarmRes = PinAlarmRes.builder()
                 .title(pin.getTitle())
+                .groupId(pin.getGroup().getGroupId())
                 .role(userRole)
                 .build();
 

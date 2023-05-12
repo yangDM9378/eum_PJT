@@ -1,5 +1,6 @@
 package com.eumpyo.eum.api.response;
 
+import com.eumpyo.eum.db.entity.Group;
 import lombok.Builder;
 import lombok.Getter;
 

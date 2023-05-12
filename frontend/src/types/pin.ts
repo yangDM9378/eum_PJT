@@ -2,6 +2,7 @@ export type Pin = {
   pinId: number;
   latitude: number;
   longitude: number;
+  type: string;
 };
 
 export type PinData = {

@@ -10,17 +10,18 @@ import Loading from "../common/Loading";
 import { useQuery } from "@tanstack/react-query";
 import { getPinAll } from "@/services/pinApi";
 import MainDescription from "./MainDescription";
+import { Pin } from "@/types/pin";
 
 const Main = () => {
+  const [data, setData] = useState<undefined | Pin[]>(undefined);
   const getMainMap = async () => {
     const pinList = await getPinAll();
-    return pinList;
+    setData(pinList);
   };
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["initial-main-pin"],
-    queryFn: async () => await getMainMap(),
-  });
+  useEffect(() => {
+    getMainMap();
+  }, []);
 
   const size = useWindowSize();
 

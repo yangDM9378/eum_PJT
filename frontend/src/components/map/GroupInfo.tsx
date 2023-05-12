@@ -2,7 +2,7 @@
 
 import { detailGroup } from "@/services/groupApi";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import GroupCodeModal from "../modals/GroupCodeModal";
 import { useRouter } from "next/navigation";
 
@@ -16,6 +16,13 @@ const GroupInfo = ({ groupId }: Props) => {
     const response = await detailGroup(groupId);
     return response;
   };
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["initial-groupInfo"] });
+  }, [groupId]);
+
   const { data, isLoading } = useQuery({
     queryKey: ["initial-groupInfo"],
     queryFn: getDetailGroup,
@@ -32,7 +39,6 @@ const GroupInfo = ({ groupId }: Props) => {
         await navigator.clipboard.writeText(text);
         setIsOpen(true);
       } else {
-        console.log("Clipboard write permission denied.");
       }
     }
   };
@@ -58,7 +64,7 @@ const GroupInfo = ({ groupId }: Props) => {
                 <img src="/map/gallery.png" alt="" />
               </div>
             </div>
-            <div className="text-xs py-2">{data.description}</div>
+            <div className="py-2 text-xs">{data.description}</div>
             <div className="flex justify-end p-2">
               <div
                 className="p-2
