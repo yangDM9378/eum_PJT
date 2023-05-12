@@ -107,6 +107,7 @@ public class PinServiceImpl implements PinService {
                     .pinId(pin.getPinId())
                     .latitude(pin.getLatitude())
                     .longitude(pin.getLongitude())
+                    .type(pin.getType())
                     .build());
         }
 

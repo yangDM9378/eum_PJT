@@ -11,10 +11,13 @@ public class PinListRes {
 
     Double longitude;
 
+    String type;
+
     @Builder
-    public PinListRes(Long pinId, Double latitude, Double longitude) {
+    public PinListRes(Long pinId, Double latitude, Double longitude, String type) {
         this.pinId = pinId;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.type = type;
     }
 }
