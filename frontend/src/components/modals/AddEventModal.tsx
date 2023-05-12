@@ -40,7 +40,7 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
   const { mutate, isLoading } = useMutation(createPin, {
     onSuccess: (data) => {
       // 사진 리스트 가져오기
-      // queryClient.invalidateQueries({ queryKey: [""] });
+      queryClient.invalidateQueries({ queryKey: ["initial-map"] });
     },
   });
 
