@@ -15,7 +15,6 @@ const GroupGallery = ({ params }: { params: { slug: number } }) => {
     queryKey: ["initial-gallery"],
     queryFn: getGallery,
   });
-  console.log(data);
   const [angle, setAngle] = useState(0);
 
   const galleryspin = (sign: boolean) => {

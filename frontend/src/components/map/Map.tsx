@@ -154,7 +154,6 @@ function Map({ markerList }: Props) {
   useEffect(() => {
     console.log(selected);
   }, [selected]);
-
   return (
     <section className="h-[75%] relative flex justify-center items-center">
       <GoogleMap
@@ -201,14 +200,29 @@ function Map({ markerList }: Props) {
           {(clusterer) => (
             <>
               {markerList &&
-                markerList.map((marker) => (
-                  <MarkerF
-                    key={marker.pinId}
-                    position={{ lat: marker.latitude, lng: marker.longitude }}
-                    clusterer={clusterer}
-                    onClick={() => clickMarker(marker.pinId)}
-                  />
-                ))}
+                markerList.map((marker) =>
+                  marker.type === "aging" ? (
+                    <MarkerF
+                      key={marker.pinId}
+                      position={{ lat: marker.latitude, lng: marker.longitude }}
+                      clusterer={clusterer}
+                      onClick={() => clickMarker(marker.pinId)}
+                      icon={{
+                        url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                      }}
+                    />
+                  ) : (
+                    <MarkerF
+                      key={marker.pinId}
+                      position={{ lat: marker.latitude, lng: marker.longitude }}
+                      clusterer={clusterer}
+                      onClick={() => clickMarker(marker.pinId)}
+                      icon={{
+                        url: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+                      }}
+                    />
+                  )
+                )}
             </>
           )}
         </MarkerClustererF>
