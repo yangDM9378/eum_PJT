@@ -70,6 +70,7 @@ const GroupInfo = ({ groupId }: Props) => {
                     border-brand-red
                      hover:bg-brand-red
                       active:bg-brand-red
+                      focus:bg-brand-red
                      font-gmarket-thin"
                 onClick={() => {
                   handleCopyClipBoard(data.groupCode);
