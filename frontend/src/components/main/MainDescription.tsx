@@ -38,7 +38,7 @@ const MainDescription = ({ markerList }: Props) => {
         <div className="text-4xl font-gmarket-thin items-center">이음</div>
         <div className="text-lg pt-5 pb-3">
           총 &nbsp;
-          {markerList && (
+          {markerList !== undefined && (
             <span className="text-xl text-brand-blue">{count}</span>
           )}
           개의 메시지가 남겨져있습니다.
