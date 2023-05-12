@@ -10,16 +10,8 @@ interface Props {
 }
 
 const MainDescription = ({ markerList }: Props) => {
-  const [end, setEnd] = useState(0);
   const [isQr, setIsQr] = useState(false);
   const [qrCode, setQrCode] = useState("");
-
-  useEffect(() => {
-    if (markerList) {
-      setEnd(markerList.length);
-    }
-  }, [markerList]);
-  const count = useCountUp(end);
 
   // Qr코드 부분
 
@@ -39,7 +31,7 @@ const MainDescription = ({ markerList }: Props) => {
         <div className="text-lg pt-5 pb-3">
           총 &nbsp;
           {markerList !== undefined && (
-            <span className="text-xl text-brand-blue">{count}</span>
+            <span className="text-xl text-brand-blue">{markerList.length}</span>
           )}
           개의 메시지가 남겨져있습니다.
         </div>
