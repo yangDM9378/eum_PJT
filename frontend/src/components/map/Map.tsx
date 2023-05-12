@@ -14,6 +14,7 @@ import { assign, setPinId } from "@/redux/map/mapSlice";
 import { Pin } from "@/types/pin";
 import GroupPhotoModal from "../modals/GroupPhotoModal";
 import { pictureid } from "@/redux/doevent/messageSlice";
+import isWithin50m from "@/libs/helper/calcDistance";
 
 // 지도 옵션입니다.
 const GoogleMapOptions: google.maps.MapOptions = {
@@ -105,14 +106,28 @@ function Map({ markerList }: Props) {
     setMessageOpen(true);
   };
 
-  // const options = {
-  //   imagePath:
-  //     "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m1.png", // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
-  // };
-
   // 메시지 추가 이벤트입니다. 버튼을 누르면 모달이 열립니다.
   const addLetter = () => {
     // alert(`추가버튼을 누르셨습니다. ${changeCenter.lat} ${changeCenter.lng}`);
+    const bool = markerList?.filter((marker) => {
+      if (
+        isWithin50m(
+          marker.latitude,
+          marker.longitude,
+          changeCenter.lat,
+          changeCenter.lng
+        )
+      ) {
+        return marker;
+      }
+    });
+    if (bool !== undefined && bool.length > 0) {
+      alert(
+        "주변에 다른 메시지가 남겨져있습니다. 다른 좌표에 메시지를 남겨주세요!"
+      );
+      return;
+    }
+
     const addCoords = {
       lat: changeCenter.lat,
       lng: changeCenter.lng,

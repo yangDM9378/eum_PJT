@@ -26,7 +26,7 @@ const isWithin50m = (
   lon2: number
 ): boolean => {
   const d = distance(lat1, lon1, lat2, lon2);
-  return d <= 1000;
+  return d <= 10;
 };
 
 export default isWithin50m;
