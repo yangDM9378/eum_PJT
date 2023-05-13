@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { pictureimg } from "@/redux/doevent/eventSlice";
@@ -9,10 +9,12 @@ import { AiOutlineCamera } from "react-icons/ai";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import InfoModal from "../modals/InfoModal";
 import { RiCameraSwitchLine } from "react-icons/ri";
+import BackIcon from "../common/BackIcon";
 
 const EventCamera = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const pathName = usePathname();
   const [isCameraReady, setIsCameraReady] = useState(false);
   const [isFrontCamera, setIsFrontCamera] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -26,7 +28,6 @@ const EventCamera = () => {
   };
 
   //등록한 포즈 사진 가져오기
-
   useEffect(() => {
     // 자동으로 켜져있는 camera 시작
     startCamera(videoRef, setIsCameraReady, isFrontCamera);
@@ -47,10 +48,21 @@ const EventCamera = () => {
     setIsFrontCamera(!isFrontCamera);
     await stopCamera(videoRef);
   };
+  // 뒤로가기
+  const goBack = async () => {
+    setIsFrontCamera(false);
+    stopCamera(videoRef);
+    await router.back();
+  };
 
   return (
     <div className="w-full h-full">
-      <div className="flex flex-col h-[88%] items-center justify-center">
+      <div className="h-[8%] text-black">
+        <button onClick={goBack}>
+          <BackIcon />
+        </button>
+      </div>
+      <div className="flex flex-col items-center justify-center">
         <video
           className="rounded-3xl px-[2%]"
           ref={videoRef}
