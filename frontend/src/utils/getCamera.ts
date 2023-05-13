@@ -28,8 +28,8 @@ const startCamera = async (
       }
       // 좌우 반전 설정
       videoRef.current.style.transform = isFrontCamera
-        ? "scaleX(1)"
-        : "scaleX(-1)";
+        ? "scaleX(-1)" // 전면 카메라일 경우 좌우 반전
+        : "scaleX(1)";
     }
   } catch (err) {
     alert("카메라 권한이 없습니다!");
@@ -53,9 +53,16 @@ const captureImage = async (videoRef: React.RefObject<HTMLVideoElement>) => {
     const canvas = document.createElement("canvas");
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
-    canvas
-      .getContext("2d")
-      ?.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+    const context = canvas.getContext("2d");
+
+    // 좌우 반전된 이미지를 원래대로 되돌리기 위해 좌우 반전된 캔버스에 그림
+    if (videoRef.current.style.transform === "scaleX(-1)") {
+      context?.translate(canvas.width, 0);
+      context?.scale(-1, 1);
+    }
+
+    context?.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
     const dataURL = canvas.toDataURL("image/png");
     return dataURL;
@@ -68,4 +75,5 @@ const captureImage = async (videoRef: React.RefObject<HTMLVideoElement>) => {
     throw new Error("Video element is not available.");
   }
 };
+
 export { startCamera, stopCamera, captureImage };

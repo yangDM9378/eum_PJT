@@ -59,8 +59,8 @@ const Aging = () => {
             className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
             src={originImage}
             alt="originImage"
-            width={window.innerHeight / 2}
-            height={290}
+            width={340}
+            height={400}
           />
         </div>
       )}
@@ -72,39 +72,39 @@ const Aging = () => {
               className="mr-[10px] border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
               src={selectedimage}
               alt="selectedimage"
-              width={220}
-              height={240}
+              width={250}
+              height={400}
             />
             <div className="flex flex-col">
               <Image
                 className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
                 src={`data:image/png;base64,${oldImage}`}
                 alt="oldImage"
-                width={80}
-                height={80}
+                width={78}
+                height={78}
                 onClick={imgClick}
               />
               <Image
-                className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
+                className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl my-[5px]"
                 src={originImage}
                 alt="originImage"
-                width={80}
-                height={80}
+                width={78}
+                height={78}
                 onClick={imgClick}
               />
               <Image
                 className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
                 src={`data:image/png;base64,${kidImage}`}
                 alt="kidImage"
-                width={80}
-                height={80}
+                width={78}
+                height={78}
                 onClick={imgClick}
               />
             </div>
           </div>
           <div className="flex items-center justify-center">
             <button
-              className="my-[4vh] bg-brand-blue text-white py-[1vh] px-[6vw] rounded-md  shadow-xl font-brand-gmarketsans"
+              className="my-[4vh] bg-brand-blue text-white py-[1.5vh] px-[6vw] rounded-md shadow-xl font-brand-gmarketsans"
               type="button"
               onClick={goRemovebg}
             >
@@ -113,12 +113,15 @@ const Aging = () => {
           </div>
         </div>
       ) : loading ? (
-        <div className="w-[100vw] h-[100vh] flex items-center justify-center">
-          <Loading />
-        </div>
+        <button
+          className="my-[4vh] py-[1.5vh] px-[6vw] rounded-full border border-black border-spacing-2 shadow-xl font-brand-gmarketsans"
+          type="button"
+        >
+          에이징 중
+        </button>
       ) : (
         <button
-          className="my-[4vh] py-[1vh] px-[6vw] rounded-full border border-black border-spacing-2 shadow-xl font-brand-gmarketsans"
+          className="my-[4vh] py-[1.5vh] px-[6vw] rounded-full border border-black border-spacing-2 shadow-xl font-brand-gmarketsans"
           type="button"
           onClick={startAging}
         >
