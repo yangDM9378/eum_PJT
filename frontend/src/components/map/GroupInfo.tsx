@@ -61,7 +61,7 @@ const GroupInfo = ({ groupId }: Props) => {
             <div className="flex justify-between items-center mt-[20%]">
               <div className="py-2 text-[90%] font-bold">{data.name}</div>
               <div className="p-1 mr-3 " onClick={() => goToGallery(groupId)}>
-                <img src="/map/gallery.png" alt="" />
+                <img src="/map/gallery.png" alt="mapgallery" />
               </div>
             </div>
             <div className="py-2 text-xs">{data.description}</div>

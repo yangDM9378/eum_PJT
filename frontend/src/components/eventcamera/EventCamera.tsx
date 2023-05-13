@@ -62,7 +62,7 @@ const EventCamera = () => {
           <BackIcon />
         </button>
       </div>
-      <div className="flex flex-col items-center justify-center">
+      <div className="h-[82%] flex flex-col items-center justify-center">
         <video
           className="rounded-3xl px-[2%]"
           ref={videoRef}
@@ -72,7 +72,7 @@ const EventCamera = () => {
         />
       </div>
 
-      <div className="grid grid-cols-3 items-center place-items-center justify-between w-full px-[2%] py-[5%]">
+      <div className="h-[10%] grid grid-cols-3 place-items-center w-full ">
         {eventType == "pose" ? (
           <AiOutlineInfoCircle
             onClick={OpenInfoModal}

@@ -81,7 +81,7 @@ const EventAging = (): JSX.Element => {
 
   const agingEventMutation = useMutation(pictureEventApi, {
     onSuccess: (data) => {
-      // queryClient.invalidateQueries({ queryKey: ["initial-map"] });
+      // queryClient.invalidateQueries({ queryKey: [""] });
     },
   });
 

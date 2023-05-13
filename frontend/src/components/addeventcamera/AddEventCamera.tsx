@@ -54,7 +54,7 @@ const AddEventCamera = () => {
           <BackIcon />
         </button>
       </div>
-      <div className="flex flex-col items-center justify-center">
+      <div className="h-[82%] flex flex-col items-center justify-center">
         <video
           className="rounded-3xl px-[2%]"
           ref={videoRef}
@@ -62,17 +62,18 @@ const AddEventCamera = () => {
             display: isCameraReady ? "block" : "none",
           }}
         />
-        <div className="grid grid-cols-3 items-center place-items-center justify-between w-full px-[2%] py-[5%]">
-          <div className="grid cols-span-1"></div>
-          <AiOutlineCamera
-            className="grid cols-span-1 bg-white rounded-full text-brand-green text-[50px] p-[2%]"
-            onClick={handleTakePicture}
-          />
-          <RiCameraSwitchLine
-            className="grid cols-span-1 text-gray-400 text-[40px] p-[2%]"
-            onClick={chageScreen}
-          />
-        </div>
+      </div>
+
+      <div className="h-[10%] grid grid-cols-3 place-items-center w-full ">
+        <div className="grid cols-span-1"></div>
+        <AiOutlineCamera
+          className="grid cols-span-1 bg-white rounded-full text-brand-green text-[50px] p-[2%]"
+          onClick={handleTakePicture}
+        />
+        <RiCameraSwitchLine
+          className="grid cols-span-1 text-gray-400 text-[40px] p-[2%]"
+          onClick={chageScreen}
+        />
       </div>
     </div>
   );
