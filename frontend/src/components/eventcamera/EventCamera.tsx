@@ -71,26 +71,27 @@ const EventCamera = () => {
           }}
         />
       </div>
-
-      <div className="h-[10%] grid grid-cols-3 place-items-center w-full ">
-        {eventType == "pose" ? (
-          <AiOutlineInfoCircle
-            onClick={OpenInfoModal}
-            className="grid cols-span-1 text-gray-400 text-[40px] p-[2%]"
+      <div className="flex min-h-[10%] justify-center items-center">
+        <div className="grid w-full grid-cols-3 place-items-center ">
+          {eventType == "pose" ? (
+            <AiOutlineInfoCircle
+              onClick={OpenInfoModal}
+              className="grid cols-span-1 text-gray-400 text-[40px] p-[2%]"
+            />
+          ) : (
+            <div className="grid cols-span-1"></div>
+          )}
+          <AiOutlineCamera
+            className="grid cols-span-1 bg-white rounded-full text-brand-green text-[50px] my-[8%] p-[2%]"
+            onClick={handleTakePicture}
           />
-        ) : (
-          <div className="grid cols-span-1"></div>
-        )}
-        <AiOutlineCamera
-          className="grid cols-span-1 bg-white rounded-full text-brand-green text-[50px] my-[8%] p-[2%]"
-          onClick={handleTakePicture}
-        />
 
-        <RiCameraSwitchLine
-          className="grid cols-span-1 text-gray-400 text-[40px] p-[2%]"
-          onClick={chageScreen}
-        />
-        <InfoModal isOpen={modalOpen} setIsOpen={setModalOpen} />
+          <RiCameraSwitchLine
+            className="grid cols-span-1 text-gray-400 text-[40px] p-[2%]"
+            onClick={chageScreen}
+          />
+          <InfoModal isOpen={modalOpen} setIsOpen={setModalOpen} />
+        </div>
       </div>
     </div>
   );
