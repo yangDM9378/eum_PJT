@@ -49,23 +49,23 @@ const GroupPhotoModal = ({ isOpen, setIsOpen }: ModalProps) => {
       ariaHideApp={false}
       style={customStyles}
     >
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center h-full justify-evenly">
         <img
           src="/modal/closeBTN.png"
           alt="닫기버튼"
-          className="absolute left-[90%] top-[5%]"
+          className="absolute left-[85%] top-[8%]"
           onClick={() => setIsOpen(false)}
         />
-        <p className="font-gmarket-medium text-sm pt-[10%]">
-          사진을 보고 포즈를 따라 찍어주세요
+        <p className="font-gmarket-medium text-m py-[2vh]">
+          포즈를 따라 찍어주세요
         </p>
-        <div className="pt-[8%]">
+        <div>
           <Image
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${originPoseImage}`}
-            alt=""
-            width={250}
-            height={80}
-            className="rounded-lg h-[150px] drop-shadow-lg"
+            alt="이벤트 이미지"
+            width={300}
+            height={200}
+            className="rounded-lg drop-shadow-lg"
           />
         </div>
       </div>

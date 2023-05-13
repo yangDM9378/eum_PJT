@@ -117,7 +117,7 @@ const Aging = () => {
           className="my-[4vh] py-[1.5vh] px-[6vw] rounded-full border border-black border-spacing-2 shadow-xl font-brand-gmarketsans"
           type="button"
         >
-          에이징 중
+          에이징 진행 중...
         </button>
       ) : (
         <button

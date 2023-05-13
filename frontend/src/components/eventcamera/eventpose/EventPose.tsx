@@ -48,6 +48,7 @@ const EventPose = () => {
 
   // 포즈 결과 상태
   const [result, setResult] = useState<boolean | number>(-1);
+  const [loading, setLoading] = useState(false);
 
   // 포즈 사진 비교하는 함수
   const checkpose = async () => {
@@ -88,11 +89,13 @@ const EventPose = () => {
   };
 
   return (
-    <>
-      <p className="text-lg text-center font-gmarket-thin">
-        두 사진이 포즈가 같나요?
-      </p>
-      <div className="flex flex-col justify-center items-center py-[3%]">
+    <div className="w-[100vw] h-[92vh]">
+      <div className="min-h-[6vh] flex justify-center items-center">
+        <p className="text-xl text-center font-gmarket-thin">
+          같은 포즈를 취했을까요?
+        </p>
+      </div>
+      <div className="min-h-[76vh] px-[2vh] flex flex-col items-center justify-evenly">
         {/* 핀 이미지 */}
         {pinImg && (
           <Image
@@ -100,7 +103,7 @@ const EventPose = () => {
             alt="pinImg"
             width={400}
             height={500}
-            className="py-[3%] h-[35vh] px-3 rounded-md"
+            className="rounded-md"
           />
         )}
 
@@ -110,15 +113,15 @@ const EventPose = () => {
             src={picImg}
             alt="picImg"
             width={400}
-            height={700}
-            className="py-[3%] h-[35vh] px-3 rounded-md"
+            height={500}
+            className="rounded-md"
           />
         )}
       </div>
-      <div className="flex justify-center  pt-[5%] ">
+      <div className="min-h-[10vh] flex justify-center items-center">
         {result === -1 && (
           <button
-            className="w-[50%] h-[2.5rem] bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
+            className="py-[1.5vh] w-[45vw] bg-brand-red rounded-md text-white font-gmarket-thin"
             onClick={checkpose}
           >
             확인하기
@@ -141,7 +144,7 @@ const EventPose = () => {
           </button>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

@@ -56,13 +56,13 @@ const EventCamera = () => {
   };
 
   return (
-    <div className="w-full h-full">
-      <div className="h-[8%] text-black">
+    <div className="w-[100vw] h-[100vh]">
+      <div className="h-[8vh] text-black">
         <button onClick={goBack}>
           <BackIcon />
         </button>
       </div>
-      <div className="h-[82%] flex flex-col items-center justify-center">
+      <div className="min-h-[82vh] flex flex-col items-center justify-center">
         <video
           className="rounded-3xl px-[2%]"
           ref={videoRef}
