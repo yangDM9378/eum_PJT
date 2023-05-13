@@ -68,13 +68,14 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
       formData.append("image", blobRes, "image.png");
     }
 
-    await formData.append(
+    formData.append(
       "pinAddReq",
       new Blob([JSON.stringify(jsonData)], { type: "application/json" })
     );
-
-    await router.push(`/map/${groupId}`);
+    await mutate(formData);
+    await router.replace(`/map/${groupId}`);
   };
+
   return (
     <Modal
       isOpen={modalOpen}
