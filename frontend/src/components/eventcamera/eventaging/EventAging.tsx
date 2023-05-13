@@ -77,11 +77,10 @@ const EventAging = (): JSX.Element => {
   const handleLayer = async () => {};
 
   // 사진 저장 API 통신
-  // const queryClient = useQueryClient();
-
+  const queryClient = useQueryClient();
   const agingEventMutation = useMutation(pictureEventApi, {
     onSuccess: (data) => {
-      // queryClient.invalidateQueries({ queryKey: [""] });
+      queryClient.invalidateQueries({ queryKey: ["initial-pinpicture"] });
     },
   });
 

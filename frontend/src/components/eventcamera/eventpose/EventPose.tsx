@@ -5,7 +5,7 @@ import { useAppSelector } from "@/redux/hooks";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { pictureEventApi, postPose } from "@/services/eventApi";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 const EventPose = () => {
@@ -59,8 +59,11 @@ const EventPose = () => {
   // 포즈가 맞으면
   // 사진 저장 API 통신
   const router = useRouter();
+  const queryClient = useQueryClient();
   const poseEventMutation = useMutation(pictureEventApi, {
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["initial-pinpicture"] });
+    },
   });
 
   const savepicture = async () => {

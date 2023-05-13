@@ -21,7 +21,7 @@ const GroupList = () => {
     return response;
   };
 
-  const { data, isLoading, isFetching, error } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["initial-group"],
     queryFn: getGroup,
   });
@@ -44,11 +44,11 @@ const GroupList = () => {
           data.map((group, index) => (
             <li key={index}>
               <div className="flex flex-col w-[95%]">
-                <div className=" flex justify-end">
+                <div className="flex justify-end ">
                   <AiOutlineClose onClick={() => outGroupList(group.groupId)} />
                 </div>
                 <div
-                  className="  flex justify-between"
+                  className="flex justify-between "
                   onClick={() => goToMap(group.groupId)}
                 >
                   {/* 그룹 이미지 */}
