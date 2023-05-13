@@ -1,6 +1,5 @@
 "use client";
 
-import { eventimageurl } from "@/redux/doevent/eventSlice";
 import { useAppSelector } from "@/redux/hooks";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -52,9 +51,11 @@ const EventPose = () => {
 
   // 포즈 사진 비교하는 함수
   const checkpose = async () => {
+    setLoading(true);
     await convertURLtoFile(eventImg, picturImg);
     const response = await postPose(formData);
     setResult(response.result);
+    setLoading(false);
   };
 
   // 포즈가 맞으면
@@ -79,7 +80,7 @@ const EventPose = () => {
       new Blob([JSON.stringify(jsonReq)], { type: "application/json" })
     );
     await poseEventMutation.mutate(formData2);
-    await router.replace(`/group/${groupId}`);
+    router.push(`/group/${groupId}`);
   };
 
   // 다시찍기
@@ -123,13 +124,14 @@ const EventPose = () => {
           <button
             className="py-[1.5vh] w-[45vw] bg-brand-red rounded-md text-white font-gmarket-thin"
             onClick={checkpose}
+            disabled={loading}
           >
-            확인하기
+            {loading ? "로딩 중..." : "확인하기"}
           </button>
         )}
         {result === 1 && (
           <button
-            className="w-[50%] h-[2.5rem] bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
+            className="py-[1.5vh] w-[45vw] bg-brand-red rounded-md text-white font-gmarket-thin"
             onClick={savepicture}
           >
             저장하기
@@ -137,7 +139,7 @@ const EventPose = () => {
         )}
         {result === 0 && (
           <button
-            className="w-[50%] h-[2.5rem] bottom-[10%] bg-brand-red rounded-md text-white font-gmarket-thin "
+            className="py-[1.5vh] w-[45vw] bg-brand-red rounded-md text-white font-gmarket-thin"
             onClick={returnPicture}
           >
             다시찍기
