@@ -48,13 +48,13 @@ const AddEventCamera = () => {
   };
 
   return (
-    <div className="w-full h-full">
-      <div className="h-[8%] text-black">
+    <div className="w-[100vw] h-[100vh]">
+      <div className="h-[8vh] text-black">
         <button onClick={goBack}>
           <BackIcon />
         </button>
       </div>
-      <div className="h-[82%] flex flex-col items-center justify-center">
+      <div className="min-h-[82vh] flex flex-col items-center justify-center">
         <video
           className="rounded-3xl px-[2%]"
           ref={videoRef}
@@ -63,7 +63,7 @@ const AddEventCamera = () => {
           }}
         />
       </div>
-      <div className="flex min-h-[10%] justify-center items-center">
+      <div className="flex h-[10vh] justify-center items-center">
         <div className="grid w-full grid-cols-3 place-items-center ">
           <div className="grid cols-span-1"></div>
           <AiOutlineCamera
