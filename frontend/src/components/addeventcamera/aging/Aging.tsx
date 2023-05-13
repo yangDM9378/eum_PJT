@@ -7,12 +7,14 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import { agingselecturl } from "@/redux/addevent/addEventSlice";
 import agingApi from "../../../services/agingApi";
+import Loading from "@/components/common/Loading";
 
 const Aging = () => {
   const [originImage, setOriginImage] = useState<string>("");
   const [oldImage, setOldImage] = useState<string>("");
   const [kidImage, setKidImage] = useState<string>("");
   const [selectedimage, setSelectedImage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
   // 리덕스에 있는 오리지날 이미지 가져오기
@@ -25,10 +27,16 @@ const Aging = () => {
   }, []);
 
   const startAging = async () => {
+    setLoading(true);
     setSelectedImage(originImageUrl);
     const { oldImage, kidImage } = await agingApi(originImage);
-    setOldImage(oldImage);
-    setKidImage(kidImage);
+    setLoading(false);
+    if (oldImage && kidImage) {
+      setOldImage(oldImage);
+      setKidImage(kidImage);
+    } else {
+      alert("얼굴이 잘 보이게 다시 찍어주세요");
+    }
   };
 
   // 에이징된 이미지를 선택하기
@@ -40,23 +48,21 @@ const Aging = () => {
   // aging된 사진중 원하는 사진 골라서 removebg로 이동하기
   const goRemovebg = () => {
     dispatch(agingselecturl(selectedimage));
-    router.push(`/addeventcamera/aging/removebg`);
+    router.replace(`/addeventcamera/aging/removebg`);
   };
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-full">
-      {originImage ? (
+      {originImage && (
         <div>
           <Image
             className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
             src={originImage}
             alt="originImage"
-            width={320}
+            width={window.innerHeight / 2}
             height={290}
           />
         </div>
-      ) : (
-        <div>사진을 찍으로 이동해주세요</div>
       )}
 
       {oldImage && kidImage ? (
@@ -105,6 +111,10 @@ const Aging = () => {
               배경지우기
             </button>
           </div>
+        </div>
+      ) : loading ? (
+        <div className="w-[100vw] h-[100vh] flex items-center justify-center">
+          <Loading />
         </div>
       ) : (
         <button
