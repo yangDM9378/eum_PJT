@@ -10,14 +10,14 @@ const Nav = () => {
     router.back();
   };
   const exPathName = ["/addeventcamera", "/eventcamera"];
-  return (
-    !exPathName.includes(pathName) && (
-      <div className="h-[8%] text-black">
-        <button onClick={goBack}>
-          <BackIcon />
-        </button>
-      </div>
-    )
+  return !exPathName.includes(pathName) ? (
+    <div className="h-[8%] text-black">
+      <button onClick={goBack}>
+        <BackIcon />
+      </button>
+    </div>
+  ) : (
+    <div></div>
   );
 };
 
