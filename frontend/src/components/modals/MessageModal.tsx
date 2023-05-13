@@ -13,6 +13,7 @@ import { Picture } from "@/types/picture";
 import GroupPhotoModal from "./GroupPhotoModal";
 import { pictureid } from "@/redux/doevent/messageSlice";
 import { getPinImage } from "@/services/galleryApi";
+import { useQuery } from "@tanstack/react-query";
 
 const customStyles = {
   overlay: {
@@ -63,19 +64,25 @@ const MessageModal = ({
   }, [messageId]);
 
   // 찍은 사진들 보여주기
-  const [imagesUrls, setImagesUrls] = useState<[] | Picture[]>([]);
+  // const [imagesUrls, setImagesUrls] = useState<[] | Picture[]>([]);
 
   // messageId로 핀 이미지들 불러오기
   const getpinImagesData = async (messageId: number) => {
     const images = await getpinImages(messageId);
-    await setImagesUrls(images);
+    return images;
+    // await setImagesUrls(images);
   };
+  const { data, isLoading } = useQuery(["initial-pinpicture", messageId], () =>
+    getpinImages(messageId)
+  );
 
   useEffect(() => {
-    imagesUrls.length === 0
-      ? setSelectedImage("")
-      : setSelectedImage(imagesUrls[0].image);
-  }, [imagesUrls]);
+    if (data && data.length > 0) {
+      setSelectedImage(data[0].image);
+    } else {
+      setSelectedImage("");
+    }
+  }, [data]);
 
   useEffect(() => {
     getpinImagesData(messageId);
@@ -157,10 +164,10 @@ const MessageModal = ({
           />
           <div className="flex flex-row justify-center mb-3 max-h-[30vh]">
             <div className="relative flex flex-col-reverse overflow-y-scroll ">
-              {imagesUrls.length === 0 ? (
+              {data?.length === 0 ? (
                 <p className="flex text-lg">아직 함께 찍은 사진이 없어요😭</p>
               ) : (
-                imagesUrls.map((image) => (
+                data?.map((image) => (
                   <img
                     key={image.pictureId}
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.image}`}
@@ -190,10 +197,8 @@ const MessageModal = ({
                     CloseModal();
                   }}
                 />
-                <div>
-                  <div>from {selectedInfo.name}</div>
-                  <div>{selectedInfo.time}</div>
-                </div>
+                <div>from {selectedInfo.name}</div>
+                <div>{selectedInfo.time}</div>
               </div>
             )}
           </div>
