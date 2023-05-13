@@ -63,17 +63,18 @@ const AddEventCamera = () => {
           }}
         />
       </div>
-
-      <div className="h-[10%] grid grid-cols-3 place-items-center w-full ">
-        <div className="grid cols-span-1"></div>
-        <AiOutlineCamera
-          className="grid cols-span-1 bg-white rounded-full text-brand-green text-[50px] p-[2%]"
-          onClick={handleTakePicture}
-        />
-        <RiCameraSwitchLine
-          className="grid cols-span-1 text-gray-400 text-[40px] p-[2%]"
-          onClick={chageScreen}
-        />
+      <div className="flex min-h-[10%] justify-center items-center">
+        <div className="grid w-full grid-cols-3 place-items-center ">
+          <div className="grid cols-span-1"></div>
+          <AiOutlineCamera
+            className="grid cols-span-1 bg-white rounded-full text-brand-green text-[50px] p-[2%]"
+            onClick={handleTakePicture}
+          />
+          <RiCameraSwitchLine
+            className="grid cols-span-1 text-gray-400 text-[40px] p-[2%]"
+            onClick={chageScreen}
+          />
+        </div>
       </div>
     </div>
   );
