@@ -79,6 +79,7 @@ const MessageModal = ({
   useEffect(() => {
     if (data && data.length > 0) {
       setSelectedImage(data[0].image);
+      setSelectedIdx(data[0].pictureId);
     } else {
       setSelectedImage("");
     }
@@ -128,15 +129,14 @@ const MessageModal = ({
 
   // 메세지 모달 닫고 상세 이미지 모달 열기
   const CloseModal = async () => {
-    // redux에 선택된 이미지 인덱스 넣어주기
     setSelected(selectedIdx);
     setMessageOpen(false);
     setIsPhotoOpen(true);
   };
 
-  useEffect(() => {
-    dispatch(pictureid(selectedIdx));
-  }, [selectedIdx]);
+  // useEffect(() => {
+  //   dispatch(pictureid(selectedIdx));
+  // }, [selectedIdx]);
 
   return (
     <Modal
@@ -197,8 +197,12 @@ const MessageModal = ({
                     CloseModal();
                   }}
                 />
-                <div>from {selectedInfo.name}</div>
-                <div>{selectedInfo.time}</div>
+                <div className="font-gmarket-thin text-sm">
+                  from {selectedInfo.name}
+                </div>
+                <div className="font-gmarket-thin text-sm">
+                  {selectedInfo.time}
+                </div>
               </div>
             )}
           </div>

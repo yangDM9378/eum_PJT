@@ -14,6 +14,7 @@ type ModalProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   messageOpen: boolean;
   selected: number;
+  setSelected: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const customStyles = {
@@ -34,7 +35,7 @@ const customStyles = {
   },
 };
 
-const GroupPhotoModal = ({ isOpen, setIsOpen, selected }: ModalProps) => {
+const GroupPhotoModal = ({ isOpen, setIsOpen, selected,setSelected }: ModalProps) => {
   // 핀 이미지 상태
 
   const [photoInfo, setPhotoInfo] = useState<PictureDetail>();
@@ -48,6 +49,7 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, selected }: ModalProps) => {
   const getPhotoDetail = async () => {
     const photoRes = await getPinImage(selected);
     await setPhotoInfo(photoRes);
+    setSelected(0);
 
   };
 

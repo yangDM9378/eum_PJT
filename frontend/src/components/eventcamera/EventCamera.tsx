@@ -61,6 +61,15 @@ const EventCamera = () => {
         <button onClick={goBack}>
           <BackIcon />
         </button>
+        {eventType == "pose" ? (
+          <p className="font-gmarket-thin text-center mb-4 text-lg">
+            포즈를 따라해 보세요
+          </p>
+        ) : (
+          <p className="font-gmarket-thin text-center mb-4 text-lg">
+            사진을 찍어주세요
+          </p>
+        )}
       </div>
       <div className="h-[82%] flex flex-col items-center justify-center">
         <video
@@ -72,12 +81,14 @@ const EventCamera = () => {
         />
       </div>
       <div className="flex min-h-[10%] justify-center items-center">
-        <div className="grid w-full grid-cols-3 place-items-center ">
+        <div className="grid w-full grid-cols-3 place-items-center mt-2 ">
           {eventType == "pose" ? (
-            <AiOutlineInfoCircle
-              onClick={OpenInfoModal}
-              className="grid cols-span-1 text-gray-400 text-[40px] p-[2%]"
-            />
+            <div>
+              <AiOutlineInfoCircle
+                onClick={OpenInfoModal}
+                className="grid cols-span-1 text-brand-red text-[40px] p-[2%]"
+              />
+            </div>
           ) : (
             <div className="grid cols-span-1"></div>
           )}
@@ -87,7 +98,7 @@ const EventCamera = () => {
           />
 
           <RiCameraSwitchLine
-            className="grid cols-span-1 text-gray-400 text-[40px] p-[2%]"
+            className="grid cols-span-1 text-brand-red text-[40px] p-[2%]"
             onClick={chageScreen}
           />
           <InfoModal isOpen={modalOpen} setIsOpen={setModalOpen} />
