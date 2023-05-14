@@ -94,8 +94,9 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
         />
         <form onSubmit={addEvent}>
           <label>
-            <div>편지 제목을 작성해주세요.</div>
+            <div className="pt-[3vh] pb-[1vh]">편지 제목을 작성해주세요.</div>
             <input
+              className="w-[80%] h-[4vh] border border-brand-baige-2 resize-none	"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -103,13 +104,17 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
           </label>
           <br />
           <label>
-            <div>편지내용을 작성해주세요.</div>
+            <div className="pt-[2vh] pb-[1vh]">편지내용을 작성해주세요.</div>
             <textarea
               value={content}
+              className="w-[80%] h-[15vh] border border-brand-baige-2 resize-none	"
               onChange={(e) => setContent(e.target.value)}
             />
             <br />
-            <button type="submit">
+            <button
+              className="rounded-2xl bg-brand-red w-[40vw] h-[5vh] mt-[2vh] font-gmarket-thin"
+              type="submit"
+            >
               {isLoading ? "등록 중..." : "등록하기"}
             </button>
           </label>

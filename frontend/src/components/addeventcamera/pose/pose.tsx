@@ -23,18 +23,22 @@ const Pose = () => {
     SetPoseImage(originImageUrl);
   });
   return (
-    <>
+    <div className="flex flex-col items-center justify-center w-[100vw] h-[92vh]">
+      {PoseImage && (
+        <Image
+          className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
+          src={PoseImage}
+          alt="poseimage"
+          width={340}
+          height={400}
+        />
+      )}
       <div className="flex justify-center">
-        {PoseImage && (
-          <Image src={PoseImage} alt="poseimage" width={300} height={700} />
-        )}
-      </div>
-      <div className="flex justify-center pt-[10%] ">
         <button
           onClick={addEventModalOpen}
-          className="w-[60vw] rounded-md  bg-brand-blue h-[5vh]"
+          className="my-[2vh] bg-brand-blue text-white py-[1.5vh] px-[6vw] rounded-md shadow-xl font-brand-gmarketsans"
         >
-          저장
+          이벤트 등록
         </button>
         <AddEventModal
           modalOpen={modalOpen}
@@ -42,7 +46,7 @@ const Pose = () => {
           image={PoseImage}
         />
       </div>
-    </>
+    </div>
   );
 };
 
