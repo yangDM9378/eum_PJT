@@ -131,7 +131,7 @@ const MessageModal = ({
   // 메세지 모달 닫고 상세 이미지 모달 열기
   const CloseModal = async () => {
     setSelected(selectedIdx);
-  
+
     setMessageOpen(false);
     setIsPhotoOpen(true);
   };
@@ -211,9 +211,7 @@ const MessageModal = ({
               </div>
             ) : (
               data?.length !== 0 && (
-                <div className="w-[150px] h-[150px] border-2 border-brand-blue rounded-md m-auto">
-                  {" "}
-                </div>
+                <div className="w-[150px] h-[150px] border-2 border-brand-blue rounded-md m-auto"></div>
               )
             )}
           </div>
@@ -222,7 +220,7 @@ const MessageModal = ({
             className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl"
             onClick={moveEvent}
           >
-            함께 찍기
+            포즈 찍기
           </div>
         </section>
       )}
