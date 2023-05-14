@@ -76,14 +76,14 @@ const MessageModal = ({
     getpinImages(messageId)
   );
 
-  useEffect(() => {
-    if (data && data.length > 0) {
-      setSelectedImage(data[0].image);
-      setSelectedIdx(data[0].pictureId);
-    } else {
-      setSelectedImage("");
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data && data.length > 0) {
+  //     setSelectedImage(data[0].image);
+  //     setSelectedIdx(data[0].pictureId);
+  //   } else {
+  //     setSelectedImage("");
+  //   }
+  // }, [data]);
 
   useEffect(() => {
     getpinImagesData(messageId);
@@ -123,6 +123,7 @@ const MessageModal = ({
   // 이미지 선택하기
   const selecteimage = (id: number, image: string) => {
     getPinData(id);
+    // pictureId 값을 넣어줘요.
     setSelectedIdx(id);
     setSelectedImage(image);
   };
@@ -141,9 +142,9 @@ const MessageModal = ({
   return (
     <Modal
       isOpen={messageOpen}
-      onRequestClose={() => {
-        setMessageOpen(false);
-      }}
+      // onRequestClose={() => {
+      //   setMessageOpen(false);
+      // }}
       ariaHideApp={false}
       style={customStyles}
     >
@@ -153,7 +154,10 @@ const MessageModal = ({
             src="/modal/closeBTN.png"
             alt="닫기버튼"
             className="absolute left-[95%] top-[0%]"
-            onClick={() => setMessageOpen(false)}
+            onClick={() => {
+              setMessageOpen(false);
+              setSelectedImage(null);
+            }}
           />
           <div className="py-3 text-xl">{detailData?.result.title}</div>
           <div className="text-sm">{detailData?.result.content}</div>
@@ -185,7 +189,7 @@ const MessageModal = ({
               )}
             </div>
 
-            {selectedImage !== "" && (
+            {selectedImage !== null ? (
               <div>
                 <img
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${selectedImage}`}
@@ -197,13 +201,17 @@ const MessageModal = ({
                     CloseModal();
                   }}
                 />
-                <div className="font-gmarket-thin text-sm">
+                <div className="font-gmarket-thin text-sm ">
                   from {selectedInfo.name}
                 </div>
-                <div className="font-gmarket-thin text-sm">
+                <div className="font-gmarket-thin text-sm ">
                   {selectedInfo.time}
                 </div>
               </div>
+            ) : (
+              data?.length !== 0 && (
+                <div className="w-[200px] border-2 border-brand-blue rounded-md"></div>
+              )
             )}
           </div>
 

@@ -35,7 +35,12 @@ const customStyles = {
   },
 };
 
-const GroupPhotoModal = ({ isOpen, setIsOpen, selected,setSelected }: ModalProps) => {
+const GroupPhotoModal = ({
+  isOpen,
+  setIsOpen,
+  selected,
+  setSelected,
+}: ModalProps) => {
   // 핀 이미지 상태
 
   const [photoInfo, setPhotoInfo] = useState<PictureDetail>();
@@ -50,7 +55,6 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, selected,setSelected }: ModalProps
     const photoRes = await getPinImage(selected);
     await setPhotoInfo(photoRes);
     setSelected(0);
-
   };
 
   useEffect(() => {
@@ -82,8 +86,7 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, selected,setSelected }: ModalProps
       content: {
         title: `${photoInfo?.userName}이 찍은 사진`,
         description: `${photoInfo?.createdDate}`,
-        imageUrl:
-          `${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`,
+        imageUrl: `${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`,
         link: {
           mobileWebUrl: "https://i-eum-u.com",
           webUrl: "https://i-eum-u.com",
@@ -95,9 +98,9 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, selected,setSelected }: ModalProps
   return (
     <Modal
       isOpen={isOpen}
-      onRequestClose={() => {
-        setIsOpen(false);
-      }}
+      // onRequestClose={() => {
+      //   setIsOpen(false);
+      // }}
       ariaHideApp={false}
       style={customStyles}
     >
@@ -123,7 +126,6 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, selected,setSelected }: ModalProps
         >
           공유
         </button>
-  
       </div>
     </Modal>
   );
