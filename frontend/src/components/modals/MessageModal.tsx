@@ -131,7 +131,7 @@ const MessageModal = ({
   // 메세지 모달 닫고 상세 이미지 모달 열기
   const CloseModal = async () => {
     setSelected(selectedIdx);
-    console.log(selectedIdx, "🎈");
+  
     setMessageOpen(false);
     setIsPhotoOpen(true);
   };
