@@ -54,7 +54,6 @@ const GroupPhotoModal = ({
   const getPhotoDetail = async () => {
     const photoRes = await getPinImage(selected);
     await setPhotoInfo(photoRes);
-    setSelected(0);
   };
 
   useEffect(() => {
@@ -68,7 +67,6 @@ const GroupPhotoModal = ({
     };
   }, []);
 
-  // selected 가 0이 아니면 넣어주기
   useEffect(() => {
     getPhotoDetail();
   }, [selected]);
@@ -80,8 +78,8 @@ const GroupPhotoModal = ({
   }, [kakaoLoaded]);
 
   // 버튼 클릭하면 카카오톡 공유하기 함수 실행
-  const sharephoto = () => {
-    window.Kakao.Share.sendDefault({
+  const sharephoto = async () => {
+    await window.Kakao.Share.sendDefault({
       objectType: "feed",
       content: {
         title: `${photoInfo?.userName}이 찍은 사진`,
@@ -93,6 +91,7 @@ const GroupPhotoModal = ({
         },
       },
     });
+    setSelected(0);
   };
 
   return (
@@ -109,16 +108,21 @@ const GroupPhotoModal = ({
           src="/modal/closeBTN.png"
           alt="닫기버튼"
           className="absolute left-[90%] top-[5%]"
-          onClick={() => setIsOpen(false)}
+          onClick={() => {
+            setIsOpen(false);
+            setSelected(0);
+          }}
         />
         <div className="pt-[10%]">
-          <Image
-            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`}
-            alt=""
-            width={300}
-            height={300}
-            className="rounded-lg"
-          />
+          {photoInfo && (
+            <Image
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`}
+              alt=""
+              width={300}
+              height={300}
+              className="rounded-lg"
+            />
+          )}
         </div>
         <button
           className="bg-brand-green w-[50%] h-[5vh] mt-[10%] font-gmarket-thin rounded-xl"

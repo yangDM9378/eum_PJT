@@ -131,6 +131,7 @@ const MessageModal = ({
   // 메세지 모달 닫고 상세 이미지 모달 열기
   const CloseModal = async () => {
     setSelected(selectedIdx);
+    console.log(selectedIdx, "🎈");
     setMessageOpen(false);
     setIsPhotoOpen(true);
   };
@@ -201,16 +202,18 @@ const MessageModal = ({
                     CloseModal();
                   }}
                 />
-                <div className="font-gmarket-thin text-sm ">
+                <div className="font-gmarket-thin text-[12px] text-right mt-[2%]">
                   from {selectedInfo.name}
                 </div>
-                <div className="font-gmarket-thin text-sm ">
+                <div className="font-gmarket-thin text-[8px] text-right ">
                   {selectedInfo.time}
                 </div>
               </div>
             ) : (
               data?.length !== 0 && (
-                <div className="w-[200px] border-2 border-brand-blue rounded-md"></div>
+                <div className="w-[150px] h-[150px] border-2 border-brand-blue rounded-md m-auto">
+                  {" "}
+                </div>
               )
             )}
           </div>

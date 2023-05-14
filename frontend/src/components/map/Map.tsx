@@ -260,7 +260,7 @@ function Map({ markerList }: Props) {
           setIsOpen={setIsPhotoOpen}
           messageOpen={messageOpen}
           selected={selected}
-          setSelected = {setSelected}
+          setSelected={setSelected}
         />
       )}
     </section>

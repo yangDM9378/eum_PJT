@@ -22,6 +22,7 @@ const GroupGallery = ({ params }: { params: { slug: number } }) => {
     if (!sign) {
       newAngle = newAngle + 45;
     } else {
+      
       newAngle = newAngle - 45;
     }
     setAngle(newAngle);
