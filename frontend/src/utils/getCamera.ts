@@ -30,6 +30,10 @@ const startCamera = async (
       videoRef.current.style.transform = isFrontCamera
         ? "scaleX(1)" // 전면 카메라일 경우 좌우 반전
         : "scaleX(-1)";
+      // 1:1 비율 조절
+      videoRef.current.style.objectFit = "cover";
+      videoRef.current.style.width = "100%";
+      videoRef.current.style.height = "100%";
     }
   } catch (err) {
     alert("카메라 권한이 없습니다!");

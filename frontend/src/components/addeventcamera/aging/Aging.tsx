@@ -52,22 +52,20 @@ const Aging = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full min-h-full">
+    <div className="flex flex-col items-center justify-center w-[100vw] h-[92vh]">
       {originImage && (
-        <div>
-          <Image
-            className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
-            src={originImage}
-            alt="originImage"
-            width={340}
-            height={400}
-          />
-        </div>
+        <Image
+          className="h-[30vh] w-auto border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
+          src={originImage}
+          alt="originImage"
+          width={340}
+          height={400}
+        />
       )}
 
       {oldImage && kidImage ? (
         <div>
-          <div className="mt-[5vh] flex items-center justify-center">
+          <div className="h-[45vh] my-[2vh] flex items-center justify-center">
             <Image
               className="mr-[10px] border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
               src={selectedimage}
@@ -104,7 +102,7 @@ const Aging = () => {
           </div>
           <div className="flex items-center justify-center">
             <button
-              className="my-[4vh] bg-brand-blue text-white py-[1.5vh] px-[6vw] rounded-md shadow-xl font-brand-gmarketsans"
+              className="my-[2vh] bg-brand-blue text-white py-[1.5vh] px-[6vw] rounded-md shadow-xl font-brand-gmarketsans"
               type="button"
               onClick={goRemovebg}
             >
