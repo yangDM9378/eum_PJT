@@ -51,11 +51,20 @@ const EventPose = () => {
 
   // 포즈 사진 비교하는 함수
   const checkpose = async () => {
-    setLoading(true);
-    await convertURLtoFile(eventImg, picturImg);
-    const response = await postPose(formData);
-    setResult(response.result);
-    setLoading(false);
+    try {
+      setLoading(true);
+      await convertURLtoFile(eventImg, picturImg);
+      const response = await postPose(formData);
+      console.log(response.result);
+      if (response.result == false) {
+        throw new Error("포즈를 다시 취해주세요");
+      }
+      setResult(response.result);
+    } catch (error) {
+      alert("사진이 잘못 됐어요 다시 사진을 찍어주세요");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 포즈가 맞으면
@@ -80,7 +89,7 @@ const EventPose = () => {
       new Blob([JSON.stringify(jsonReq)], { type: "application/json" })
     );
     await poseEventMutation.mutate(formData2);
-    router.push(`/group/${groupId}`);
+    router.push(`/map/${groupId}`);
   };
 
   // 다시찍기
@@ -91,38 +100,37 @@ const EventPose = () => {
 
   return (
     <div className="w-[100vw] h-[92vh]">
-      <div className="min-h-[6vh] flex justify-center items-center">
-        <p className="text-xl text-center font-gmarket-thin">
-          같은 포즈를 취했을까요?
-        </p>
-      </div>
-      <div className="min-h-[76vh] px-[2vh] flex flex-col items-center justify-evenly">
-        {/* 핀 이미지 */}
+      <p className="font-gmarket-thin text-center py-[1vh] text-[3vh]">
+        같은 포즈를 취했을까요?
+      </p>
+
+      {/* 핀 이미지 */}
+      <div className="h-[76vh] flex flex-col justify-evenly items-center">
         {pinImg && (
           <Image
+            className="rounded-lg jborder border-brand-blue border-spacing-1 drop-hadow-2xl"
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${pinImg}`}
             alt="pinImg"
-            width={400}
-            height={500}
-            className="rounded-md"
+            width={320}
+            height={260}
           />
         )}
 
         {/* 사진찍은 이미지 */}
         {picImg && (
           <Image
+            className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
             src={picImg}
             alt="picImg"
-            width={400}
-            height={500}
-            className="rounded-md"
+            width={320}
+            height={260}
           />
         )}
       </div>
-      <div className="min-h-[10vh] flex justify-center items-center">
+      <div className="h-[8vh] flex items-center justify-center">
         {result === -1 && (
           <button
-            className="py-[1.5vh] w-[45vw] bg-brand-red rounded-md text-white font-gmarket-thin"
+            className="py-[1.5vh] my-[2vh] w-[45vw] bg-brand-red rounded-md text-white font-gmarket-thin"
             onClick={checkpose}
             disabled={loading}
           >
@@ -131,15 +139,15 @@ const EventPose = () => {
         )}
         {result === 1 && (
           <button
-            className="py-[1.5vh] w-[45vw] bg-brand-red rounded-md text-white font-gmarket-thin"
+            className="py-[1.5vh] my-[2vh] w-[45vw] bg-brand-red rounded-md text-white font-gmarket-thin"
             onClick={savepicture}
           >
-            저장하기
+            포즈 저장하기
           </button>
         )}
         {result === 0 && (
           <button
-            className="py-[1.5vh] w-[45vw] bg-brand-red rounded-md text-white font-gmarket-thin"
+            className="py-[1.5vh] my-[2vh] w-[45vw] bg-brand-red rounded-md text-white font-gmarket-thin"
             onClick={returnPicture}
           >
             다시찍기
