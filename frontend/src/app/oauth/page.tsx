@@ -12,6 +12,10 @@ const OauthPage = () => {
       router.push("/group");
     }
   }, []);
+  useEffect(() => {
+    // Prefetch the dashboard page
+    router.prefetch("/group");
+  }, []);
   return <></>;
 };
 export default OauthPage;
