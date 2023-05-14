@@ -39,16 +39,13 @@ const Main = () => {
           <MapUpper markerList={data} />
         </section>
       ) : (
-        <div
-          className="w-[100vw] h-[100vh] max-w-[360px]:"
-          style={{
-            backgroundImage: "url(/images/main.png)",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "contain",
-          }}
-        >
-          <p className="text-[35px] pt-[20vh] pl-[5vh]">이음</p>
-          <div className="flex justify-center pt-[40vh]">
+        <div className="w-[100vw] h-[100vh] bg-brand-baige max-w-[360px]:">
+          <div className="w-[100vw] h-[2px] bg-brand-blue mt-[10%]"></div>
+          <p className="text-[35px] pt-[20vh] pl-[8vh] font-gmarket-thin">
+            이음
+          </p>
+          <div className="w-[100vw] h-[2px] bg-brand-red mt-[20%]"></div>
+          <div className="flex justify-center pt-[30vh]">
             <a href={oauthlogin}>
               <Image
                 className="w-[30vh] h-[7vh]"
@@ -57,6 +54,7 @@ const Main = () => {
               />
             </a>
           </div>
+          <div className="w-[100vw] h-[2px] bg-brand-green mt-[20%]"></div>
         </div>
       )}
     </div>
