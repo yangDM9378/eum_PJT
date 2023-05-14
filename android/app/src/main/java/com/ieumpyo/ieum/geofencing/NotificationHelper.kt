@@ -8,37 +8,34 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
-import android.content.Intent.ACTION_MAIN
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.ieumpyo.ieum.MainActivity
-import com.ieumpyo.ieum.roomdb.notifiedLocationEntity
 
 class NotificationHelper (context: Context): ContextWrapper(context){
     private var notificationManager: NotificationManager? = null
     private val CHANNEL_ID = "com.ieumpyo.ieumpyo"
     private val CHANNEL_NAME = "메시지 알람"
 
-    fun displayNotification(reqId: Int, title: String, body : String, activityName : Class<*>){
+    fun displayNotification(reqId: Int, groupId: Int, title: String, body : String, activityName : Class<*>){
 //        Log.d(ContentValues.TAG, title+body+"display notification!!")
 
         //알람 콘텐츠 설정
         val intent = Intent(this, activityName)
 //        상태 저장
         val bundle = Bundle()
-        bundle.putString("url","http://i-eum-u.com/map/${reqId}")
+        bundle.putString("url","http://i-eum-u.com/map/${groupId}")
         bundle.putInt("pin_id",reqId)
-//        Log.d("OBSERVER",reqId.toString())
         intent.putExtras(bundle)
 
 
         //Activity 중복실행 방지
-        intent.setAction(ACTION_MAIN)
-        intent.addCategory(Intent.CATEGORY_HOME)
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-
+//        intent.setAction(ACTION_MAIN)
+//        intent.addCategory(Intent.CATEGORY_HOME)
+//        intent.addFlags(
+//            Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
 

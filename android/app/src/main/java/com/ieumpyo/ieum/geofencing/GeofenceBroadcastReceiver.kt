@@ -56,11 +56,13 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                     Log.d("API",rawlist.toString())
                     val title=rawlist.result.title
                     val role = rawlist.result.role
+                    val groupId = rawlist.result.groupId
                     when (transitionTypes) {
 
                         Geofence.GEOFENCE_TRANSITION_ENTER -> {
                             notificationHelper.displayNotification(
                                 geofenceId!!,
+                                groupId,
                                 "${title}",
                                 "${role}님이 남긴 메시지에 접근했어요!",
                                 MainActivity().javaClass
@@ -70,6 +72,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                         Geofence.GEOFENCE_TRANSITION_DWELL -> {
                             notificationHelper.displayNotification(
                                 geofenceId!!,
+                                groupId,
                                 "${title}",
                                 "${role}님이 남긴 메시지가 있어요!",
                                 MainActivity().javaClass
@@ -79,6 +82,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                         Geofence.GEOFENCE_TRANSITION_EXIT -> {
                             notificationHelper.displayNotification(
                                 geofenceId!!,
+                                groupId,
                                 "${title}",
                                 "${role}님이 남긴 메시지에서 멀어졌어요!",
                                 MainActivity().javaClass
