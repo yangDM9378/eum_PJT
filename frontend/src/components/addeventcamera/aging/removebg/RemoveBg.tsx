@@ -33,16 +33,9 @@ const RemoveBg = () => {
   return (
     <>
       {agingImage && removebgImageUrl && (
-        <div className="flex flex-col items-center justify-center w-full h-full">
-          {/* <Image
-            className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
-            src={agingImage}
-            alt="agingImage"
-            width={320}
-            height={260}
-          /> */}
+        <div className="flex flex-col items-center justify-center w-full h-[92vh]">
           <Image
-            className="mt-[5vh] border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
+            className="h-[45vh] border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
             src={removebgImageUrl}
             alt="removebgimage"
             width={320}
