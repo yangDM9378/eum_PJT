@@ -58,6 +58,8 @@ function Map({ markerList }: Props) {
   const [messageOpen, setMessageOpen] = useState(false);
   const [messageId, setMessageId] = useState(-1);
 
+  const coords = useAppSelector((state) => state.coordsReducer.coords);
+
   //groupphotomodal 관련 state
   const [isPhotoOpen, setIsPhotoOpen] = useState<boolean>(false);
 
@@ -100,10 +102,11 @@ function Map({ markerList }: Props) {
   };
 
   // 메시지 마커 클릭 이벤트입니다.
-  const clickMarker = async (pinId: number) => {
+  const clickMarker = async (pinId: number, lat: number, lng: number) => {
+    setMapCenter({ lat: lat, lng: lng });
     setMessageId(pinId);
     dispatch(setPinId(pinId));
-    setMessageOpen(true);
+    await setMessageOpen(true);
   };
 
   // 메시지 추가 이벤트입니다. 버튼을 누르면 모달이 열립니다.
@@ -147,8 +150,18 @@ function Map({ markerList }: Props) {
     });
   };
 
+  const eventGps = () => {
+    const lat = coords.lat;
+    const lng = coords.lng;
+    setMapCenter({ lat, lng });
+  };
+
   useEffect(() => {
-    getUserGps();
+    if (coords.lat === 0 && coords.lng === 0) {
+      getUserGps();
+    } else {
+      eventGps();
+    }
   }, []);
 
   return (
@@ -203,7 +216,13 @@ function Map({ markerList }: Props) {
                       key={marker.pinId}
                       position={{ lat: marker.latitude, lng: marker.longitude }}
                       clusterer={clusterer}
-                      onClick={() => clickMarker(marker.pinId)}
+                      onClick={() =>
+                        clickMarker(
+                          marker.pinId,
+                          marker.latitude,
+                          marker.longitude
+                        )
+                      }
                       icon={{
                         url: "/map/red.png",
                         scaledSize: new google.maps.Size(40, 43),
@@ -214,7 +233,13 @@ function Map({ markerList }: Props) {
                       key={marker.pinId}
                       position={{ lat: marker.latitude, lng: marker.longitude }}
                       clusterer={clusterer}
-                      onClick={() => clickMarker(marker.pinId)}
+                      onClick={() =>
+                        clickMarker(
+                          marker.pinId,
+                          marker.latitude,
+                          marker.longitude
+                        )
+                      }
                       icon={{
                         url: "/map/blue.png",
                         scaledSize: new google.maps.Size(40, 43),

@@ -14,6 +14,7 @@ pipeline {
                         git branch: 'develop', credentialsId: 'admin', url: 'https://lab.ssafy.com/s08-final/S08P31C103.git'
 
                         echo 'frontend container, image remove'
+                        sh 'pwd'
                         sh 'docker container prune -f'
                         sh 'docker image prune -af'
                         echo 'frontend build and up'
