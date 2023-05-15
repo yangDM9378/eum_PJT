@@ -126,7 +126,6 @@ const MessageModal = ({
     };
 
     setSelectedInfo(newData);
-    console.log(newData);
   };
 
   // 이미지 선택하기
@@ -177,7 +176,7 @@ const MessageModal = ({
             alt="이벤트사진"
             className="h-[25vh] my-4 rounded-[10px] shadow-xl border-2 border-brand-blue"
           />
-          <div className="flex flex-row justify-center mb-3 max-h-[30vh]">
+          <div className="flex flex-row mb-3 max-h-[30vh]">
             <div className="flex flex-col overflow-y-scroll">
               {data?.length === 0 ? (
                 <p className="flex text-lg">아직 함께 찍은 사진이 없어요😭</p>
@@ -187,13 +186,13 @@ const MessageModal = ({
                     key={image.pictureId}
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.image}`}
                     alt=""
-                    width={70}
-                    height={60}
                     className={`min-h-[10vh] my-[5%] mr-[5vw] ${
                       selectedIdx === image.pictureId
                         ? "border-4 border-brand-red"
                         : ""
                     }`}
+                    width={70}
+                    height={60}
                     onClick={() => selecteimage(image.pictureId, image.image)}
                   />
                 ))
