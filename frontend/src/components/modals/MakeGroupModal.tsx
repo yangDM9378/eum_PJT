@@ -68,7 +68,7 @@ const EventOptionModal = ({ isOpen, setIsOpen }: ModalProps) => {
       setGroupState(initialGroupState);
       setIsOpen(false);
     }
-  });
+  }, [response]);
 
   // 요청 성공시
   const handleSuccess = (data: Result) => {

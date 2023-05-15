@@ -30,7 +30,7 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
     border: "none",
     width: "80vw",
-    height: "50vh",
+    height: "full",
     background: "#F8F9F3",
   },
 };
@@ -116,22 +116,28 @@ const GroupPhotoModal = ({
           className="absolute left-[90%] top-[5%]"
           onClick={() => closeModal()}
         />
-        <div className="pt-[15%]">
-          {photoInfo && (
-            <Image
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`}
-              alt=""
-              width={300}
-              height={300}
-              className="rounded-lg"
-            />
-          )}
-        </div>
+
+        {photoInfo ? (
+          <Image
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`}
+            className="rounded-lg mt-[15%] h-[90%]"
+            alt=""
+            width={320}
+            height={600}
+          />
+        ) : (
+          <img
+            src="/images/loading.gif"
+            alt="loading"
+            className="w-[100%] h-[100%]"
+          />
+        )}
+
         <button
           className="bg-brand-green w-[50%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl"
           onClick={sharephoto}
         >
-          공유
+          공유하기
         </button>
       </div>
     </Modal>

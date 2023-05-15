@@ -34,7 +34,7 @@ public class PictureServiceImpl implements PictureService {
     private final PictureRepository pictureRepository;
     @Override
     public List<PicturePinRes> findPicturePinList(Long pinId) {
-        List<PicturePinRes> pictures = pictureRepository.findByPinId(pinId);
+        List<PicturePinRes> pictures = pictureRepository.findByPinIdOrderByCreatedDateDesc(pinId);
         return pictures;
     }
 

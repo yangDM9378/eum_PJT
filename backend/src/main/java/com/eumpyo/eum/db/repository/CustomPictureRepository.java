@@ -7,6 +7,6 @@ import com.eumpyo.eum.db.entity.Picture;
 import java.util.List;
 
 public interface CustomPictureRepository {
-    List<PicturePinRes> findByPinId(Long pinId);
+    List<PicturePinRes> findByPinIdOrderByCreatedDateDesc(Long pinId);
     List<PictureGroupRes> findByGroupId(Long groupId);
 }

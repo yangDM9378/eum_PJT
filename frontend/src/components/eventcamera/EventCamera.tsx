@@ -71,7 +71,7 @@ const EventCamera = () => {
           사진을 찍어주세요
         </div>
       )}
-      <div className="min-h-[77vh] flex flex-col items-center justify-center">
+      <div className="min-h-[75vh] flex flex-col items-center justify-center">
         <video
           className="rounded-3xl px-[2%]"
           ref={videoRef}
