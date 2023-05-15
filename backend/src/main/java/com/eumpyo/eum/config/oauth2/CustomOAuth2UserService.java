@@ -35,19 +35,39 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if(provider.equals(AuthProvider.KAKAO.getProviderName())){
             oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
         }
+
         log.info(oAuth2UserInfo.getName());
         log.info(oAuth2UserInfo.getEmail());
         log.info(oAuth2UserInfo.getGender());
         log.info(oAuth2UserInfo.getAgeRange());
 
         String name = oAuth2UserInfo.getName();
-
-        String email = oAuth2UserInfo.getEmail();
-
+        String email;
         int gender = 1;
-        if (oAuth2UserInfo.getGender().equals("male")) gender = 0;
+        String [] age;
+        if (oAuth2UserInfo.getEmail().isEmpty()){
+            email = "";
+        } else {
+            email = oAuth2UserInfo.getEmail();
+        }
 
-        String [] age = oAuth2UserInfo.getAgeRange().split("~");
+        if (oAuth2UserInfo.getEmail().isEmpty()){
+            email = "";
+        } else {
+            email = oAuth2UserInfo.getEmail();
+        }
+
+        if (oAuth2UserInfo.getGender().isEmpty()){
+            gender = -1;
+        } else {
+            if (oAuth2UserInfo.getGender().equals("male")) gender = 0;
+        }
+        if (oAuth2UserInfo.getAgeRange().isEmpty()) {
+            age = new String[]{("0"), ("0")};
+        } else {
+            age = oAuth2UserInfo.getAgeRange().split("~");
+        }
+
 
         LocalDate now = LocalDate.now();
         int birthYear = now.getYear() - Integer.parseInt(age[1]);
