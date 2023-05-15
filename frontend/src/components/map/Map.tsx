@@ -276,6 +276,7 @@ function Map({ markerList }: Props) {
           messageOpen={messageOpen}
           setMessageOpen={setMessageOpen}
           messageId={messageId}
+          setMessageId={setMessageId}
           setIsPhotoOpen={setIsPhotoOpen}
           setSelected={setSelected}
         />
