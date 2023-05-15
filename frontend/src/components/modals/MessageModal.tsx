@@ -190,7 +190,9 @@ const MessageModal = ({
                     width={70}
                     height={60}
                     className={`min-h-[10vh] my-[5%] mr-[5vw] ${
-                      selectedIdx === image.pictureId ? "border-4 border-brand-red" : ""
+                      selectedIdx === image.pictureId
+                        ? "border-4 border-brand-red"
+                        : ""
                     }`}
                     onClick={() => selecteimage(image.pictureId, image.image)}
                   />
