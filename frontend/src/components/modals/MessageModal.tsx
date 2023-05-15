@@ -180,6 +180,17 @@ const MessageModal = ({
               setMessageId(-1);
             }}
           />
+          <div className="absolute left-[2%] top-[0%]">
+            {detailData?.result.type === "pose" ? (
+              <div className="text-xs rounded-md p-1 bg-blue-400 text-white">
+                따라 찍기
+              </div>
+            ) : (
+              <div className="text-xs rounded-md p-1 bg-red-400 text-white">
+                함께 찍기
+              </div>
+            )}
+          </div>
           <div className="py-3 text-xl">{detailData?.result.title}</div>
           <div className="text-sm">{detailData?.result.content}</div>
           <div className="flex flex-col items-end text-xs">
@@ -201,7 +212,7 @@ const MessageModal = ({
                     key={image.pictureId}
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.image}`}
                     alt=""
-                    className={`min-h-[10vh] my-[5%] mr-[5vw] ${
+                    className={`min-h-[10vh] my-[5%] mr-[5vw] rounded-md ${
                       selectedIdx === image.pictureId
                         ? "border-4 border-brand-red"
                         : ""
