@@ -103,7 +103,7 @@ function Map({ markerList }: Props) {
   const clickMarker = async (pinId: number) => {
     setMessageId(pinId);
     dispatch(setPinId(pinId));
-    setMessageOpen(true);
+    await setMessageOpen(true);
   };
 
   // 메시지 추가 이벤트입니다. 버튼을 누르면 모달이 열립니다.
