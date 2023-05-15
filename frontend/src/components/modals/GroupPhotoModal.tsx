@@ -117,13 +117,19 @@ const GroupPhotoModal = ({
           onClick={() => closeModal()}
         />
 
-        {photoInfo && (
+        {photoInfo ? (
           <Image
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`}
             className="rounded-lg mt-[15%] h-[90%]"
             alt=""
             width={320}
             height={600}
+          />
+        ) : (
+          <img
+            src="/images/loading.gif"
+            alt="loading"
+            className="w-[100%] h-[100%]"
           />
         )}
 
