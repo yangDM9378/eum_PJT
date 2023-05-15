@@ -87,14 +87,22 @@ const MessageModal = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (data && data.length > 0) {
-  //     setSelectedImage(data[0].image);
-  //     setSelectedIdx(data[0].pictureId);
-  //   } else {
-  //     setSelectedImage("");
-  //   }
-  // }, [data]);
+  // 메시지에 사진들이 존재할 때 첫 렌더링시 사진 리스트의 처음 인덱스를 선택된 것으로 취급
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setSelectedImage(data[0].image);
+      setSelectedIdx(data[0].pictureId);
+      const dataDate = new Date(data[0].createdDate);
+      console.log(data);
+      const newData = {
+        name: data[0].userName,
+        time: dataDate.toDateString(),
+      };
+      setSelectedInfo(newData);
+    } else {
+      setSelectedImage("");
+    }
+  }, [data]);
   // useEffect(() => {
   //   getpinImagesData(messageId);
   // }, [messageId]);
@@ -181,7 +189,7 @@ const MessageModal = ({
           <img
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${detailData.result.image}`}
             alt="이벤트사진"
-            className="h-[25vh] my-4 rounded-[10px] shadow-xl border-2 border-brand-blue"
+            className="h-[25vh] my-4 rounded-[10px] shadow-xl border-2 "
           />
           <div className="flex flex-row mb-3 max-h-[30vh]">
             <div className="flex flex-col overflow-y-scroll">
@@ -213,7 +221,7 @@ const MessageModal = ({
                   alt="선택된 이미지"
                   height={270}
                   width={200}
-                  className="rounded-lg h-[25vh] ml-[5%] my-auto"
+                  className="rounded-lg h-[25vh] my-auto"
                   onClick={() => {
                     CloseModal();
                   }}
