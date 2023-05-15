@@ -55,6 +55,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.ieumpyo.ieum.MainActivity.Companion.db
 import com.ieumpyo.ieum.api.RetrofitImpl
 import com.ieumpyo.ieum.geofencing.GeofenceHelper
+import com.ieumpyo.ieum.map.MapGeoActivity
 import com.ieumpyo.ieum.roomdb.notifiedLocationDB
 import com.ieumpyo.ieum.roomdb.notifiedLocationEntity
 import retrofit2.Call
@@ -145,6 +146,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             Toast.makeText(mContext, "그룹코드가 복사되었습니다!", Toast.LENGTH_SHORT).show()
 
         }
+        @JavascriptInterface
+        fun showGPS(message: String) {
+            if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 3)
+            }
+            val data = message
+            Toast.makeText(mContext, "문화재 찾아가기", Toast.LENGTH_SHORT).show()
+            val intent = Intent(mContext, MapGeoActivity::class.java)
+            intent.putExtra("culturalProperty", data)
+            mContext.startActivity(intent)
+        }
+
     }
     var cameraPath = ""
     var mWebViewImageUpload: ValueCallback<Array<Uri>>? = null
@@ -153,10 +166,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var intLst : List<Int>
     lateinit var web : WebView
 
-    companion object{
+    companion object {
 
         var accessToken: MutableLiveData<String> = MutableLiveData()
         lateinit var db: notifiedLocationDB
+        lateinit var listGeofence: List<Result>
     }
 
 
@@ -458,7 +472,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             ) {
                 if(response.isSuccessful){
                     val rawlist = response.body()
-                    val listGeofence = rawlist?.result
+                    listGeofence = rawlist?.result
                     listGeofence?.forEach{
                         val isTrue=intLst.binarySearch(it.pinId)
                         if(isTrue<0){

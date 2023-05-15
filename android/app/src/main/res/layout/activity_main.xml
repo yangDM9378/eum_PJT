@@ -21,7 +21,8 @@
         ads:backgroundTint="#B9907D"
         ads:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
         ads:layout_constraintStart_toStartOf="parent"
-        ads:srcCompat="@android:drawable/ic_popup_sync" />
+        ads:srcCompat="@android:drawable/ic_popup_sync"
+        android:contentDescription="REFRESH" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
