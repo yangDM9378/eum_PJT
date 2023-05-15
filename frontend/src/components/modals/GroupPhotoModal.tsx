@@ -100,9 +100,6 @@ const GroupPhotoModal = ({
     setSelected(0);
   };
 
-
-
-
   return (
     <Modal
       isOpen={isOpen}
@@ -119,7 +116,7 @@ const GroupPhotoModal = ({
           className="absolute left-[90%] top-[5%]"
           onClick={() => closeModal()}
         />
-        <div className="pt-[10%]">
+        <div className="pt-[15%]">
           {photoInfo && (
             <Image
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`}
@@ -131,7 +128,7 @@ const GroupPhotoModal = ({
           )}
         </div>
         <button
-          className="bg-brand-green w-[50%] h-[5vh] mt-[10%] font-gmarket-thin rounded-xl"
+          className="bg-brand-green w-[50%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl"
           onClick={sharephoto}
         >
           공유

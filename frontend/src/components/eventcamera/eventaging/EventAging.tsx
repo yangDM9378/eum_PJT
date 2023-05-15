@@ -105,7 +105,7 @@ const EventAging = (): JSX.Element => {
         new Blob([JSON.stringify(jsonReq)], { type: "application/json" })
       );
       await agingEventMutation.mutate(formData);
-      await router.push(`/map/${groupId}`);
+      await router.replace(`/map/${groupId}`);
     }
   };
 
