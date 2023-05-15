@@ -203,7 +203,7 @@ const MessageModal = ({
             className="h-[25vh] my-4 rounded-[10px] shadow-xl border-2 "
           />
           <div className="flex flex-row mb-3 max-h-[30vh] justify-center">
-            <div className="flex flex-col overflow-y-scroll ">
+            <div className="flex flex-col overflow-y-scroll pr-[5%] ;">
               {data?.length === 0 ? (
                 <p className="flex text-sm">아직 함께 찍은 사진이 없어요😭</p>
               ) : (
@@ -212,7 +212,7 @@ const MessageModal = ({
                     key={image.pictureId}
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.image}`}
                     alt=""
-                    className={`min-h-[10vh] my-[5%] mr-[5vw] rounded-md ${
+                    className={`min-h-[10vh] my-[5%] rounded-md ${
                       selectedIdx === image.pictureId
                         ? "border-4 border-brand-red"
                         : ""
