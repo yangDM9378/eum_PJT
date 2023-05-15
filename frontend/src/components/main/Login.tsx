@@ -44,7 +44,7 @@ const Main = () => {
         <div className="whyt6-[100vw] h-[100vh] bg-brand-baige max-w-[360px]">
           <div className="w-[100vw] h-[2px] bg-brand-blue mt-[13%]">
             <AiOutlineCloud className="text-[30px] mt-[13%] ml-[20%] text-brand-blue" />
-            <AiOutlineCloud className="text-[30px] ml-[80%] text-brand-blue" />
+            <AiOutlineCloud className="text-[30px] ml-[70%] text-brand-blue" />
           </div>
           <div className="mt-[20%] h-[100px] w-full overflow-hidden ">
             <div className="animate-show">
