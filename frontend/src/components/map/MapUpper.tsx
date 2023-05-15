@@ -41,9 +41,7 @@ const MapUpper = ({ groupId }: Props) => {
   return isLoaded ? (
     <Map markerList={data} />
   ) : (
-    <div className=" h-[75%]  flex items-center justify-center">
-      <Loading />
-    </div>
+    <div className=" h-[75%]  flex items-center justify-center"></div>
   );
 };
 

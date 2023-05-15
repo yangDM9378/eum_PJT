@@ -21,7 +21,7 @@ const EventAging = (): JSX.Element => {
   useEffect(() => {
     const stage = new Konva.Stage({
       container: "container",
-      width: window.innerWidth,
+      width: window.innerWidth - 20,
       height: 300,
       ref: stageRef,
     });
@@ -35,7 +35,7 @@ const EventAging = (): JSX.Element => {
         x: 0,
         y: 0,
         image: bgimage,
-        width: window.innerWidth,
+        width: window.innerWidth - 10,
         height: 300,
         name: "bgrect",
         draggable: false,
@@ -105,15 +105,20 @@ const EventAging = (): JSX.Element => {
         new Blob([JSON.stringify(jsonReq)], { type: "application/json" })
       );
       await agingEventMutation.mutate(formData);
-      await router.push(`/map/${groupId}`);
+      await router.replace(`/map/${groupId}`);
     }
   };
 
   return (
-    <>
-      <div id="container"></div>
-      <button onClick={handleSave}>사진꾸미기완료</button>
-    </>
+    <div className="flex flex-col items-center justify-center w-full h-[92vh]">
+      <div id="container" className="border rounded-lg h-[500]"></div>
+      <button
+        className="my-[2vh] bg-brand-blue text-white py-[1.5vh] px-[6vw] rounded-md shadow-xl font-brand-gmarketsans"
+        onClick={handleSave}
+      >
+        사진꾸미기완료
+      </button>
+    </div>
   );
 };
 

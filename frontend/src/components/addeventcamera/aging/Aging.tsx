@@ -53,7 +53,7 @@ const Aging = () => {
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-full">
-      {originImage && (
+      {originImage && !kidImage && (
         <div>
           <Image
             className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
@@ -67,7 +67,7 @@ const Aging = () => {
 
       {oldImage && kidImage ? (
         <div>
-          <div className="mt-[5vh] flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <Image
               className="mr-[10px] border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
               src={selectedimage}

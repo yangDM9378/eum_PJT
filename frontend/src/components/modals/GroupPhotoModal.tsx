@@ -14,6 +14,7 @@ type ModalProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   messageOpen: boolean;
   selected: number;
+  setSelected: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const customStyles = {
@@ -34,7 +35,12 @@ const customStyles = {
   },
 };
 
-const GroupPhotoModal = ({ isOpen, setIsOpen, selected }: ModalProps) => {
+const GroupPhotoModal = ({
+  isOpen,
+  setIsOpen,
+  selected,
+  setSelected,
+}: ModalProps) => {
   // 핀 이미지 상태
 
   const [photoInfo, setPhotoInfo] = useState<PictureDetail>();
@@ -48,7 +54,6 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, selected }: ModalProps) => {
   const getPhotoDetail = async () => {
     const photoRes = await getPinImage(selected);
     await setPhotoInfo(photoRes);
-
   };
 
   useEffect(() => {
@@ -62,7 +67,6 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, selected }: ModalProps) => {
     };
   }, []);
 
-  // selected 가 0이 아니면 넣어주기
   useEffect(() => {
     getPhotoDetail();
   }, [selected]);
@@ -74,28 +78,34 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, selected }: ModalProps) => {
   }, [kakaoLoaded]);
 
   // 버튼 클릭하면 카카오톡 공유하기 함수 실행
-  const sharephoto = () => {
-    window.Kakao.Share.sendDefault({
+  const sharephoto = async () => {
+    await window.Kakao.Share.sendDefault({
       objectType: "feed",
       content: {
         title: `${photoInfo?.userName}이 찍은 사진`,
         description: `${photoInfo?.createdDate}`,
-        imageUrl:
-          `${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`,
+        imageUrl: `${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`,
         link: {
           mobileWebUrl: "https://i-eum-u.com",
           webUrl: "https://i-eum-u.com",
         },
       },
     });
+    setSelected(0);
+  };
+
+  // 닫기를 누르면 함수 호출
+  const closeModal = () => {
+    setIsOpen(false);
+    setSelected(0);
   };
 
   return (
     <Modal
       isOpen={isOpen}
-      onRequestClose={() => {
-        setIsOpen(false);
-      }}
+      // onRequestClose={() => {
+      //   setIsOpen(false);
+      // }}
       ariaHideApp={false}
       style={customStyles}
     >
@@ -104,24 +114,25 @@ const GroupPhotoModal = ({ isOpen, setIsOpen, selected }: ModalProps) => {
           src="/modal/closeBTN.png"
           alt="닫기버튼"
           className="absolute left-[90%] top-[5%]"
-          onClick={() => setIsOpen(false)}
+          onClick={() => closeModal()}
         />
-        <div className="pt-[10%]">
-          <Image
-            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`}
-            alt=""
-            width={300}
-            height={300}
-            className="rounded-lg"
-          />
+        <div className="pt-[15%]">
+          {photoInfo && (
+            <Image
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`}
+              alt=""
+              width={300}
+              height={300}
+              className="rounded-lg"
+            />
+          )}
         </div>
         <button
-          className="bg-brand-green w-[50%] h-[5vh] mt-[10%] font-gmarket-thin rounded-xl"
+          className="bg-brand-green w-[50%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl"
           onClick={sharephoto}
         >
           공유
         </button>
-  
       </div>
     </Modal>
   );

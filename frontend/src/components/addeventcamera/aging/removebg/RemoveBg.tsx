@@ -33,23 +33,16 @@ const RemoveBg = () => {
   return (
     <>
       {agingImage && removebgImageUrl && (
-        <div className="flex flex-col items-center justify-center w-full min-h-full">
+        <div className="flex flex-col items-center justify-center w-full h-[92vh]">
           <Image
-            className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
-            src={agingImage}
-            alt="agingImage"
-            width={320}
-            height={260}
-          />
-          <Image
-            className="mt-[5vh] border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
+            className="h-[45vh] border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
             src={removebgImageUrl}
             alt="removebgimage"
             width={320}
             height={260}
           />
           <button
-            className="my-[4vh] bg-brand-blue text-white py-[1.5vh] px-[6vw] rounded-md shadow-xl font-brand-gmarketsans"
+            className="my-[2vh] bg-brand-blue text-white py-[1.5vh] px-[6vw] rounded-md shadow-xl font-brand-gmarketsans"
             type="button"
             onClick={addEventModalOpen}
           >

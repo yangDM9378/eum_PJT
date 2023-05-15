@@ -38,6 +38,7 @@ type ModalProps = {
   setMessageOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPhotoOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSelected: React.Dispatch<React.SetStateAction<number>>;
+  setMessageId: React.Dispatch<React.SetStateAction<number>>;
 };
 
 // 메세지 모달
@@ -47,6 +48,7 @@ const MessageModal = ({
   messageId,
   setIsPhotoOpen,
   setSelected,
+  setMessageId,
 }: ModalProps) => {
   const [detailData, setDetailData] = useState<PindetailResult>();
   const dispatch = useAppDispatch();
@@ -64,14 +66,15 @@ const MessageModal = ({
   }, [messageId]);
 
   // 찍은 사진들 보여주기
-  // const [imagesUrls, setImagesUrls] = useState<[] | Picture[]>([]);
+  const [imagesUrls, setImagesUrls] = useState<[] | Picture[]>([]);
 
   // messageId로 핀 이미지들 불러오기
-  const getpinImagesData = async (messageId: number) => {
-    const images = await getpinImages(messageId);
-    return images;
-    // await setImagesUrls(images);
-  };
+  // const getpinImagesData = async (messageId: number) => {
+  //   const images = await getpinImages(messageId);
+  //   // return images;
+  //   await setImagesUrls(images);
+  // };
+
   const { data, isLoading } = useQuery(["initial-pinpicture", messageId], () =>
     getpinImages(messageId)
   );
@@ -81,17 +84,17 @@ const MessageModal = ({
     }
   };
 
-  useEffect(() => {
-    if (data && data.length > 0) {
-      setSelectedImage(data[0].image);
-    } else {
-      setSelectedImage("");
-    }
-  }, [data]);
-
-  useEffect(() => {
-    getpinImagesData(messageId);
-  }, [messageId]);
+  // useEffect(() => {
+  //   if (data && data.length > 0) {
+  //     setSelectedImage(data[0].image);
+  //     setSelectedIdx(data[0].pictureId);
+  //   } else {
+  //     setSelectedImage("");
+  //   }
+  // }, [data]);
+  // useEffect(() => {
+  //   getpinImagesData(messageId);
+  // }, [messageId]);
 
   const router = useRouter();
   const moveEvent = async () => {
@@ -121,34 +124,37 @@ const MessageModal = ({
       name: data.userName,
       time: dataDate.toDateString(),
     };
+
     setSelectedInfo(newData);
+    console.log(newData);
   };
 
   // 이미지 선택하기
   const selecteimage = (id: number, image: string) => {
     getPinData(id);
+    // pictureId 값을 넣어줘요.
     setSelectedIdx(id);
     setSelectedImage(image);
   };
 
   // 메세지 모달 닫고 상세 이미지 모달 열기
   const CloseModal = async () => {
-    // redux에 선택된 이미지 인덱스 넣어주기
     setSelected(selectedIdx);
+
     setMessageOpen(false);
     setIsPhotoOpen(true);
   };
 
-  useEffect(() => {
-    dispatch(pictureid(selectedIdx));
-  }, [selectedIdx]);
+  // useEffect(() => {
+  //   dispatch(pictureid(selectedIdx));
+  // }, [selectedIdx]);
 
   return (
     <Modal
       isOpen={messageOpen}
-      onRequestClose={() => {
-        setMessageOpen(false);
-      }}
+      // onRequestClose={() => {
+      //   setMessageOpen(false);
+      // }}
       ariaHideApp={false}
       style={customStyles}
     >
@@ -158,7 +164,11 @@ const MessageModal = ({
             src="/modal/closeBTN.png"
             alt="닫기버튼"
             className="absolute left-[95%] top-[0%]"
-            onClick={() => setMessageOpen(false)}
+            onClick={() => {
+              setMessageOpen(false);
+              setSelectedImage(null);
+              setMessageId(-1);
+            }}
           />
           <div className="py-3 text-xl">{detailData?.result.title}</div>
           <div className="text-sm">{detailData?.result.content}</div>
@@ -168,7 +178,7 @@ const MessageModal = ({
             className="h-[25vh] my-4 rounded-[10px] shadow-xl border-2 border-brand-blue"
           />
           <div className="flex flex-row justify-center mb-3 max-h-[30vh]">
-            <div className="relative flex flex-col-reverse overflow-y-scroll ">
+            <div className="flex flex-col-reverse overflow-y-scroll ">
               {data?.length === 0 ? (
                 <p className="flex text-lg">아직 함께 찍은 사진이 없어요😭</p>
               ) : (
@@ -188,7 +198,7 @@ const MessageModal = ({
               )}
             </div>
 
-            {selectedImage !== "" && (
+            {selectedImage !== null ? (
               <div>
                 <img
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${selectedImage}`}
@@ -200,9 +210,17 @@ const MessageModal = ({
                     CloseModal();
                   }}
                 />
-                <div>from {selectedInfo.name}</div>
-                <div>{selectedInfo.time}</div>
+                <div className="font-gmarket-thin text-[12px] text-right mt-[2%]">
+                  from {selectedInfo.name}
+                </div>
+                <div className="font-gmarket-thin text-[8px] text-right ">
+                  {selectedInfo.time}
+                </div>
               </div>
+            ) : (
+              data?.length !== 0 && (
+                <div className="w-[150px] h-[150px] border-2 border-brand-blue rounded-md m-auto"></div>
+              )
             )}
           </div>
 
@@ -216,7 +234,7 @@ const MessageModal = ({
             className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl"
             onClick={moveEvent}
           >
-            함께 찍기
+            사진 찍기
           </div>
         </section>
       )}
