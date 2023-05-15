@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class PicturePinRes {
-    String name;
+    String userName;
     LocalDateTime createdDate;
     Long pictureId;
     String image;
