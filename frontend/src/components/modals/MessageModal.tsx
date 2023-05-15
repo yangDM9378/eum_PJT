@@ -75,6 +75,11 @@ const MessageModal = ({
   const { data, isLoading } = useQuery(["initial-pinpicture", messageId], () =>
     getpinImages(messageId)
   );
+  const showGPS = () => {
+    if ((window as any).Android) {
+      (window as any).Android.showGPS(data);
+    }
+  };
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -175,9 +180,7 @@ const MessageModal = ({
                     width={70}
                     height={60}
                     className={`min-h-[10vh] my-[5%] mr-[5vw] ${
-                      selectedIdx === image.pictureId
-                        ? "border-4 border-brand-red"
-                        : ""
+                      selectedIdx === image.pictureId ? "border-4 border-brand-red" : ""
                     }`}
                     onClick={() => selecteimage(image.pictureId, image.image)}
                   />
@@ -203,6 +206,12 @@ const MessageModal = ({
             )}
           </div>
 
+          <div
+            className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl"
+            onClick={showGPS}
+          >
+            찾아가기
+          </div>
           <div
             className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl"
             onClick={moveEvent}
