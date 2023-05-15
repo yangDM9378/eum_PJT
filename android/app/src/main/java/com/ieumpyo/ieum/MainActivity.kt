@@ -1,12 +1,12 @@
 package com.ieumpyo.ieum
 
 import Pin
+import Pins
 import android.Manifest
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.getIntent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Location
@@ -29,7 +29,6 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -40,7 +39,6 @@ import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -52,7 +50,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.ieumpyo.ieum.MainActivity.Companion.db
 import com.ieumpyo.ieum.api.RetrofitImpl
 import com.ieumpyo.ieum.geofencing.GeofenceHelper
 import com.ieumpyo.ieum.map.MapGeoActivity
@@ -147,11 +144,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         }
         @JavascriptInterface
-        fun showGPS(message: String) {
+        fun showGPS(pinId: Int) {
             if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 3)
             }
-            val data = message
+            val data = pinId
+            Log.d("showGPS",data.toString()+"!!")
             Toast.makeText(mContext, "문화재 찾아가기", Toast.LENGTH_SHORT).show()
             val intent = Intent(mContext, MapGeoActivity::class.java)
             intent.putExtra("culturalProperty", data)
@@ -170,7 +168,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         var accessToken: MutableLiveData<String> = MutableLiveData()
         lateinit var db: notifiedLocationDB
-        lateinit var listGeofence: List<Result>
+        var listGeofence: List<Pin>? = null
     }
 
 
@@ -460,15 +458,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     private fun initList(token: String){
         Log.d("initList",token+"!!")
-        RetrofitImpl.service.getPinAll(token).enqueue(object : Callback<Pin>{
-            override fun onFailure(call: Call<Pin>, t: Throwable) {
+        RetrofitImpl.service.getPinAll(token).enqueue(object : Callback<Pins>{
+            override fun onFailure(call: Call<Pins>, t: Throwable) {
                 Log.e("Failed",t.toString()+"!!")
             }
 
             @RequiresApi(Build.VERSION_CODES.Q)
             override fun onResponse(
-                call: Call<Pin>,
-                response: Response<Pin>
+                call: Call<Pins>,
+                response: Response<Pins>
             ) {
                 if(response.isSuccessful){
                     val rawlist = response.body()
