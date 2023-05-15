@@ -82,7 +82,7 @@ const GroupPhotoModal = ({
     await window.Kakao.Share.sendDefault({
       objectType: "feed",
       content: {
-        title: `${photoInfo?.userName}이 찍은 사진`,
+        title: `${photoInfo?.userName} 님이 찍은 사진`,
         description: `${photoInfo?.createdDate}`,
         imageUrl: `${process.env.NEXT_PUBLIC_IMAGE_URL}${photoInfo?.image}`,
         link: {
