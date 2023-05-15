@@ -61,7 +61,7 @@ const EventPose = () => {
       }
       setResult(response.result);
     } catch (error) {
-      alert("사진이 잘못 됐어요 다시 사진을 찍어주세요");
+      alert("포즈를 다시 취해주세요");
     } finally {
       setLoading(false);
     }
@@ -89,7 +89,7 @@ const EventPose = () => {
       new Blob([JSON.stringify(jsonReq)], { type: "application/json" })
     );
     await poseEventMutation.mutate(formData2);
-    router.push(`/map/${groupId}`);
+    await router.replace(`/map/${groupId}`);
   };
 
   // 다시찍기

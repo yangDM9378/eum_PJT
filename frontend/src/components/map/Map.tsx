@@ -112,6 +112,7 @@ function Map({ markerList }: Props) {
       lng: lng,
     };
     dispatch(assign(addCoords));
+    await setMessageOpen(true);
   };
 
   // 메시지 추가 이벤트입니다. 버튼을 누르면 모달이 열립니다.
@@ -280,6 +281,7 @@ function Map({ markerList }: Props) {
           messageOpen={messageOpen}
           setMessageOpen={setMessageOpen}
           messageId={messageId}
+          setMessageId={setMessageId}
           setIsPhotoOpen={setIsPhotoOpen}
           setSelected={setSelected}
         />

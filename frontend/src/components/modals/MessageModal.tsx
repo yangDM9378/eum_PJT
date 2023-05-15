@@ -38,6 +38,7 @@ type ModalProps = {
   setMessageOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPhotoOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSelected: React.Dispatch<React.SetStateAction<number>>;
+  setMessageId: React.Dispatch<React.SetStateAction<number>>;
 };
 
 // 메세지 모달
@@ -47,6 +48,7 @@ const MessageModal = ({
   messageId,
   setIsPhotoOpen,
   setSelected,
+  setMessageId,
 }: ModalProps) => {
   const [detailData, setDetailData] = useState<PindetailResult>();
   const dispatch = useAppDispatch();
@@ -64,17 +66,23 @@ const MessageModal = ({
   }, [messageId]);
 
   // 찍은 사진들 보여주기
-  // const [imagesUrls, setImagesUrls] = useState<[] | Picture[]>([]);
+  const [imagesUrls, setImagesUrls] = useState<[] | Picture[]>([]);
 
   // messageId로 핀 이미지들 불러오기
-  const getpinImagesData = async (messageId: number) => {
-    const images = await getpinImages(messageId);
-    return images;
-    // await setImagesUrls(images);
-  };
+  // const getpinImagesData = async (messageId: number) => {
+  //   const images = await getpinImages(messageId);
+  //   // return images;
+  //   await setImagesUrls(images);
+  // };
+
   const { data, isLoading } = useQuery(["initial-pinpicture", messageId], () =>
     getpinImages(messageId)
   );
+  const showGPS = () => {
+    if ((window as any).Android) {
+      (window as any).Android.showGPS(data);
+    }
+  };
 
   // useEffect(() => {
   //   if (data && data.length > 0) {
@@ -84,10 +92,9 @@ const MessageModal = ({
   //     setSelectedImage("");
   //   }
   // }, [data]);
-
-  useEffect(() => {
-    getpinImagesData(messageId);
-  }, [messageId]);
+  // useEffect(() => {
+  //   getpinImagesData(messageId);
+  // }, [messageId]);
 
   const router = useRouter();
   const moveEvent = async () => {
@@ -117,7 +124,9 @@ const MessageModal = ({
       name: data.userName,
       time: dataDate.toDateString(),
     };
+
     setSelectedInfo(newData);
+    console.log(newData);
   };
 
   // 이미지 선택하기
@@ -158,6 +167,7 @@ const MessageModal = ({
             onClick={() => {
               setMessageOpen(false);
               setSelectedImage(null);
+              setMessageId(-1);
             }}
           />
           <div className="py-3 text-xl">{detailData?.result.title}</div>
@@ -168,7 +178,7 @@ const MessageModal = ({
             className="h-[25vh] my-4 rounded-[10px] shadow-xl border-2 border-brand-blue"
           />
           <div className="flex flex-row justify-center mb-3 max-h-[30vh]">
-            <div className="relative flex flex-col-reverse overflow-y-scroll ">
+            <div className="flex flex-col-reverse overflow-y-scroll ">
               {data?.length === 0 ? (
                 <p className="flex text-lg">아직 함께 찍은 사진이 없어요😭</p>
               ) : (
@@ -218,9 +228,15 @@ const MessageModal = ({
 
           <div
             className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl"
+            onClick={showGPS}
+          >
+            찾아가기
+          </div>
+          <div
+            className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl"
             onClick={moveEvent}
           >
-            포즈 찍기
+            사진 찍기
           </div>
         </section>
       )}
