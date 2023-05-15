@@ -20,13 +20,14 @@ public class CustomPictureRepositoryImpl implements CustomPictureRepository{
 
     private final JPAQueryFactory jpaQueryFactory;
     @Override
-    public List<PicturePinRes> findByPinId(Long pinId) {
+    public List<PicturePinRes> findByPinIdOrderByCreatedDateDesc(Long pinId) {
 
         List<PicturePinRes> pictures = jpaQueryFactory
                 .select(Projections.constructor(PicturePinRes.class, picture.picture_id, picture.image))
                 .from(picture)
                 .join(picture.pin, pin)
                 .where(pin.pinId.eq(pinId))
+                .orderBy(picture.createdDate.desc())
                 .fetch();
 
         return pictures;
