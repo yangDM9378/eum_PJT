@@ -57,20 +57,20 @@ const EventCamera = () => {
 
   return (
     <div className="w-[100vw] h-[100vh]">
-      {/* <div className="h-[8vh] text-black">
+      <div className="h-[8vh] text-black">
         <button onClick={goBack}>
           <BackIcon />
         </button>
-        {eventType == "pose" ? (
-          <div className="font-gmarket-thin text-center my-[1vh] text-[3vh]">
-            포즈를 따라해 보세요
-          </div>
-        ) : (
-          <div className="font-gmarket-thin text-center my-[1vh] text-[3vh]">
-            사진을 찍어주세요
-          </div>
-        )}
-      </div> */}
+      </div>
+      {eventType == "pose" ? (
+        <div className="font-gmarket-thin text-center my-[1vh] text-[3vh]">
+          포즈를 따라해 보세요
+        </div>
+      ) : (
+        <div className="font-gmarket-thin text-center my-[1vh] text-[3vh]">
+          사진을 찍어주세요
+        </div>
+      )}
       <div className="min-h-[77vh] flex flex-col items-center justify-center">
         <video
           className="rounded-3xl px-[2%]"
@@ -81,7 +81,7 @@ const EventCamera = () => {
         />
       </div>
       <div className="flex h-[10vh] justify-center items-center">
-        <div className="grid w-full grid-cols-3 mt-2 place-items-center ">
+        <div className="grid w-full grid-cols-3 pt-2 place-items-center ">
           {eventType == "pose" ? (
             <div>
               <AiOutlineInfoCircle
