@@ -66,11 +66,11 @@ const MessageModal = ({
   }, [messageId]);
 
   // 찍은 사진들 보여주기
-  const [imagesUrls, setImagesUrls] = useState<[] | Picture[]>([]);
+  // const [imagesUrls, setImagesUrls] = useState<[] | Picture[]>([]);
 
   // messageId로 핀 이미지들 불러오기
   // const getpinImagesData = async (messageId: number) => {
-  //   const images = await getpinImages(messageId);
+  // const images = await getpinImages(messageId);
   //   // return images;
   //   await setImagesUrls(images);
   // };
@@ -178,7 +178,7 @@ const MessageModal = ({
             className="h-[25vh] my-4 rounded-[10px] shadow-xl border-2 border-brand-blue"
           />
           <div className="flex flex-row justify-center mb-3 max-h-[30vh]">
-            <div className="flex flex-col-reverse overflow-y-scroll ">
+            <div className="flex flex-col overflow-y-scroll">
               {data?.length === 0 ? (
                 <p className="flex text-lg">아직 함께 찍은 사진이 없어요😭</p>
               ) : (
