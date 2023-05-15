@@ -173,7 +173,7 @@ const MessageModal = ({
             className="h-[25vh] my-4 rounded-[10px] shadow-xl border-2 border-brand-blue"
           />
           <div className="flex flex-row justify-center mb-3 max-h-[30vh]">
-            <div className="relative flex flex-col-reverse overflow-y-scroll ">
+            <div className="flex flex-col-reverse overflow-y-scroll ">
               {data?.length === 0 ? (
                 <p className="flex text-lg">아직 함께 찍은 사진이 없어요😭</p>
               ) : (
