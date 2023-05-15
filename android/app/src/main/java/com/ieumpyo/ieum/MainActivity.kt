@@ -29,6 +29,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -50,9 +51,11 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.ieumpyo.ieum.MainActivity.Companion.db
 import com.ieumpyo.ieum.api.RetrofitImpl
 import com.ieumpyo.ieum.geofencing.GeofenceHelper
+import com.ieumpyo.ieum.map.MapGeoActivity
 import com.ieumpyo.ieum.roomdb.notifiedLocationDB
 import com.ieumpyo.ieum.roomdb.notifiedLocationEntity
 import retrofit2.Call
@@ -143,6 +146,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             Toast.makeText(mContext, "그룹코드가 복사되었습니다!", Toast.LENGTH_SHORT).show()
 
         }
+        @JavascriptInterface
+        fun showGPS(message: String) {
+            if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 3)
+            }
+            val data = message
+            Toast.makeText(mContext, "문화재 찾아가기", Toast.LENGTH_SHORT).show()
+            val intent = Intent(mContext, MapGeoActivity::class.java)
+            intent.putExtra("culturalProperty", data)
+            mContext.startActivity(intent)
+        }
+
     }
     var cameraPath = ""
     var mWebViewImageUpload: ValueCallback<Array<Uri>>? = null
@@ -151,10 +166,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var intLst : List<Int>
     lateinit var web : WebView
 
-    companion object{
+    companion object {
 
         var accessToken: MutableLiveData<String> = MutableLiveData()
         lateinit var db: notifiedLocationDB
+        lateinit var listGeofence: List<Result>
     }
 
 
@@ -175,13 +191,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
         MobileAds.setRequestConfiguration(configuration)
 
-        checkGPS()
+        checkPermission()
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment)as SupportMapFragment
         mapFragment.getMapAsync(this)
 
 
 
 //        val refreshLayout = findViewById<SwipeRefreshLayout>(R.id.contentSwipeLayout)
+        val fabutton=findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        fabutton.setOnClickListener{
+            web.reload()
+            initList("Bearer "+ accessToken.value.toString())
+
+        }
+        lateinit var uri: Uri
+
+        accessToken=getCookie(target_url,"accessToken")
+        accessToken.observe(this){
+            initList("Bearer "+it)
+            Log.d("ACCESS TOKEN","observe!!!!")
+        }
 
 
 //        웹뷰 생성
@@ -206,20 +235,43 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 //        refreshLayout.setOnRefreshListener {
 //            web.reload()
+//            initList("Bearer "+ accessToken.value.toString())
 //            refreshLayout.isRefreshing = true
 //        }
-
+//        refreshLayout.viewTreeObserver.addOnScrollChangedListener {
+//            if (web.getScrollY() <= 0 ) {
+//                refreshLayout.isEnabled = true
+//            } else {
+//                refreshLayout.isEnabled = false
+//            }
+//        }
 
         web.setWebViewClient(object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
-                checkPermission()
+                checkGPS()
+                accessToken=getCookie(target_url,"accessToken")
+
             }
 
-//            override fun onPageFinished(view: WebView, url: String) {
-//                super.onPageFinished(view, url);
+            override fun onPageFinished(view: WebView, url: String) {
+                super.onPageFinished(view, url);
 //                refreshLayout.isRefreshing = false
-//            }
+//                Log.d("URL",url.toString()+"!!")
+//                if(url?.contains("group")==true|| url?.contains("oauth")==true){
+//                    refreshLayout.isEnabled=true
+//                }else if(url?.contains("map")==true){
+//                    refreshLayout.isEnabled=false
+//                }
+//                else{
+//                    refreshLayout.isEnabled=false
+//                }
+            }
+
+            override fun onLoadResource(view: WebView?, url: String?) {
+                super.onLoadResource(view, url)
+
+            }
 
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
@@ -254,6 +306,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                             startActivity(intentStore)
                         }
                     }
+                    uri=Uri.parse(request.url.toString())
                 }
                 return false
             }
@@ -323,27 +376,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
 
-//        refreshLayout.setOnRefreshListener {
-//            web.reload()
-//            refreshLayout.isRefreshing = true
-//        }
-//        refreshLayout.viewTreeObserver.addOnScrollChangedListener {
-//            if (web.getScrollY() <= 0 || web.canScrollVertically(-1)) {
-//                refreshLayout.isEnabled = true
-//            } else {
-//                refreshLayout.isEnabled = false
-//            }
-//        }
-
-        accessToken=getCookie(target_url,"accessToken")
-        accessToken.observe(this){
-            initList("Bearer "+it)
-        }
-
-
         db= Room.databaseBuilder(applicationContext, notifiedLocationDB::class.java,"pin").allowMainThreadQueries().fallbackToDestructiveMigration().build()
         db.dao().getAll().observe(this ){ tmp ->
             val StrArr = tmp.map{it.toString()}
+            Log.d("API",StrArr.toString()+"!!")
             intLst=tmp
             removeGeofence(StrArr) }
 
@@ -375,7 +411,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun getBundle(){
-        Log.d("BUNDLE","getBundle!!!")
         val intent = getIntent()
         val bundle = intent.extras
         if (bundle != null) {
@@ -389,6 +424,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             if(bundle.getInt("pin_id")!=null){
                 try{
                     db.dao().insert(notifiedLocationEntity(bundle.getInt("pin_id")))
+
 
                 }
                 catch(e:Exception){
@@ -423,18 +459,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         return MutableLiveData(CookieValue)
     }
     private fun initList(token: String){
+        Log.d("initList",token+"!!")
         RetrofitImpl.service.getPinAll(token).enqueue(object : Callback<Pin>{
             override fun onFailure(call: Call<Pin>, t: Throwable) {
                 Log.e("Failed",t.toString()+"!!")
             }
 
+            @RequiresApi(Build.VERSION_CODES.Q)
             override fun onResponse(
                 call: Call<Pin>,
                 response: Response<Pin>
             ) {
                 if(response.isSuccessful){
                     val rawlist = response.body()
-                    val listGeofence = rawlist?.result
+                    listGeofence = rawlist?.result
                     listGeofence?.forEach{
                         val isTrue=intLst.binarySearch(it.pinId)
                         if(isTrue<0){
@@ -455,10 +493,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun addGeofence(geofence : Geofence) {
+        Log.d("Geopfence",geofence.toString()+"!!")
         val geofenceRequest = geofence?.let{geofenceHelper.getGeofencingRequest(it)}
         val pendingIntent = geofenceHelper.geofencePendingIntent
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
             return
         }
         geofencingClient.addGeofences(geofenceRequest!!,pendingIntent).run{
@@ -466,7 +518,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 Log.d("Success","Geofence added!!")
             }
             addOnFailureListener{
-                Log.d("Failure","Geofence Not added!!")
+                e->
+                Log.d("Failure","Geofence Not added!!", e)
             }
 
         }
@@ -522,12 +575,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun checkGPS(){
         val permissionCheck =
             ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
 
         if (permissionCheck == PackageManager.PERMISSION_DENIED) { //포그라운드 위치 권한 확인
-
             //위치 권한 요청
             requestPermissions(
                 this,
@@ -539,8 +592,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val permissionCheck2 =
             ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-
-        if (permissionCheck == PackageManager.PERMISSION_DENIED) { //백그라운드 위치 권한 확인
+        if (permissionCheck2 == PackageManager.PERMISSION_DENIED) { //백그라운드 위치 권한 확인
             //위치 권한 요청
             requestPermissions(
                 this,
@@ -567,6 +619,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         CookieSyncManager.getInstance().startSync()
+        getBundle()
     }
 
     override fun onPause() {

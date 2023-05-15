@@ -18,5 +18,6 @@ data class Result(
 data class Detail(
     val title : String,
     val userName : String,
-    val role : String
+    val role : String,
+    val groupId : Int
 )
