@@ -107,6 +107,11 @@ function Map({ markerList }: Props) {
     setMessageId(pinId);
     dispatch(setPinId(pinId));
     setMessageOpen(true);
+    const addCoords = {
+      lat: lat,
+      lng: lng,
+    };
+    dispatch(assign(addCoords));
   };
 
   // 메시지 추가 이벤트입니다. 버튼을 누르면 모달이 열립니다.
@@ -138,7 +143,7 @@ function Map({ markerList }: Props) {
     dispatch(assign(addCoords));
     setIsOpen(true);
   };
-
+  console.log(coords);
   const getUserGps = () => {
     navigator.geolocation.getCurrentPosition(function (position) {
       if (position) {
