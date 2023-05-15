@@ -51,6 +51,7 @@ const MessageModal = ({
   setMessageId,
 }: ModalProps) => {
   const [detailData, setDetailData] = useState<PindetailResult>();
+  const [messageDate, setMessageDate] = useState("");
   const dispatch = useAppDispatch();
 
   // messageId로 핀 상세 조회 데이터 가져오기
@@ -60,6 +61,8 @@ const MessageModal = ({
       const getPinDetailData = async () => {
         const pinDetailRes = await getPinDetail(messageId);
         setDetailData(pinDetailRes);
+        const date = new Date(pinDetailRes.result.createdDate);
+        setMessageDate(date.toDateString());
       };
       getPinDetailData();
     }
@@ -157,7 +160,7 @@ const MessageModal = ({
       ariaHideApp={false}
       style={customStyles}
     >
-      {detailData && (
+      {detailData ? (
         <section className="relative flex flex-col px-2 py-3 text-center">
           <img
             src="/modal/closeBTN.png"
@@ -171,6 +174,10 @@ const MessageModal = ({
           />
           <div className="py-3 text-xl">{detailData?.result.title}</div>
           <div className="text-sm">{detailData?.result.content}</div>
+          <div className="flex flex-col items-end text-xs">
+            <div>from {detailData.result.userName}</div>
+            <div>{messageDate}</div>
+          </div>
           <img
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${detailData.result.image}`}
             alt="이벤트사진"
@@ -214,7 +221,9 @@ const MessageModal = ({
                 <div className="font-gmarket-thin text-[12px] text-right mt-[2%]">
                   from {selectedInfo.name}
                 </div>
-                <div className="font-gmarket-thin text-[8px] text-right ">{selectedInfo.time}</div>
+                <div className="font-gmarket-thin text-[8px] text-right ">
+                  {selectedInfo.time}
+                </div>
               </div>
             ) : (
               data?.length !== 0 && (
@@ -238,6 +247,12 @@ const MessageModal = ({
             사진 찍기
           </div>
         </section>
+      ) : (
+        <img
+          src="/images/loading.gif"
+          alt="loading"
+          className="w-[100%] h-[100%]"
+        />
       )}
     </Modal>
   );

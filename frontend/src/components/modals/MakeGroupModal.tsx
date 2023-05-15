@@ -27,7 +27,6 @@ const customStyles = {
     width: "85vw",
     height: "80vh",
     background: "#F8F9F3",
-    overflow: "scroll",
   },
 };
 
