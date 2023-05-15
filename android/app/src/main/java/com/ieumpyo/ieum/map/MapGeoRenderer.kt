@@ -157,7 +157,7 @@ class MapGeoRenderer(val activity: MapGeoActivity, val culturalProperty: String?
 
 //      processLocationArray("ssafy", activity.resources.getStringArray(R.array.ssafy))
 
-            val cpData = activity.resources.getStringArray(R.array.cp)
+            val cpData = activity.resources.getStringArray(R.array.ssafy)
 
             var resultCP: String = CulturalProperty.getCP(culturalProperty, cpData)
 

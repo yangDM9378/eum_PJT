@@ -108,14 +108,16 @@
             android:name="com.ieumpyo.ieum.geofencing.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
+
+        <meta-data android:name="com.google.ar.core" android:value="required" />
+
+        <meta-data
+            android:name="com.google.android.ar.API_KEY"
+            android:value="${AR_API_KEY}"/>
+
     </application>
 
     <!-- Indicates whether "Google Play Services for AR" (ARCore) is "required" or "optional". -->
-    <meta-data android:name="com.google.ar.core" android:value="required" />
-
-    <meta-data
-        android:name="com.google.android.ar.API_KEY"
-        android:value="${AR_API_KEY}"/>
 
 
     <queries>

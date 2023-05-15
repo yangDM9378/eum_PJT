@@ -78,9 +78,9 @@ const MessageModal = ({
   const { data, isLoading } = useQuery(["initial-pinpicture", messageId], () =>
     getpinImages(messageId)
   );
-  const showGPS = () => {
+  const showGPS = (pinId: number) => {
     if ((window as any).Android) {
-      (window as any).Android.showGPS(data);
+      (window as any).Android.showGPS(pinId);
     }
   };
 
@@ -213,9 +213,7 @@ const MessageModal = ({
                 <div className="font-gmarket-thin text-[12px] text-right mt-[2%]">
                   from {selectedInfo.name}
                 </div>
-                <div className="font-gmarket-thin text-[8px] text-right ">
-                  {selectedInfo.time}
-                </div>
+                <div className="font-gmarket-thin text-[8px] text-right ">{selectedInfo.time}</div>
               </div>
             ) : (
               data?.length !== 0 && (
@@ -226,7 +224,9 @@ const MessageModal = ({
 
           <div
             className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl"
-            onClick={showGPS}
+            onClick={() => {
+              showGPS(messageId);
+            }}
           >
             찾아가기
           </div>
