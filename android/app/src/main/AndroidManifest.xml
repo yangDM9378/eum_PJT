@@ -48,6 +48,8 @@
 
     <application
         android:allowBackup="true"
+        android:windowSoftInputMode="adjustNothing"
+        android:screenOrientation="portrait"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -113,7 +115,7 @@
 
         <meta-data
             android:name="com.google.android.ar.API_KEY"
-            android:value="${AR_API_KEY}"/>
+            android:value="${MAPS_API_KEY}"/>
 
     </application>
 

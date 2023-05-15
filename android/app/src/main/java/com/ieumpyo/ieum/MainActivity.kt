@@ -17,6 +17,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.WindowManager
 import android.webkit.CookieManager
 import android.webkit.CookieSyncManager
 import android.webkit.GeolocationPermissions
@@ -148,13 +149,29 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 3)
             }
-            val data = pinId
-            Log.d("showGPS",data.toString()+"!!")
+            val data = setString(pinId)
             Toast.makeText(mContext, "문화재 찾아가기", Toast.LENGTH_SHORT).show()
             val intent = Intent(mContext, MapGeoActivity::class.java)
+
             intent.putExtra("culturalProperty", data)
             mContext.startActivity(intent)
         }
+
+    }
+    fun setString(id:Int): String{
+        var tmp=""
+        val pinList = listGeofence as List<Pin>?
+        if(pinList!=null){
+            pinList.forEach{
+                if(it.pinId==id){
+                    tmp = "${it.latitude}|${it.longitude}|${it.pinId}|poi|https://i-eum-u.com/|${it.pinId}"
+                }
+                listAll?.add("${it.latitude}|${it.longitude}|${it.pinId}|poi|https://i-eum-u.com/|${it.pinId}")
+                Log.d("showGPS",it.toString())
+            }
+        }
+        Log.d("showGPS", listAll.toString()+"!!")
+        return tmp
 
     }
     var cameraPath = ""
@@ -169,6 +186,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         var accessToken: MutableLiveData<String> = MutableLiveData()
         lateinit var db: notifiedLocationDB
         var listGeofence: List<Pin>? = null
+        var listAll: MutableList<String>?= mutableListOf<String>()
     }
 
 
@@ -176,7 +194,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
         MobileAds.initialize(this) {}
         mAdView = findViewById<AdView>(R.id.adView)
@@ -470,7 +488,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             ) {
                 if(response.isSuccessful){
                     val rawlist = response.body()
-                    listGeofence = rawlist?.result
+                    if (rawlist != null) {
+                        listGeofence = rawlist.result
+                    }
                     listGeofence?.forEach{
                         val isTrue=intLst.binarySearch(it.pinId)
                         if(isTrue<0){
@@ -609,6 +629,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             web.goBack()
         } else if (0 <= gapTime && 2000 >= gapTime) {
             super.onBackPressed()
+
         } else {
             backBtnTime = curTime
             Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()

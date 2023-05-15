@@ -21,6 +21,7 @@ import android.widget.TextView
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.ar.core.Earth
 import com.google.ar.core.GeospatialPose
 import com.ieumpyo.ieum.R
@@ -37,11 +38,12 @@ class TrashcanGeoView(val activity: MapGeoActivity) : DefaultLifecycleObserver {
   val snackbarHelper = SnackbarHelper()
 
   var mapView: MapView? = null
-//  val mapTouchWrapper: MapTouchWrapper = root.findViewById<MapTouchWrapper>(R.id.map_wrapper).apply {
+  //  val mapTouchWrapper: MapTouchWrapper = root.findViewById<MapTouchWrapper>(R.id.map_wrapper).apply {
 //    setup {
 //      activity.renderer.onMapClick()
 //    }
 //  }
+
   val mapFragment =
     (activity.supportFragmentManager.findFragmentById(R.id.map)!! as SupportMapFragment).also {
       it.getMapAsync { googleMap -> mapView = MapView(activity, googleMap) }

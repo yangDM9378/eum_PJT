@@ -10,6 +10,7 @@ import com.google.ar.core.Anchor
 import com.google.ar.core.TrackingState
 import com.google.ar.core.exceptions.CameraNotAvailableException
 import com.ieumpyo.ieum.BuildConfig
+import com.ieumpyo.ieum.MainActivity
 import com.ieumpyo.ieum.R
 import com.ieumpyo.ieum.map.helpers.DisplayRotationHelper
 import com.ieumpyo.ieum.map.helpers.TrackingStateHelper
@@ -157,13 +158,15 @@ class MapGeoRenderer(val activity: MapGeoActivity, val culturalProperty: String?
 
 //      processLocationArray("ssafy", activity.resources.getStringArray(R.array.ssafy))
 
-            val cpData = activity.resources.getStringArray(R.array.ssafy)
-
-            var resultCP: String = CulturalProperty.getCP(culturalProperty, cpData)
+//            val cpData = activity.resources.getStringArray(R.array.cp)
+            val cpData=MainActivity.listAll?.map{it.toString()}
+            Log.d(TAG,cpData.toString()+"!!")
+            var resultCP: String = CulturalProperty.getCP(culturalProperty, cpData!!)
 
 //        val array = arrayOf(cpData[myInt-1])
 //        processLocationArray("cp${myInt}", array)
             val array = arrayOf(resultCP)
+            Log.d(TAG,resultCP+array.toString())
             processLocationArray("culturalProperty", array)
 
         } catch (e: IOException) {
@@ -281,25 +284,34 @@ class MapGeoRenderer(val activity: MapGeoActivity, val culturalProperty: String?
         var latSum = 0.0
         var lonSum = 0.0
         for (location in locations) {
+            Log.d("showGPS", location)
             val locationParts = location.split("|")
-            val lat = locationParts[0].trim().toDouble()
-            val lon = locationParts[1].trim().toDouble()
-            val title = if (locationParts.size > 2) locationParts[2].trim() else ""
-            val kind = if (locationParts.size > 3) LocationKind.getByName(locationParts[3].trim()) else LocationKind.POI
-            val url = if (locationParts.size > 4) locationParts[4].trim() else ""
-            mapArea.locationData.add(
-                LocationData(
-                    LatLng(lat, lon),
-                    title,
-                    kind,
-                    url,
-                    FloatArray(16),
-                    FloatArray(16),
-                    FloatArray(16)
-                )
-            )
-            latSum += lat
-            lonSum += lon
+
+            if (locationParts.size >= 2) {
+                val lat = locationParts[0].trim().toDoubleOrNull()
+                val lon = locationParts[1].trim().toDoubleOrNull()
+
+                if (lat != null && lon != null) {
+                    val title = if (locationParts.size > 2) locationParts[2].trim() else ""
+                    val kind = if (locationParts.size > 3) LocationKind.getByName(locationParts[3].trim()) else LocationKind.POI
+                    val url = if (locationParts.size > 4) locationParts[4].trim() else ""
+
+                    mapArea.locationData.add(
+                        LocationData(
+                            LatLng(lat, lon),
+                            title,
+                            kind,
+                            url,
+                            FloatArray(16),
+                            FloatArray(16),
+                            FloatArray(16)
+                        )
+                    )
+
+                    latSum += lat
+                    lonSum += lon
+                }
+            }
         }
 
 //    mapArea.center = LatLng(latSum / locations.size, lonSum / locations.size)

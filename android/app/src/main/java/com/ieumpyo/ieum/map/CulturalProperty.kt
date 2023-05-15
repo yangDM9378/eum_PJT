@@ -6,11 +6,16 @@ import android.util.Log
 class CulturalProperty {
 
     companion object{
-        fun getCP(culturalProperty : String?, cpData : Array<String>): String {
+
+        fun getCP(culturalProperty : String?, cpData : List<String>): String {
+            val tmp=culturalProperty?.split("|")
             for (data:String in cpData) {
                 var dataArray = data.split("|")
-                if (culturalProperty != null) {
-                    if (dataArray.last().equals(culturalProperty.trim())) {
+                if (tmp != null) {
+
+                    Log.d("CulturalProperty",dataArray.last().toString()+"  "+culturalProperty?.last().toString())
+
+                    if (dataArray.last().equals(tmp.last())) {
                         return data
                     }
                 }
