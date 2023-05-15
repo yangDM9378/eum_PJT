@@ -143,7 +143,6 @@ function Map({ markerList }: Props) {
     dispatch(assign(addCoords));
     setIsOpen(true);
   };
-  console.log(coords);
   const getUserGps = () => {
     navigator.geolocation.getCurrentPosition(function (position) {
       if (position) {
