@@ -94,6 +94,15 @@ const GroupPhotoModal = ({
     setSelected(0);
   };
 
+  // 닫기를 누르면 함수 호출
+  const closeModal = () => {
+    setIsOpen(false);
+    setSelected(0);
+  };
+
+
+
+
   return (
     <Modal
       isOpen={isOpen}
@@ -108,10 +117,7 @@ const GroupPhotoModal = ({
           src="/modal/closeBTN.png"
           alt="닫기버튼"
           className="absolute left-[90%] top-[5%]"
-          onClick={() => {
-            setIsOpen(false);
-            setSelected(0);
-          }}
+          onClick={() => closeModal()}
         />
         <div className="pt-[10%]">
           {photoInfo && (
