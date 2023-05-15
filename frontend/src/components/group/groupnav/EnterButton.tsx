@@ -11,16 +11,16 @@ const EnterButton = () => {
     setIsOpen(true);
   };
 
-  function moveGroupCss(isOpen:boolean):string {
-    return isOpen === true ? 
-    'bg-brand-pink': 'border-2 border-brand-pink'
+  function moveGroupCss(isOpen: boolean): string {
+    return isOpen === true ? "bg-brand-pink" : "border-2 border-brand-pink";
   }
 
   return (
     <div className="pl-[5vw] text-[15px]  font-gmarket-thin ">
       <button
         onClick={openModal}
-        className={`w-[35vw] h-[5vh] rounded-lg ${moveGroupCss(isOpen)}`}>
+        className={`w-[35vw] h-[5vh] rounded-lg ${moveGroupCss(isOpen)}`}
+      >
         그룹 들어가기
       </button>
       <EnterGroupModal isOpen={isOpen} setIsOpen={setIsOpen} />

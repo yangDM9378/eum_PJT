@@ -42,7 +42,6 @@ class GeofenceHelper(context: Context?): ContextWrapper(context) {
 
 //    지오펜싱 전환 이벤트 캐치를 위한 broadcast receiver 정의
     val geofencePendingIntent: PendingIntent by lazy {
-    Log.d(ContentValues.TAG, "start geofencePendingIntent!!")
 
     val intent = Intent(this, GeofenceBroadcastReceiver::class.java)
     intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)

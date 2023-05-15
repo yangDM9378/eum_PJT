@@ -1,6 +1,6 @@
 package com.ieumpyo.ieum.api
 
-import Pin
+import Pins
 import PinDetail
 import retrofit2.Call
 import retrofit2.http.GET
@@ -11,7 +11,7 @@ interface RetrofitService {
 
 
     @GET("pins/user")
-    fun getPinAll(@Header("Authorization")token:String): Call<Pin>
+    fun getPinAll(@Header("Authorization")token:String): Call<Pins>
 
     @GET("pins/alarm/{pin_id}")
     fun getPinDetail(@Header("Authorization")token: String, @Path("pin_id")id:Int): Call<PinDetail>

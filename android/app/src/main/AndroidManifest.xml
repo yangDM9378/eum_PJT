@@ -25,9 +25,12 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 <!--    알림 정책에 접근-->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
-<!--    저장소 파일 접근 권한-->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<!--    카메라-->
+    <!-- 5.0 버전 파일업로드 퍼미션 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="18"/>
+    <!-- 외부 저장소 사용 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!--    카메라-->
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.CAMERA2"/>
 <!--클립보드 허용-->
@@ -35,6 +38,9 @@
     <uses-permission android:name="android.permission.READ_CLIPBOARD" />
     <uses-permission android:name="android.permission.WRITE_CLIPBOARD" />
     <uses-permission android:name="android.webkit.PermissionRequest" />
+
+    <uses-feature android:name="android.hardware.camera.ar" android:required="true"/>
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
 
     <meta-data
         android:name="com.google.android.gms.version"
@@ -49,6 +55,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Ieum"
+        android:foregroundServiceType="location"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
@@ -92,12 +99,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".map.MapGeoActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="false"/>
 
         <receiver
             android:name="com.ieumpyo.ieum.geofencing.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
+
+        <meta-data android:name="com.google.ar.core" android:value="required" />
+
+        <meta-data
+            android:name="com.google.android.ar.API_KEY"
+            android:value="${AR_API_KEY}"/>
+
     </application>
+
+    <!-- Indicates whether "Google Play Services for AR" (ARCore) is "required" or "optional". -->
+
+
     <queries>
         <package android:name="com.kakao.talk" />
     </queries>

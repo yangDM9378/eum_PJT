@@ -38,6 +38,7 @@ type ModalProps = {
   setMessageOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPhotoOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSelected: React.Dispatch<React.SetStateAction<number>>;
+  setMessageId: React.Dispatch<React.SetStateAction<number>>;
 };
 
 // 메세지 모달
@@ -47,8 +48,10 @@ const MessageModal = ({
   messageId,
   setIsPhotoOpen,
   setSelected,
+  setMessageId,
 }: ModalProps) => {
   const [detailData, setDetailData] = useState<PindetailResult>();
+  const [messageDate, setMessageDate] = useState("");
   const dispatch = useAppDispatch();
 
   // messageId로 핀 상세 조회 데이터 가져오기
@@ -58,35 +61,51 @@ const MessageModal = ({
       const getPinDetailData = async () => {
         const pinDetailRes = await getPinDetail(messageId);
         setDetailData(pinDetailRes);
+        const date = new Date(pinDetailRes.result.createdDate);
+        setMessageDate(date.toDateString());
       };
       getPinDetailData();
     }
   }, [messageId]);
 
   // 찍은 사진들 보여주기
-  const [imagesUrls, setImagesUrls] = useState<[] | Picture[]>([]);
+  // const [imagesUrls, setImagesUrls] = useState<[] | Picture[]>([]);
 
   // messageId로 핀 이미지들 불러오기
-  const getpinImagesData = async (messageId: number) => {
-    const images = await getpinImages(messageId);
-    // return images;
-    await setImagesUrls(images);
-  };
-  // const { data, isLoading } = useQuery(["initial-pinpicture", messageId], () =>
-  //   getpinImages(messageId)
-  // );
+  // const getpinImagesData = async (messageId: number) => {
+  // const images = await getpinImages(messageId);
+  //   // return images;
+  //   await setImagesUrls(images);
+  // };
 
-  // useEffect(() => {
-  //   if (data && data.length > 0) {
-  //     setSelectedImage(data[0].image);
-  //     setSelectedIdx(data[0].pictureId);
-  //   } else {
-  //     setSelectedImage("");
-  //   }
-  // }, [data]);
+  const { data, isLoading } = useQuery(["initial-pinpicture", messageId], () =>
+    getpinImages(messageId)
+  );
+  const showGPS = (pinId: number) => {
+    if ((window as any).Android) {
+      (window as any).Android.showGPS(pinId);
+    }
+  };
+
+  // 메시지에 사진들이 존재할 때 첫 렌더링시 사진 리스트의 처음 인덱스를 선택된 것으로 취급
   useEffect(() => {
-    getpinImagesData(messageId);
-  }, [messageId]);
+    if (data && data.length > 0) {
+      setSelectedImage(data[0].image);
+      setSelectedIdx(data[0].pictureId);
+      const dataDate = new Date(data[0].createdDate);
+      console.log(data);
+      const newData = {
+        name: data[0].userName,
+        time: dataDate.toDateString(),
+      };
+      setSelectedInfo(newData);
+    } else {
+      setSelectedImage("");
+    }
+  }, [data]);
+  // useEffect(() => {
+  //   getpinImagesData(messageId);
+  // }, [messageId]);
 
   const router = useRouter();
   const moveEvent = async () => {
@@ -149,7 +168,7 @@ const MessageModal = ({
       ariaHideApp={false}
       style={customStyles}
     >
-      {detailData && (
+      {detailData ? (
         <section className="relative flex flex-col px-2 py-3 text-center">
           <img
             src="/modal/closeBTN.png"
@@ -158,32 +177,37 @@ const MessageModal = ({
             onClick={() => {
               setMessageOpen(false);
               setSelectedImage(null);
+              setMessageId(-1);
             }}
           />
           <div className="py-3 text-xl">{detailData?.result.title}</div>
           <div className="text-sm">{detailData?.result.content}</div>
+          <div className="flex flex-col items-end text-xs">
+            <div>from {detailData.result.userName}</div>
+            <div>{messageDate}</div>
+          </div>
           <img
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${detailData.result.image}`}
             alt="이벤트사진"
-            className="h-[25vh] my-4 rounded-[10px] shadow-xl border-2 border-brand-blue"
+            className="h-[25vh] my-4 rounded-[10px] shadow-xl border-2 "
           />
-          <div className="flex flex-row justify-center mb-3 max-h-[30vh]">
-            <div className="relative flex flex-col-reverse overflow-y-scroll ">
-              {imagesUrls?.length === 0 ? (
+          <div className="flex flex-row mb-3 max-h-[30vh]">
+            <div className="flex flex-col overflow-y-scroll">
+              {data?.length === 0 ? (
                 <p className="flex text-lg">아직 함께 찍은 사진이 없어요😭</p>
               ) : (
-                imagesUrls?.map((image) => (
+                data?.map((image) => (
                   <img
                     key={image.pictureId}
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.image}`}
                     alt=""
-                    width={70}
-                    height={60}
                     className={`min-h-[10vh] my-[5%] mr-[5vw] ${
                       selectedIdx === image.pictureId
                         ? "border-4 border-brand-red"
                         : ""
                     }`}
+                    width={70}
+                    height={60}
                     onClick={() => selecteimage(image.pictureId, image.image)}
                   />
                 ))
@@ -197,7 +221,7 @@ const MessageModal = ({
                   alt="선택된 이미지"
                   height={270}
                   width={200}
-                  className="rounded-lg h-[25vh] ml-[5%] my-auto"
+                  className="rounded-lg h-[25vh] my-auto"
                   onClick={() => {
                     CloseModal();
                   }}
@@ -210,7 +234,7 @@ const MessageModal = ({
                 </div>
               </div>
             ) : (
-              imagesUrls?.length !== 0 && (
+              data?.length !== 0 && (
                 <div className="w-[150px] h-[150px] border-2 border-brand-blue rounded-md m-auto"></div>
               )
             )}
@@ -218,11 +242,25 @@ const MessageModal = ({
 
           <div
             className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl"
+            onClick={() => {
+              showGPS(messageId);
+            }}
+          >
+            찾아가기
+          </div>
+          <div
+            className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl"
             onClick={moveEvent}
           >
-            포즈 찍기
+            사진 찍기
           </div>
         </section>
+      ) : (
+        <img
+          src="/images/loading.gif"
+          alt="loading"
+          className="w-[100%] h-[100%]"
+        />
       )}
     </Modal>
   );

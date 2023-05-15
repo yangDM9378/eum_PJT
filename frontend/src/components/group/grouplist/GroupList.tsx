@@ -43,8 +43,8 @@ const GroupList = () => {
         {data &&
           data.map((group, index) => (
             <li key={index}>
-              <div className="flex flex-col w-[95%]">
-                <div className="flex justify-end ">
+              <div className="flex flex-col w-[95%] m-auto">
+                <div className="flex justify-end pt-2">
                   <AiOutlineClose onClick={() => outGroupList(group.groupId)} />
                 </div>
                 <div
@@ -52,15 +52,15 @@ const GroupList = () => {
                   onClick={() => goToMap(group.groupId)}
                 >
                   {/* 그룹 이미지 */}
-                  <div className=" w-[30%]">
+                  <div className=" w-[30%] h-[13vh] flex">
                     <img
-                      className="rounded-sm h-[13vh] w-[13vh] m-1 "
+                      className="rounded-md  w-[13vh] h-[90%] m-auto "
                       src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${group.image}`}
                       alt={group.name}
                     />
                   </div>
                   {/* 모임 정보들 */}
-                  <div className="w-[70%]">
+                  <div className="w-[65%]">
                     <p className=" font-semibold text-[1rem]">{group.name}</p>
                     <p className="te xt-[0.8rem] font-normal pt-[1vh]">
                       {group.description}

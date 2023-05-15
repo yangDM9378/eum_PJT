@@ -1,5 +1,5 @@
-data class Pin(
-    val result: List<Result>,
+data class Pins(
+    val result: List<Pin>,
     val resultCode: String,
     val resultMsg: String
 )
@@ -9,7 +9,7 @@ data class PinDetail(
     val resultMsg: String
 )
 
-data class Result(
+data class Pin(
     val latitude: Double,
     val longitude: Double,
     val pinId: Int
@@ -18,5 +18,6 @@ data class Result(
 data class Detail(
     val title : String,
     val userName : String,
-    val role : String
+    val role : String,
+    val groupId : Int
 )

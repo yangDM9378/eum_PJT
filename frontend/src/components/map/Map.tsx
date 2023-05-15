@@ -106,6 +106,12 @@ function Map({ markerList }: Props) {
     setMapCenter({ lat: lat, lng: lng });
     setMessageId(pinId);
     dispatch(setPinId(pinId));
+    setMessageOpen(true);
+    const addCoords = {
+      lat: lat,
+      lng: lng,
+    };
+    dispatch(assign(addCoords));
     await setMessageOpen(true);
   };
 
@@ -138,7 +144,6 @@ function Map({ markerList }: Props) {
     dispatch(assign(addCoords));
     setIsOpen(true);
   };
-
   const getUserGps = () => {
     navigator.geolocation.getCurrentPosition(function (position) {
       if (position) {
@@ -276,6 +281,7 @@ function Map({ markerList }: Props) {
           messageOpen={messageOpen}
           setMessageOpen={setMessageOpen}
           messageId={messageId}
+          setMessageId={setMessageId}
           setIsPhotoOpen={setIsPhotoOpen}
           setSelected={setSelected}
         />

@@ -1,7 +1,11 @@
 package com.eumpyo.eum.config.handler;
 
+import com.eumpyo.eum.common.code.ErrorCode;
+import com.eumpyo.eum.common.response.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
@@ -25,12 +29,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         log.info("유효한 자격증명을 제공하지 않고 있습니다.");
         // 유효한 자격증명을 제공하지 않고 접근하려 할때 401
 
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("status", 401);
-        map.put("code", "UNAUTHORIZED 코드");
-        map.put("message", "유효한 자격증명을 제공하지 않고 있습니다.");
-
-        response.getWriter().write(objectMapper.writeValueAsString(map));
+        // HttpServletResponse에 ResponseEntity의 정보를 설정합니다.
+        response.setStatus(ErrorCode.UNAUTHORIZED_ERROR.getStatus());
+//        response.setContentType("application/json");
+//        response.getWriter().write(ErrorCode.UNAUTHORIZED_ERROR.getMessage());
+        response.getWriter().flush();
+        response.getWriter().close();
     }
 }
