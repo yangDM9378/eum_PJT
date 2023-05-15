@@ -191,10 +191,10 @@ const MessageModal = ({
             alt="이벤트사진"
             className="h-[25vh] my-4 rounded-[10px] shadow-xl border-2 "
           />
-          <div className="flex flex-row mb-3 max-h-[30vh]">
-            <div className="flex flex-col overflow-y-scroll">
+          <div className="flex flex-row mb-3 max-h-[30vh] justify-center">
+            <div className="flex flex-col overflow-y-scroll ">
               {data?.length === 0 ? (
-                <p className="flex text-lg">아직 함께 찍은 사진이 없어요😭</p>
+                <p className="flex text-sm">아직 함께 찍은 사진이 없어요😭</p>
               ) : (
                 data?.map((image) => (
                   <img
@@ -214,7 +214,7 @@ const MessageModal = ({
               )}
             </div>
 
-            {selectedImage !== null ? (
+            {selectedImage && (
               <div>
                 <img
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${selectedImage}`}
@@ -233,10 +233,6 @@ const MessageModal = ({
                   {selectedInfo.time}
                 </div>
               </div>
-            ) : (
-              data?.length !== 0 && (
-                <div className="w-[150px] h-[150px] border-2 border-brand-blue rounded-md m-auto"></div>
-              )
             )}
           </div>
 
