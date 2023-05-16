@@ -1,9 +1,11 @@
 "use client";
 
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Konva from "konva";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { setFrameImg } from "@/redux/map/mapSlice";
 
 const framePicture = (): JSX.Element => {
   const pictureImg = useAppSelector((state) => state.coordsReducer.frameImg);
@@ -76,8 +78,25 @@ const framePicture = (): JSX.Element => {
 
   const images = [1, 2, 3, 4];
 
+  // 꾸미기 페이지로 사진 이동시키기
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const pictureArt = async () => {
+    if (stageRef.current) {
+      const tr = stageRef.current.children[0].findOne("Transformer");
+      tr.visible(false);
+      stageRef.current.draw();
+      const dataURL = await stageRef.current.toDataURL({ pixelRatio: 1 });
+      dispatch(setFrameImg(dataURL));
+      await router.replace(`artpicture/frameimg`);
+    }
+  };
+
   return (
-    <div className="h-[90vh] flex flex-col items-center justify-center">
+    <div className="h-[92vh] flex flex-col items-center justify-center">
+      <div className="text-lg font-gmarket-thin mb-[3vh]">
+        사진을 꾸밀 프레임을 선택해주세요
+      </div>
       <div
         id="container"
         className="flex items-center justify-center border rounded-lg"
@@ -98,6 +117,12 @@ const framePicture = (): JSX.Element => {
           </div>
         ))}
       </div>
+      <button
+        className="my-[1vh] bg-brand-blue text-white py-[1.5vh] px-[6vw] rounded-md shadow-xl font-brand-gmarketsans"
+        onClick={pictureArt}
+      >
+        사진 꾸미기
+      </button>
     </div>
   );
 };
