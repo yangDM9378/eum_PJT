@@ -375,6 +375,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 message: String?,
                 result: JsResult?
             ): Boolean {
+                initList("Bearer "+accessToken.value.toString())
                 return super.onJsAlert(view, url, message, result)
             }
 
