@@ -160,19 +160,19 @@ const MessageModal = ({
   // }, [selectedIdx]);
 
   // 음성 변환 목소리 preload
-  useEffect(() => {
-    window.speechSynthesis.getVoices();
-  }, []);
+  // useEffect(() => {
+  //   window.speechSynthesis.getVoices();
+  // }, []);
 
-  useEffect(() => {
-    if (detailData) {
-      speech(detailData.result.content);
-    }
-  }, [detailData]);
+  // useEffect(() => {
+  //   if (detailData) {
+  //     speech(detailData.result.content);
+  //   }
+  // }, [detailData]);
 
-  const speech = (value: string) => {
-    getSpeech(value);
-  };
+  // const speech = (value: string) => {
+  //   getSpeech(value);
+  // };
 
   return (
     <Modal
