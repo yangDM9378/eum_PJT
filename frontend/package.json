@@ -25,7 +25,7 @@
     "eslint-config-next": "13.3.0",
     "install": "^0.13.0",
     "js-cookie": "^3.0.5",
-    "konva": "7.2.5",
+    "konva": "^7.2.5",
     "next": "13.3.0",
     "postcss": "8.4.23",
     "qrcode": "^1.5.3",
