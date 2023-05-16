@@ -14,6 +14,7 @@ import GroupPhotoModal from "./GroupPhotoModal";
 import { pictureid } from "@/redux/doevent/messageSlice";
 import { getPinImage } from "@/services/galleryApi";
 import { useQuery } from "@tanstack/react-query";
+import { getSpeech } from "@/libs/helper/getSpeech";
 
 const customStyles = {
   overlay: {
@@ -93,7 +94,6 @@ const MessageModal = ({
       setSelectedImage(data[0].image);
       setSelectedIdx(data[0].pictureId);
       const dataDate = new Date(data[0].createdDate);
-      console.log(data);
       const newData = {
         name: data[0].userName,
         time: dataDate.toDateString(),
@@ -159,6 +159,21 @@ const MessageModal = ({
   //   dispatch(pictureid(selectedIdx));
   // }, [selectedIdx]);
 
+  // 음성 변환 목소리 preload
+  // useEffect(() => {
+  //   window.speechSynthesis.getVoices();
+  // }, []);
+
+  // useEffect(() => {
+  //   if (detailData) {
+  //     speech(detailData.result.content);
+  //   }
+  // }, [detailData]);
+
+  // const speech = (value: string) => {
+  //   getSpeech(value);
+  // };
+
   return (
     <Modal
       isOpen={messageOpen}
@@ -193,15 +208,30 @@ const MessageModal = ({
           </div>
           <div className="py-3 text-xl">{detailData?.result.title}</div>
           <div className="text-sm">{detailData?.result.content}</div>
-          <div className="flex flex-col items-end text-xs">
+          <div className="flex flex-col items-end text-xs relative">
             <div>from {detailData.result.userName}</div>
             <div>{messageDate}</div>
+            <div
+              className="absolute left-[0%] top-[-50%] text-xs w-[20%] h-[200%]"
+              onClick={() => {
+                showGPS(messageId);
+              }}
+            >
+              <img
+                src="/map/centerTarget.png"
+                alt=""
+                className="h-[68%] w-[70%] m-auto"
+              />
+              <div>찾아가기</div>
+            </div>
           </div>
-          <img
-            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${detailData.result.image}`}
-            alt="이벤트사진"
-            className="h-[25vh] my-4 rounded-[10px] shadow-xl border-2 "
-          />
+          <div className="h-[25vh] w-[100%] flex items-center justify-center">
+            <img
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${detailData.result.image}`}
+              alt="이벤트사진"
+              className="h-[90%] w-[90%] rounded-[10px] shadow-xl border-2 "
+            />
+          </div>
           <div className="flex flex-row mb-3 max-h-[30vh] justify-center">
             <div className="flex flex-col overflow-y-scroll pr-[5%] ;">
               {data?.length === 0 ? (
@@ -245,15 +275,6 @@ const MessageModal = ({
                 </div>
               </div>
             )}
-          </div>
-
-          <div
-            className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl"
-            onClick={() => {
-              showGPS(messageId);
-            }}
-          >
-            찾아가기
           </div>
           <div
             className="bg-brand-green rounded-[5px] text-center text-lg py-2 shadow-xl"

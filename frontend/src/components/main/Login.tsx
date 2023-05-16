@@ -36,17 +36,16 @@ const Main = () => {
     <div>
       {size > 450 ? (
         // 웹페이지 버전입니다.
-        <section className="w-[100vw] h-[100vh] flex">
+        <section className="w-[100vw] h-[50vh] flex">
           <MainDescription markerList={data} />
           <MapUpper markerList={data} />
         </section>
       ) : (
-        <div className="whyt6-[100vw] h-[100vh] bg-brand-baige max-w-[360px]">
-          <div className="w-[100vw] h-[2px] bg-brand-blue mt-[13%]">
-            <AiOutlineCloud className="text-[30px] mt-[13%] ml-[20%] text-brand-blue" />
-            <AiOutlineCloud className="text-[30px] ml-[70%] text-brand-blue" />
-          </div>
-          <div className="mt-[20%] h-[100px] w-full overflow-hidden ">
+        <div className="w-[100vw] h-[92%] bg-brand-baige">
+          <hr className="w-[100vw] border-brand-blue absolute top-[10%]" />
+          <AiOutlineCloud className="text-[30px] mt-[20%] ml-[20%] text-brand-blue" />
+          <AiOutlineCloud className="text-[30px] ml-[70%] text-brand-blue" />
+          <div className=" h-[100px] w-full overflow-hidden ">
             <div className="animate-show">
               <div
                 className=" first_text color: bg-brand-baige pt-[10%] h-[10vh] w-[100vw] 
@@ -67,8 +66,8 @@ const Main = () => {
               </div>
             </div>
           </div>
-          <div className="w-[100vw] h-[2px] bg-brand-red mt-[20%]"></div>
-          <div className="flex justify-center pt-[20vh]">
+          <hr className="w-[100vw] h-[2px] bg-brand-red absolute top-[40%]"></hr>
+          <div className="absolute top-[55%] left-[50%] translate-x-[-50%]">
             <a href={oauthlogin}>
               <Image
                 className="w-[30vh] h-[7vh]"
@@ -77,7 +76,7 @@ const Main = () => {
               />
             </a>
           </div>
-          <div className="w-[100vw] h-[2px] bg-brand-green mt-[40%]"></div>
+          <hr className="w-[100vw] h-[2px] bg-brand-green absolute bottom-[15%]"></hr>
         </div>
       )}
     </div>

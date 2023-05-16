@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={poppins.className}>
-      <body className="w-[100vw] h-[100vh] bg-brand-baige">
+      <body className="w-[100vw] h-[90vh] bg-brand-baige">
         <Providers>
           <ReduxProviders>
             <RouterGuard>{children}</RouterGuard>
