@@ -41,7 +41,6 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
     onSuccess: (data) => {
       // 사진 리스트 가져오기
       queryClient.invalidateQueries({ queryKey: ["initial-map"] });
-      reloadList();
     },
   });
 
@@ -79,6 +78,7 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
       new Blob([JSON.stringify(jsonData)], { type: "application/json" })
     );
     await mutate(formData);
+    await reloadList();
     await router.replace(`/map/${groupId}`);
   };
 
