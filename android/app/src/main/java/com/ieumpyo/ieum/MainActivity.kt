@@ -171,19 +171,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         fun reloadList(){
             initList("Bearer "+ accessToken.value.toString())
+
         }
 
     }
     fun setString(id:Int): String{
         var tmp=""
-        listAll=null
         val pinList = listGeofence as List<Pin>?
         if(pinList!=null){
             pinList.forEach{
                 if(it.pinId==id){
                     tmp = "${it.latitude}|${it.longitude}|${it.pinId}|poi|https://i-eum-u.com/|${it.pinId}"
                 }
-                listAll?.add("${it.latitude}|${it.longitude}|${it.pinId}|poi|https://i-eum-u.com/|${it.pinId}")
                 Log.d("showGPS",it.toString())
             }
         }
@@ -203,7 +202,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         var accessToken: MutableLiveData<String> = MutableLiveData()
         lateinit var db: notifiedLocationDB
         var listGeofence: List<Pin>? = null
-        var listAll: MutableList<String>?= mutableListOf<String>()
+        var listAll: MutableSet<String>?= mutableSetOf<String>()
     }
 
 
@@ -241,6 +240,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //        val fabutton=findViewById<FloatingActionButton>(R.id.floatingActionButton)
 //        fabutton.setOnClickListener{
 //            web.reload()
+//            initList("Bearer "+ accessToken.value.toString())
 //
 //        }
         lateinit var uri: Uri
@@ -515,6 +515,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         listGeofence = rawlist.result
                     }
                     listGeofence?.forEach{
+                        listAll?.add("${it.latitude}|${it.longitude}|${it.pinId}|poi|https://i-eum-u.com/|${it.pinId}")
                         val isTrue=intLst.binarySearch(it.pinId)
                         if(isTrue<0){
                             val tmp = geofenceHelper.getGeofence(it.pinId.toString(), Pair(it.latitude, it.longitude),100.0f)
@@ -666,6 +667,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onPause() {
         super.onPause()
+
     }
 
     override fun onDestroy() {
