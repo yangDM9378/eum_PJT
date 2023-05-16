@@ -41,7 +41,7 @@ const Main = () => {
           <MapUpper markerList={data} />
         </section>
       ) : (
-        <div className="whyt6-[100vw] h-[100vh] bg-brand-baige max-w-[360px]">
+        <div className="w-[100vw] h-[100vh] bg-brand-baige">
           <div className="w-[100vw] h-[2px] bg-brand-blue mt-[13%]">
             <AiOutlineCloud className="text-[30px] mt-[13%] ml-[20%] text-brand-blue" />
             <AiOutlineCloud className="text-[30px] ml-[70%] text-brand-blue" />
@@ -68,7 +68,7 @@ const Main = () => {
             </div>
           </div>
           <div className="w-[100vw] h-[2px] bg-brand-red mt-[20%]"></div>
-          <div className="flex justify-center pt-[20vh]">
+          <div className="flex justify-center items-center pt-[20vh]">
             <a href={oauthlogin}>
               <Image
                 className="w-[30vh] h-[7vh]"
