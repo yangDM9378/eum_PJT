@@ -78,8 +78,8 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
       new Blob([JSON.stringify(jsonData)], { type: "application/json" })
     );
     await mutate(formData);
-    await reloadList();
     await router.replace(`/map/${groupId}`);
+    window.alert("메시지가 생성되었습니다");
   };
 
   return (
