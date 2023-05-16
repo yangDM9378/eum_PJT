@@ -116,6 +116,11 @@ const GroupPhotoModal = ({
     }
   };
 
+  // 소켓 테스트
+  const goSocket = () => {
+    router.replace(`/soket/${selected}`);
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -161,6 +166,7 @@ const GroupPhotoModal = ({
         >
           꾸미기
         </button>
+        <button onClick={goSocket}>소켓방으로</button>
       </div>
     </Modal>
   );

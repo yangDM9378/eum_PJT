@@ -1,9 +1,7 @@
 package com.eumpyo.eum.api.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
@@ -30,6 +28,10 @@ public class WebSocket {
         }else{
             log.info("이미 연결된 session");
         }
+
+        for (Session s : rooms.keySet()){
+            log.info("{}", s);
+        }
     }
 
     @OnMessage
@@ -49,11 +51,6 @@ public class WebSocket {
                 if (rooms.get(s).equals(roomNo)) {
                     sessions.add(session);
                 }
-            }
-
-            for (Session s : sessions) {
-                log.info("send data : {}", st.nextToken());
-                s.getBasicRemote().sendText(st.nextToken());
             }
         }
 

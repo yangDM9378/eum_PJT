@@ -8,5 +8,5 @@ export default function GroupPage() {
       <GroupNav />
       <GroupList />
     </div>
-  ); 
+  );
 }
