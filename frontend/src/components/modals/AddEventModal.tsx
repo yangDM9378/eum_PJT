@@ -79,7 +79,7 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
     );
     await mutate(formData);
     await router.replace(`/map/${groupId}`);
-    await reloadList();
+    reloadList();
   };
 
   return (
