@@ -169,6 +169,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             mTTS?.speak(msg,TextToSpeech.QUEUE_FLUSH,null)
         }
 
+        fun reloadList(){
+            initList("Bearer "+ accessToken.value.toString())
+        }
+
     }
     fun setString(id:Int): String{
         var tmp=""
@@ -234,12 +238,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
 //        val refreshLayout = findViewById<SwipeRefreshLayout>(R.id.contentSwipeLayout)
-        val fabutton=findViewById<FloatingActionButton>(R.id.floatingActionButton)
-        fabutton.setOnClickListener{
-            web.reload()
-            initList("Bearer "+ accessToken.value.toString())
-
-        }
+//        val fabutton=findViewById<FloatingActionButton>(R.id.floatingActionButton)
+//        fabutton.setOnClickListener{
+//            web.reload()
+//
+//        }
         lateinit var uri: Uri
 
         accessToken=getCookie(target_url,"accessToken")
