@@ -46,6 +46,11 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
 
   const router = useRouter();
 
+  const reloadList = () => {
+    if ((window as any).Android) {
+      (window as any).Android.reloadList();
+    }
+  };
   const addEvent = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     const formData = new FormData();
@@ -74,6 +79,7 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
     );
     await mutate(formData);
     await router.replace(`/map/${groupId}`);
+    await reloadList();
   };
 
   return (

@@ -15,9 +15,7 @@ const Pose = () => {
     setModalOpen(true);
   };
 
-  const originImageUrl = useAppSelector(
-    (state) => state.addEventReducer.originimageurl
-  );
+  const originImageUrl = useAppSelector((state) => state.addEventReducer.originimageurl);
 
   useEffect(() => {
     SetPoseImage(originImageUrl);
@@ -40,11 +38,7 @@ const Pose = () => {
         >
           이벤트 등록
         </button>
-        <AddEventModal
-          modalOpen={modalOpen}
-          setModalOpen={setModalOpen}
-          image={PoseImage}
-        />
+        <AddEventModal modalOpen={modalOpen} setModalOpen={setModalOpen} image={PoseImage} />
       </div>
     </div>
   );
