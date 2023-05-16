@@ -11,6 +11,7 @@ import { isConstructorDeclaration } from "typescript";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";
 import { setFrameImg } from "@/redux/map/mapSlice";
+import { useAppSelector } from "@/redux/hooks";
 
 type ModalProps = {
   isOpen: boolean;
@@ -115,10 +116,12 @@ const GroupPhotoModal = ({
       alert("뒤로 가셔서 사진을 다시 선택해 주세요");
     }
   };
+  const userName = useAppSelector((state) => state.userReducer.name);
 
   // 소켓 테스트
   const goSocket = () => {
-    router.replace(`/soket/${selected}`);
+    const encode = encodeURIComponent(userName + selected);
+    router.replace(`/soket/${encode}`);
   };
 
   return (
