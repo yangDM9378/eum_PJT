@@ -11,7 +11,14 @@ const UserName = () => {
   const openSocket = () => {
     if (ws) {
       ws.current = new WebSocket("ws://localhost:8080/socket/room");
+
+      ws.current.onmessage = (message) => {
+        const dataSet = JSON.parse(message.data);
+        console.log(dataSet)
+    }
+
       const data = {
+        userName:userName,
         roomId: decode,
         x: 25,
         y: 47,
@@ -25,6 +32,23 @@ const UserName = () => {
       };
     }
   };
+  
+  const sendData = () => {
+    if (ws?.current?.readyState === 0 ){
+      ws.current.onopen = () => {
+        console.log(ws.current?.readyState)
+      }
+    } else {
+      const data = {
+        roomId: decode,
+        x: 1,
+        y: 20,
+      };
+      const temp = JSON.stringify(data);
+      ws?.current?.send(temp)
+    }
+  }
+
   const roomCode = async () => {
     const code = pathName.substring(7);
     alert("초대 코드가 복사되었습니다." + code);
@@ -47,6 +71,7 @@ const UserName = () => {
   return (
     <section>
       <div onClick={roomCode}>초대 코드</div>
+      <div onClick={sendData}>클릭하세요</div>
     </section>
   );
 };
