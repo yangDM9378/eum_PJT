@@ -14,6 +14,7 @@ import GroupPhotoModal from "./GroupPhotoModal";
 import { pictureid } from "@/redux/doevent/messageSlice";
 import { getPinImage } from "@/services/galleryApi";
 import { useQuery } from "@tanstack/react-query";
+import { getSpeech } from "@/libs/helper/getSpeech";
 
 const customStyles = {
   overlay: {
@@ -157,6 +158,21 @@ const MessageModal = ({
   // useEffect(() => {
   //   dispatch(pictureid(selectedIdx));
   // }, [selectedIdx]);
+
+  // 음성 변환 목소리 preload
+  useEffect(() => {
+    window.speechSynthesis.getVoices();
+  }, []);
+
+  useEffect(() => {
+    if (detailData) {
+      speech(detailData.result.content);
+    }
+  }, [detailData]);
+
+  const speech = (value: string) => {
+    getSpeech(value);
+  };
 
   return (
     <Modal
