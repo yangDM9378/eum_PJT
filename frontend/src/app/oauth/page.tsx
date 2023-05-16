@@ -9,7 +9,7 @@ const OauthPage = () => {
   useEffect(() => {
     if (Cookies.get("accessToken")) {
       // const accesstoken = Cookies.get("accessToken");
-      router.push("/group");
+      router.replace("/group");
     }
   }, []);
   useEffect(() => {
