@@ -16,6 +16,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.speech.tts.TextToSpeech
+import android.speech.tts.TextToSpeech.ERROR
 import android.util.Log
 import android.view.WindowManager
 import android.webkit.CookieManager
@@ -30,6 +32,8 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -61,6 +65,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.net.URISyntaxException
 import java.util.Arrays
+import java.util.Locale
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -133,6 +138,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+    private var mTTS // TTS 변수 선언
+            : TextToSpeech? = null
 
     inner class WebAppInterface(private val mContext: Context) {
         @JavascriptInterface
@@ -150,16 +157,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 3)
             }
             val data = setString(pinId)
-            Toast.makeText(mContext, "문화재 찾아가기", Toast.LENGTH_SHORT).show()
+            Toast.makeText(mContext, "메시지 찾아가기", Toast.LENGTH_SHORT).show()
             val intent = Intent(mContext, MapGeoActivity::class.java)
 
             intent.putExtra("culturalProperty", data)
             mContext.startActivity(intent)
         }
 
+        @JavascriptInterface
+        fun doTTS(msg:String){
+            mTTS?.speak(msg,TextToSpeech.QUEUE_FLUSH,null)
+        }
+
     }
     fun setString(id:Int): String{
         var tmp=""
+        listAll=null
         val pinList = listGeofence as List<Pin>?
         if(pinList!=null){
             pinList.forEach{
@@ -200,6 +213,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mAdView = findViewById<AdView>(R.id.adView)
         val adRequest=AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
+
+        mTTS = TextToSpeech(this) { status ->
+            if (status != ERROR) {
+                // 언어를 선택한다.
+                mTTS?.setLanguage(Locale.KOREAN)
+            }
+        }
 
 //        val testDeviceIds = Arrays.asList("ca-app-pub-4728228463704876/6896938382")
         val testDeviceIds = Arrays.asList("ca-app-pub-3940256099942544/6300978111")
