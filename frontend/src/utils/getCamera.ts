@@ -37,6 +37,7 @@ const startCamera = async (
     }
   } catch (err) {
     alert("카메라 권한이 없습니다!");
+    // startCamera(videoRef, setIsCameraReady, isFrontCamera);
   }
 };
 

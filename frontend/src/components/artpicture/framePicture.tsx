@@ -33,10 +33,20 @@ const framePicture = (): JSX.Element => {
           width: 300,
           height: 350,
           name: "bgrect",
-          draggable: false,
-          listening: false,
+          draggable: true,
+          listening: true,
         });
         layer.add(bgrect);
+        // 사진크기 조절 및 회전
+        const tr = new Konva.Transformer({
+          visible: true,
+        });
+        layer.add(tr);
+        tr.nodes([bgrect]);
+        layer.on("tap", function () {
+          tr.visible(!tr.visible());
+          stage.draw();
+        });
         stageRef.current?.draw();
       };
     }
