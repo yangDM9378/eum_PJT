@@ -30,9 +30,16 @@ const MapUpper = ({ groupId }: Props) => {
     queryClient.invalidateQueries({ queryKey: ["initial-map"] });
   }, [groupId]);
 
+  const handleSuccess = () => {
+    if ((window as any).Android) {
+      (window as any).Android.reloadList();
+    }
+  };
+
   const { data, isLoading } = useQuery({
     queryKey: ["initial-map"],
     queryFn: async () => await getGroupPin(),
+    onSuccess: handleSuccess,
   });
 
   const dispatch = useAppDispatch();

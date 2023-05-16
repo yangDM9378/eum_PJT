@@ -29,6 +29,7 @@ class MapGeoActivity : AppCompatActivity() {
     lateinit var view: TrashcanGeoView
     lateinit var renderer: MapGeoRenderer
     private var disposable = Disposables.disposed()
+    lateinit var culturalProperty: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +39,8 @@ class MapGeoActivity : AppCompatActivity() {
         }
 
         val intent = getIntent()
-        val culturalProperty = intent.getStringExtra("culturalProperty")
-        Log.d("showGPS",culturalProperty.toString()+"!!")
+        culturalProperty = intent.getStringExtra("culturalProperty").toString()
+        Log.d("showGPSs",culturalProperty.toString()+"!!")
 //    // Setup ARCore session lifecycle helper and configuration.
         arCoreSessionHelper = ARCoreSessionLifecycleHelper(this)
         // If Session creation or Session.resume() fails, display a message and log detailed
