@@ -22,7 +22,7 @@ const EventAging = (): JSX.Element => {
     const stage = new Konva.Stage({
       container: "container",
       width: window.innerWidth - 20,
-      height: 300,
+      height: 500,
       ref: stageRef,
     });
     const layer = new Konva.Layer();
@@ -36,7 +36,7 @@ const EventAging = (): JSX.Element => {
         y: 0,
         image: bgimage,
         width: window.innerWidth - 10,
-        height: 300,
+        height: 500,
         name: "bgrect",
         draggable: false,
         listening: false,
