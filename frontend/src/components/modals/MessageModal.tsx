@@ -15,6 +15,7 @@ import { pictureid } from "@/redux/doevent/messageSlice";
 import { getPinImage } from "@/services/galleryApi";
 import { useQuery } from "@tanstack/react-query";
 import { getSpeech } from "@/libs/helper/getSpeech";
+import { AiFillSound } from "react-icons/ai";
 
 const customStyles = {
   overlay: {
@@ -87,7 +88,7 @@ const MessageModal = ({
       (window as any).Android.showGPS(pinId);
     }
   };
-  const doTTS = (msg: String) => {
+  const doTTS = (msg: string) => {
     if ((window as any).Android) {
       (window as any).Android.doTTS(msg);
     }
@@ -160,25 +161,6 @@ const MessageModal = ({
     setIsPhotoOpen(true);
   };
 
-  // useEffect(() => {
-  //   dispatch(pictureid(selectedIdx));
-  // }, [selectedIdx]);
-
-  // 음성 변환 목소리 preload
-  // useEffect(() => {
-  //   window.speechSynthesis.getVoices();
-  // }, []);
-
-  // useEffect(() => {
-  //   if (detailData) {
-  //     speech(detailData.result.content);
-  //   }
-  // }, [detailData]);
-
-  // const speech = (value: string) => {
-  //   getSpeech(value);
-  // };
-
   return (
     <Modal
       isOpen={messageOpen}
@@ -202,9 +184,13 @@ const MessageModal = ({
           />
           <div className="absolute left-[2%] top-[0%]">
             {detailData?.result.type === "pose" ? (
-              <div className="text-xs rounded-md p-1 bg-blue-400 text-white">따라 찍기</div>
+              <div className="text-xs rounded-md p-1 bg-blue-400 text-white">
+                따라 찍기
+              </div>
             ) : (
-              <div className="text-xs rounded-md p-1 bg-red-400 text-white">함께 찍기</div>
+              <div className="text-xs rounded-md p-1 bg-red-400 text-white">
+                함께 찍기
+              </div>
             )}
           </div>
           <div className="py-3 text-xl">{detailData?.result.title}</div>
@@ -214,18 +200,25 @@ const MessageModal = ({
               doTTS(detailData?.result.content);
             }}
           >
-            {detailData?.result.content}
+            <div className="flex justify-center items-center">
+              <AiFillSound className="w-[35px]" />
+              {detailData?.result.content}
+            </div>
           </div>
           <div className="flex flex-col items-end text-xs relative">
             <div>from {detailData.result.userName}</div>
             <div>{messageDate}</div>
             <div
-              className="absolute left-[0%] top-[-50%] text-xs w-[20%] h-[200%]"
+              className="absolute left-[0%] top-[-5%] text-xs w-[20%] h-[140%]"
               onClick={() => {
                 showGPS(messageId);
               }}
             >
-              <img src="/map/centerTarget.png" alt="" className="h-[68%] w-[70%] m-auto" />
+              <img
+                src="/map/centerTarget.png"
+                alt=""
+                className="h-[47%] w-[40%] m-auto"
+              />
               <div>찾아가기</div>
             </div>
           </div>
@@ -233,7 +226,7 @@ const MessageModal = ({
             <img
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${detailData.result.image}`}
               alt="이벤트사진"
-              className="h-[90%] w-[90%] rounded-[10px] shadow-xl border-2 "
+              className="h-[90%] w-[64%] rounded-[10px] shadow-xl  "
             />
           </div>
           <div className="flex flex-row mb-3 max-h-[30vh] justify-center">
@@ -247,7 +240,9 @@ const MessageModal = ({
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.image}`}
                     alt=""
                     className={`min-h-[10vh] my-[5%] rounded-md ${
-                      selectedIdx === image.pictureId ? "border-4 border-brand-red" : ""
+                      selectedIdx === image.pictureId
+                        ? "border-4 border-brand-red"
+                        : ""
                     }`}
                     width={70}
                     height={60}
@@ -264,7 +259,7 @@ const MessageModal = ({
                   alt="선택된 이미지"
                   height={270}
                   width={200}
-                  className="rounded-lg h-[25vh] my-auto"
+                  className="rounded-lg h-[25vh] my-auto shadow-xl"
                   onClick={() => {
                     CloseModal();
                   }}
@@ -272,7 +267,9 @@ const MessageModal = ({
                 <div className="font-gmarket-thin text-[12px] text-right mt-[2%]">
                   from {selectedInfo.name}
                 </div>
-                <div className="font-gmarket-thin text-[8px] text-right ">{selectedInfo.time}</div>
+                <div className="font-gmarket-thin text-[8px] text-right ">
+                  {selectedInfo.time}
+                </div>
               </div>
             )}
           </div>
@@ -284,7 +281,11 @@ const MessageModal = ({
           </div>
         </section>
       ) : (
-        <img src="/images/loading.gif" alt="loading" className="w-[100%] h-[100%]" />
+        <img
+          src="/images/loading.gif"
+          alt="loading"
+          className="w-[100%] h-[100%]"
+        />
       )}
     </Modal>
   );
