@@ -27,7 +27,7 @@ class MapGeoActivity : AppCompatActivity() {
 
     lateinit var arCoreSessionHelper: ARCoreSessionLifecycleHelper
     lateinit var view: TrashcanGeoView
-    private lateinit var renderer: MapGeoRenderer
+    lateinit var renderer: MapGeoRenderer
     private var disposable = Disposables.disposed()
 
     override fun onCreate(savedInstanceState: Bundle?) {

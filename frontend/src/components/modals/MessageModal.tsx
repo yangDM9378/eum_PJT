@@ -87,6 +87,11 @@ const MessageModal = ({
       (window as any).Android.showGPS(pinId);
     }
   };
+  const doTTS = (msg: String) => {
+    if ((window as any).Android) {
+      (window as any).Android.doTTS(msg);
+    }
+  };
 
   // 메시지에 사진들이 존재할 때 첫 렌더링시 사진 리스트의 처음 인덱스를 선택된 것으로 취급
   useEffect(() => {
@@ -197,17 +202,20 @@ const MessageModal = ({
           />
           <div className="absolute left-[2%] top-[0%]">
             {detailData?.result.type === "pose" ? (
-              <div className="text-xs rounded-md p-1 bg-blue-400 text-white">
-                따라 찍기
-              </div>
+              <div className="text-xs rounded-md p-1 bg-blue-400 text-white">따라 찍기</div>
             ) : (
-              <div className="text-xs rounded-md p-1 bg-red-400 text-white">
-                함께 찍기
-              </div>
+              <div className="text-xs rounded-md p-1 bg-red-400 text-white">함께 찍기</div>
             )}
           </div>
           <div className="py-3 text-xl">{detailData?.result.title}</div>
-          <div className="text-sm">{detailData?.result.content}</div>
+          <div
+            className="text-sm"
+            onClick={() => {
+              doTTS(detailData?.result.content);
+            }}
+          >
+            {detailData?.result.content}
+          </div>
           <div className="flex flex-col items-end text-xs relative">
             <div>from {detailData.result.userName}</div>
             <div>{messageDate}</div>
@@ -217,11 +225,7 @@ const MessageModal = ({
                 showGPS(messageId);
               }}
             >
-              <img
-                src="/map/centerTarget.png"
-                alt=""
-                className="h-[68%] w-[70%] m-auto"
-              />
+              <img src="/map/centerTarget.png" alt="" className="h-[68%] w-[70%] m-auto" />
               <div>찾아가기</div>
             </div>
           </div>
@@ -243,9 +247,7 @@ const MessageModal = ({
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.image}`}
                     alt=""
                     className={`min-h-[10vh] my-[5%] rounded-md ${
-                      selectedIdx === image.pictureId
-                        ? "border-4 border-brand-red"
-                        : ""
+                      selectedIdx === image.pictureId ? "border-4 border-brand-red" : ""
                     }`}
                     width={70}
                     height={60}
@@ -270,9 +272,7 @@ const MessageModal = ({
                 <div className="font-gmarket-thin text-[12px] text-right mt-[2%]">
                   from {selectedInfo.name}
                 </div>
-                <div className="font-gmarket-thin text-[8px] text-right ">
-                  {selectedInfo.time}
-                </div>
+                <div className="font-gmarket-thin text-[8px] text-right ">{selectedInfo.time}</div>
               </div>
             )}
           </div>
@@ -284,11 +284,7 @@ const MessageModal = ({
           </div>
         </section>
       ) : (
-        <img
-          src="/images/loading.gif"
-          alt="loading"
-          className="w-[100%] h-[100%]"
-        />
+        <img src="/images/loading.gif" alt="loading" className="w-[100%] h-[100%]" />
       )}
     </Modal>
   );

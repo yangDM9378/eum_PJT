@@ -38,7 +38,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.ieumpyo.ieum.R
 import com.ieumpyo.ieum.map.MapGeoActivity
 
-class MapView(val activity: MapGeoActivity, private val googleMap: GoogleMap): OnInfoWindowClickListener {
+class MapView(val activity: MapGeoActivity, val googleMap: GoogleMap): OnInfoWindowClickListener {
   companion object {
     const val TAG = "MapView"
   }
@@ -135,6 +135,15 @@ class MapView(val activity: MapGeoActivity, private val googleMap: GoogleMap): O
     val opt = BitmapFactory.Options()
     opt.inMutable = true
     val navigationIcon = BitmapFactory.decodeResource(activity.resources, iconId, opt)
+    if (navigationIcon == null) {
+      // Handle the case where navigationIcon is null
+      // You can log an error message or take appropriate action
+      // For example, you can return a default marker bitmap
+      Log.e(TAG, "Navigation icon is null")
+      // Return a default marker bitmap or perform appropriate action
+      return getDefaultMarkerBitmap(color, size)
+    }
+
     val width = (navigationIcon.width * size).toInt()
     val height = (navigationIcon.height * size).toInt()
     val scaledIcon = Bitmap.createScaledBitmap(navigationIcon, width, height, true)
@@ -144,7 +153,15 @@ class MapView(val activity: MapGeoActivity, private val googleMap: GoogleMap): O
     canvas.drawBitmap(scaledIcon, 0f, 0f, p)
     return scaledIcon
   }
-
+  private fun getDefaultMarkerBitmap(@ColorInt color: Int, size: Float): Bitmap {
+    // Create a default marker bitmap with the specified color and size
+    val width = 48 // Set the desired width
+    val height = 48 // Set the desired height
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    bitmap.eraseColor(color)
+    // You can also customize the default marker bitmap further if needed
+    return bitmap
+  }
   override fun onInfoWindowClick(marker: Marker) {
     val url: String = marker.tag as String? ?: return
     if (url.isEmpty()) {
