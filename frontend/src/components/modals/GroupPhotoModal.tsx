@@ -8,6 +8,9 @@ import { PictureDetail } from "@/types/picture";
 import GroupInfo from "../map/GroupInfo";
 import { Result } from "postcss";
 import { isConstructorDeclaration } from "typescript";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/redux/hooks";
+import { setFrameImg } from "@/redux/map/mapSlice";
 
 type ModalProps = {
   isOpen: boolean;
@@ -100,6 +103,19 @@ const GroupPhotoModal = ({
     setSelected(0);
   };
 
+  // 꾸미기 프레임으로 이동
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const goFrame = async () => {
+    if (photoInfo) {
+      dispatch(setFrameImg(photoInfo?.image));
+      await router.push("/artpicture");
+    } else {
+      alert("뒤로 가셔서 사진을 다시 선택해 주세요");
+    }
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -138,6 +154,12 @@ const GroupPhotoModal = ({
           onClick={sharephoto}
         >
           공유하기
+        </button>
+        <button
+          className="bg-brand-green w-[50%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl"
+          onClick={goFrame}
+        >
+          꾸미기
         </button>
       </div>
     </Modal>

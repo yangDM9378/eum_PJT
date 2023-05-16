@@ -12,11 +12,10 @@ import BackIcon from "../common/BackIcon";
 const AddEventCamera = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const routerPath = usePathname();
   const pathSelector = useAppSelector((state) => state.coordsReducer.path);
   const [pathOption, setPathOption] = useState(pathSelector);
   const [isCameraReady, setIsCameraReady] = useState(false);
-  const [isFrontCamera, setIsFrontCamera] = useState(false);
+  const [isFrontCamera, setIsFrontCamera] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // 자동으로 켜져있는 camera 시작

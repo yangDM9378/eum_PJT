@@ -2,7 +2,7 @@
 const startCamera = async (
   videoRef: React.RefObject<HTMLVideoElement>,
   setIsCameraReady: React.Dispatch<React.SetStateAction<boolean>>,
-  isFrontCamera: boolean // 기본값은 후면 카메라
+  isFrontCamera: boolean // 기본값은 전 카메라
 ) => {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({

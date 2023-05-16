@@ -9,6 +9,7 @@ const initialState = {
   path: "",
   groupId: 0,
   pinId: -1,
+  frameImg: "",
 };
 
 export const coords = createSlice({
@@ -28,9 +29,12 @@ export const coords = createSlice({
     setPinId: (state, action: PayloadAction<number>) => {
       state.pinId = action.payload;
     },
+    setFrameImg: (state, action: PayloadAction<string>) => {
+      state.frameImg = action.payload;
+    },
   },
 });
 
-export const { reset, assign, destination, setGroupId, setPinId } =
+export const { reset, assign, destination, setGroupId, setPinId, setFrameImg } =
   coords.actions;
 export default coords.reducer;
