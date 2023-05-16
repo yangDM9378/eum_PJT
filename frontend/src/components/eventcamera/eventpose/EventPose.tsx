@@ -55,7 +55,6 @@ const EventPose = () => {
       setLoading(true);
       await convertURLtoFile(eventImg, picturImg);
       const response = await postPose(formData);
-      console.log(response.result);
       if (response.result == false) {
         throw new Error("포즈를 다시 취해주세요");
       }
@@ -105,10 +104,10 @@ const EventPose = () => {
       </p>
 
       {/* 핀 이미지 */}
-      <div className="h-[76vh] flex flex-col justify-evenly items-center">
+      <div className="flex flex-col justify-evenly items-center">
         {pinImg && (
           <Image
-            className="rounded-lg jborder border-brand-blue border-spacing-1 drop-hadow-2xl"
+            className="h-[36vh] my-[1vh] rounded-lg jborder border-brand-blue border-spacing-1 drop-shadow-2xl"
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${pinImg}`}
             alt="pinImg"
             width={320}
@@ -119,7 +118,7 @@ const EventPose = () => {
         {/* 사진찍은 이미지 */}
         {picImg && (
           <Image
-            className="border rounded-lg border-brand-blue border-spacing-1 drop-hadow-2xl"
+            className="h-[36vh] my-[1vh] border rounded-lg border-brand-blue border-spacing-1 drop-shadow-2xl"
             src={picImg}
             alt="picImg"
             width={320}
