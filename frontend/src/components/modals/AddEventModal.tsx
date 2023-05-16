@@ -41,6 +41,7 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
     onSuccess: (data) => {
       // 사진 리스트 가져오기
       queryClient.invalidateQueries({ queryKey: ["initial-map"] });
+      reloadList();
     },
   });
 
@@ -119,9 +120,6 @@ const AddEventModal = ({ modalOpen, setModalOpen, image }: ModalProps) => {
             <button
               className="rounded-2xl bg-brand-red w-[40vw] h-[5vh] mt-[2vh] font-gmarket-thin"
               type="submit"
-              onClick={() => {
-                reloadList();
-              }}
             >
               {isLoading ? "등록 중..." : "등록하기"}
             </button>
