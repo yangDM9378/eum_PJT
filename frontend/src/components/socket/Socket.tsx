@@ -8,7 +8,6 @@ const UserName = () => {
   const userName = useAppSelector((state) => state.userReducer.name);
   const pathName = usePathname();
   const decode = decodeURIComponent(pathName.substring(7));
-  console.log(decode);
   const openSocket = () => {
     if (ws) {
       ws.current = new WebSocket("ws://localhost:8080/socket/room");
@@ -26,11 +25,30 @@ const UserName = () => {
       };
     }
   };
+  const roomCode = async () => {
+    const code = pathName.substring(7);
+    alert("초대 코드가 복사되었습니다." + code);
+    if ((window as any).Android) {
+      (window as any).Android.copyToClipboard(code);
+    } else {
+      const clipboardPermission = await navigator.permissions.query({
+        name: "clipboard-write" as PermissionName,
+      });
+      if (clipboardPermission.state === "granted") {
+        await navigator.clipboard.writeText(code);
+      } else {
+      }
+    }
+  };
 
   useEffect(() => {
     openSocket();
   }, []);
-  return <div>{userName}</div>;
+  return (
+    <section>
+      <div onClick={roomCode}>초대 코드</div>
+    </section>
+  );
 };
 
 export default UserName;
