@@ -176,19 +176,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
     fun setString(id:Int): String{
-        var tmp=""
-        val pinList = listGeofence as List<Pin>?
-        if(pinList!=null){
-            pinList.forEach{
+        lateinit var tmp:String
+        val pinList = listGeofence as List<Pin>
+            pinList?.forEach{
                 if(it.pinId==id){
                     tmp = "${it.latitude}|${it.longitude}|${it.pinId}|poi|https://i-eum-u.com/|${it.pinId}"
+                    return tmp
                 }
-                Log.d("showGPS",it.toString())
             }
-        }
-        Log.d("showGPS", listAll.toString()+"!!")
         return tmp
-
     }
     var cameraPath = ""
     var mWebViewImageUpload: ValueCallback<Array<Uri>>? = null
