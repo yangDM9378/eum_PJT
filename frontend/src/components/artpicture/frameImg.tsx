@@ -14,10 +14,10 @@ interface StickerRes {
   degree: number;
 }
 
-interface WebSocketReq {
+interface WebSocketRes {
   roomId: string;
   userName: string;
-  stickerRes: StickerRes;
+  stickerRes: StickerRes[];
   frameUrl: string;
 }
 
@@ -25,13 +25,15 @@ const FrameImg = () => {
   const ws = useRef<null | WebSocket>(); //webSocket을 담는 변수,
   const userName = useAppSelector((state) => state.userReducer.name);
   const frameUrl = useAppSelector((state) => state.coordsReducer.frameImg);
+  const [socketData, setSocketData] = useState<WebSocketRes>();
 
-  const openSocket = async () => {
+  const openSocket = () => {
     if (ws) {
       ws.current = new WebSocket("ws://localhost:8080/socket/room");
       ws.current.onmessage = (message) => {
-        const dataSet = JSON.parse(message.data);
-        console.log(dataSet);
+        const dataSet: WebSocketRes = JSON.parse(message.data);
+        console.log("data", dataSet);
+        setSocketData(dataSet);
       };
 
       const stickerData = {
@@ -42,13 +44,12 @@ const FrameImg = () => {
         height: null,
         degree: null,
       };
-      const blobRes = await (await fetch(frameUrl)).blob();
 
       const data = {
         roomId: decoCode,
         userName: userName,
-        stickerRes: stickerData,
-        frameUrl: blobRes,
+        frameUrl:
+          "https://webisfree.com/static/uploads/2019/6639_images194.jpg",
       };
 
       const temp = JSON.stringify(data);
@@ -58,6 +59,8 @@ const FrameImg = () => {
           ws.current.send(temp);
         }
       };
+    } else {
+      console.log("없어요");
     }
   };
 
@@ -70,15 +73,13 @@ const FrameImg = () => {
       height: null,
       degree: null,
     };
-    const blobRes = await (await fetch(frameUrl)).blob();
 
     const data = {
       roomId: decoCode,
       userName: userName,
       stickerRes: stickerData,
-      frameUrl: blobRes,
+      frameUrl: "https://webisfree.com/static/uploads/2019/6639_images194.jpg",
     };
-    console.log(blobRes);
 
     const temp = JSON.stringify(data);
     if (ws?.current?.readyState === 0) {
@@ -90,52 +91,6 @@ const FrameImg = () => {
       ws?.current?.send(temp);
     }
   };
-
-  // 소켓 열기
-  // const openSocket = () => {
-  //   if (ws) {
-  //     ws.current = new WebSocket("ws://localhost:8080/socket/room");
-
-  //     ws.current.onmessage = (message) => {
-  //       const dataSet = JSON.parse(message.data);
-  //       console.log(dataSet);
-  //     };
-
-  //     console.log("소켓 연결");
-  //   }
-  // };
-
-  // const sendData = () => {
-  //   openSocket();
-  //   console.log("연결");
-  //   const stickerData = {
-  //     stickerId: null,
-  //     x: null,
-  //     y: null,
-  //     width: null,
-  //     height: null,
-  //     degree: null,
-  //   };
-  //   const data = {
-  //     roomId: decoCode,
-  //     userName: userName,
-  //     stickerRes: stickerData,
-  //     frameUrl:
-  //       "https://www.newyorker.com/culture/culture-desk/what-the-new-movie-misses-about-stephen-kings-it",
-  //   };
-
-  //   const temp = JSON.stringify(data);
-
-  //   if (ws?.current?.readyState === 0) {
-  //     ws.current.onopen = () => {
-  //       console.log(ws.current?.readyState);
-  //       ws?.current?.send(temp);
-  //     };
-  //   } else {
-  //     console.log(ws.current?.readyState);
-  //     ws?.current?.send(temp);
-  //   }
-  // };
 
   useEffect(() => {
     openSocket();
@@ -237,7 +192,6 @@ const FrameImg = () => {
     <div className="h-[92vh] flex flex-col items-center justify-center">
       <div onClick={roomCode}>초대 코드</div>
       <div onClick={sendData}>클릭하세요</div>
-
       <Stage width={300} height={350} ref={stageRef}>
         <Layer>
           {originImg && (
