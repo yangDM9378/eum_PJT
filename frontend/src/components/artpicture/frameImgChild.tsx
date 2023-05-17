@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Rect, Transformer, Image as KonvaImage, Group } from "react-konva";
 
 type ShapeProps = {
@@ -18,6 +18,8 @@ interface IconProps {
   isSelected: boolean;
   onSelect: () => void;
   onChange: (newAttrs: ShapeProps) => void;
+  // onMouseDown: (e: any) => void;
+  // onTouchStart: (e: any) => void;
 }
 
 const FrameImgChild = ({
@@ -25,6 +27,8 @@ const FrameImgChild = ({
   isSelected,
   onSelect,
   onChange,
+  // onMouseDown,
+  // onTouchStart,
 }: IconProps) => {
   const shapeRef = useRef<any>();
   const groupRef = useRef<any>();
@@ -75,6 +79,8 @@ const FrameImgChild = ({
       draggable
       onDragMove={handleDragMove}
       onTransformEnd={handleTransformEnd}
+      // onMouseDown={onMouseDown}
+      // onTouchStart={onTouchStart}
     >
       <Rect
         onClick={onSelect}
@@ -85,6 +91,8 @@ const FrameImgChild = ({
         width={shapeProps.width}
         height={shapeProps.height}
         rotation={shapeProps.rotation}
+        // onMouseDown={onMouseDown}
+        // onTouchStart={onTouchStart}
         onTransformEnd={(e) => {
           const node = shapeRef.current;
           const scaleX = node.scaleX();
@@ -92,7 +100,7 @@ const FrameImgChild = ({
 
           node.scaleX(1);
           node.scaleY(1);
-    
+
           onChange({
             ...shapeProps,
             x: node.x(),
@@ -113,6 +121,8 @@ const FrameImgChild = ({
         image={shapeProps.src}
         onClick={onSelect}
         onTap={onSelect}
+        // onMouseDown={onMouseDown}
+        // onTouchStart={onTouchStart}
         onTransformEnd={(e) => {
           const node = shapeRef.current;
           const scaleX = node.scaleX();
