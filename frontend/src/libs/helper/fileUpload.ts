@@ -20,7 +20,6 @@ const uploadImageToS3 = async (base64Image: string, filename: string) => {
     Bucket: BUCKET_NAME,
     Key: filename,
     Body: dataBuffer,
-    ContentEncoding: "base64",
     ContentType: "image/png",
   };
 
@@ -28,7 +27,6 @@ const uploadImageToS3 = async (base64Image: string, filename: string) => {
     const s3Response = await s3.upload(params).promise();
     return s3Response.Location;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
