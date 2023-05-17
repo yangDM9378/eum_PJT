@@ -10,6 +10,7 @@ type ShapeProps = {
   width: number;
   height: number;
   src: CanvasImageSource;
+  rotation: number;
 };
 
 interface IconProps {
@@ -33,29 +34,26 @@ const FrameImgChild = ({
     const node = groupRef.current;
     const newX = e.target.x();
     const newY = e.target.y();
+    const newRotation = e.target.rotation();
 
-    node.position({ x: newX, y: newY });
+    node.position({ x: newX, y: newY, rotation: newRotation });
     onChange({
       ...shapeProps,
       x: newX,
       y: newY,
+      rotation: newRotation,
     });
   };
 
   const handleTransformEnd = (e: any) => {
-    const node = imageRef.current;
-    const scaleX = node.scaleX();
-    const scaleY = node.scaleY();
-
-    node.scaleX(1);
-    node.scaleY(1);
-    node.rotation(e.target.rotation());
+    const shapeNode = shapeRef.current;
+    const imageNode = imageRef.current;
+    const scaleX = imageNode.scaleX();
+    const scaleY = imageNode.scaleY();
     onChange({
       ...shapeProps,
-      x: node.x(),
-      y: node.y(),
-      width: Math.max(5, node.width() * scaleX),
-      height: Math.max(5, node.height() * scaleY),
+      width: Math.max(5, imageNode.width() * scaleX),
+      height: Math.max(5, imageNode.height() * scaleY),
     });
   };
 
@@ -86,6 +84,7 @@ const FrameImgChild = ({
         y={shapeProps.y}
         width={shapeProps.width}
         height={shapeProps.height}
+        rotation={shapeProps.rotation}
         onTransformEnd={(e) => {
           const node = shapeRef.current;
           const scaleX = node.scaleX();
@@ -93,10 +92,12 @@ const FrameImgChild = ({
 
           node.scaleX(1);
           node.scaleY(1);
+    
           onChange({
             ...shapeProps,
             x: node.x(),
             y: node.y(),
+            rotation: node.rotation(),
             width: Math.max(5, node.width() * scaleX),
             height: Math.max(5, node.height() * scaleY),
           });
@@ -108,20 +109,21 @@ const FrameImgChild = ({
         y={shapeProps.y}
         width={shapeProps.width}
         height={shapeProps.height}
+        rotation={shapeProps.rotation}
         image={shapeProps.src}
         onClick={onSelect}
         onTap={onSelect}
-        onTransformEnd={(e: any) => {
-          const node = imageRef.current;
+        onTransformEnd={(e) => {
+          const node = shapeRef.current;
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();
-
           node.scaleX(1);
           node.scaleY(1);
           onChange({
             ...shapeProps,
             x: node.x(),
             y: node.y(),
+            rotation: e.target.rotation(),
             width: Math.max(5, node.width() * scaleX),
             height: Math.max(5, node.height() * scaleY),
           });

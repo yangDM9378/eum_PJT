@@ -14,7 +14,6 @@ const frameImg = () => {
 
   const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
   useEffect(() => {
-    console.log(bgImg);
     if (bgImg) {
       const img = new window.Image();
       img.src = bgImg;
@@ -36,6 +35,7 @@ const frameImg = () => {
       y: number;
       width: number;
       height: number;
+      rotation: number;
     }[]
   >([]);
 
@@ -64,7 +64,6 @@ const frameImg = () => {
       newKonvaImage.src = newIcon.src;
       newKonvaImage.onload = () => {
         const iconId = nextImageId; // 새로운 이미지 ID 할당
-        // setNextImageId((prevId) => prevId + 1); // 다음 이미지 ID 업데이트
         setNextImageId(nextImageId + 1); // 다음 이미지 ID 업데이트
 
         const updatedIcons = [
@@ -105,7 +104,6 @@ const frameImg = () => {
               key={i}
               shapeProps={icon}
               onSelect={() => {
-                console.log(icon.id);
                 setSelectedId(icon.id);
               }}
               isSelected={icon.id === selectedId}
