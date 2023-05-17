@@ -26,7 +26,7 @@ const FrameImg = () => {
   const userName = useAppSelector((state) => state.userReducer.name);
   const frameUrl = useAppSelector((state) => state.coordsReducer.frameImg);
 
-  const openSocket = () => {
+  const openSocket = async () => {
     if (ws) {
       ws.current = new WebSocket("ws://localhost:8080/socket/room");
       ws.current.onmessage = (message) => {
@@ -42,12 +42,13 @@ const FrameImg = () => {
         height: null,
         degree: null,
       };
+      const blobRes = await (await fetch(frameUrl)).blob();
+
       const data = {
         roomId: decoCode,
         userName: userName,
         stickerRes: stickerData,
-        frameUrl:
-          "https://www.newyorker.com/culture/culture-desk/what-the-new-movie-misses-about-stephen-kings-it",
+        frameUrl: blobRes,
       };
 
       const temp = JSON.stringify(data);
@@ -60,7 +61,7 @@ const FrameImg = () => {
     }
   };
 
-  const sendData = () => {
+  const sendData = async () => {
     const stickerData = {
       stickerId: null,
       x: null,
@@ -69,13 +70,15 @@ const FrameImg = () => {
       height: null,
       degree: null,
     };
+    const blobRes = await (await fetch(frameUrl)).blob();
+
     const data = {
       roomId: decoCode,
       userName: userName,
       stickerRes: stickerData,
-      frameUrl:
-        "https://www.newyorker.com/culture/culture-desk/what-the-new-movie-misses-about-stephen-kings-it",
+      frameUrl: blobRes,
     };
+    console.log(blobRes);
 
     const temp = JSON.stringify(data);
     if (ws?.current?.readyState === 0) {
