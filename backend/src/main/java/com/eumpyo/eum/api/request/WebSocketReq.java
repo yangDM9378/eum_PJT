@@ -10,7 +10,11 @@ import lombok.ToString;
 public class WebSocketReq {
     String roomId;
     String userName;
+    Long stickerId;
     double x;
     double y;
+    double width;
+    double height;
+    double degree;
 
 }

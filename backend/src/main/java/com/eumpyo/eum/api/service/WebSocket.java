@@ -53,6 +53,10 @@ public class WebSocket {
                     .builder()
                     .x(webSocketReq.getX())
                     .y(webSocketReq.getY())
+                    .stickerId(webSocketReq.getStickerId())
+                    .width(webSocketReq.getWidth())
+                    .height(webSocketReq.getHeight())
+                    .degree(webSocketReq.getDegree())
                     .build();
 
             for (Session s : rooms.keySet()) {
