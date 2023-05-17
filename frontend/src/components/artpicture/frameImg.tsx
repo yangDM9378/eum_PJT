@@ -16,8 +16,8 @@ interface StickerRes {
 
 interface WebSocketRes {
   roomId: string;
-  userName: string;
-  stickerRes: StickerRes[];
+  userNames: string[];
+  stickers: StickerRes[];
   frameUrl: string;
 }
 
@@ -44,14 +44,13 @@ const FrameImg = () => {
         height: null,
         degree: null,
       };
-
+      // 방만들기 요청 데이터
       const data = {
         roomId: decoCode,
         userName: userName,
         frameUrl:
           "https://webisfree.com/static/uploads/2019/6639_images194.jpg",
       };
-
       const temp = JSON.stringify(data);
       console.log(temp);
       ws.current.onopen = () => {
@@ -74,6 +73,7 @@ const FrameImg = () => {
       degree: null,
     };
 
+    // 움직이는 시간
     const data = {
       roomId: decoCode,
       userName: userName,
@@ -192,6 +192,7 @@ const FrameImg = () => {
     <div className="h-[92vh] flex flex-col items-center justify-center">
       <div onClick={roomCode}>초대 코드</div>
       <div onClick={sendData}>클릭하세요</div>
+      {socketData ? <img src={socketData.frameUrl} alt="" /> : <></>}
       <Stage width={300} height={350} ref={stageRef}>
         <Layer>
           {originImg && (
