@@ -93,7 +93,8 @@ const framePicture = (): JSX.Element => {
         dataURL,
         `eum/temp/${Date.now().toString() + Math.random().toString()}.png`
       );
-      router.replace(`artpicture/frameimg`);
+      console.log(imageUrl);
+      // router.replace(`artpicture/frameimg`);
     }
   };
 

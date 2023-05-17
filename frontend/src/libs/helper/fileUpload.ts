@@ -9,6 +9,7 @@ const s3 = new AWS.S3({
 const uploadImageToS3 = async (base64Image: string, filename: string) => {
   // Remove 'data:image/png;base64,' from the string
   const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, ""); // Convert the base64 string to a buffer
+
   const dataBuffer = Buffer.from(base64Data, "base64");
   const BUCKET_NAME = process.env.NEXT_PUBLIC_S3_BUCKET_NAME;
 
@@ -21,6 +22,7 @@ const uploadImageToS3 = async (base64Image: string, filename: string) => {
     Key: filename,
     Body: dataBuffer,
     ContentType: "image/png",
+    ACL: "public-read",
   };
 
   try {
