@@ -29,6 +29,7 @@ const frameImg = () => {
 
   const [icons, setIcons] = useState<
     {
+
       id: number;
       src: CanvasImageSource;
       x: number;
@@ -51,9 +52,8 @@ const frameImg = () => {
   };
 
   useEffect(() => {
-    console.log(selectedId)
-  },[selectedId])
-
+    console.log(selectedId);
+  }, [selectedId]);
 
   // 아이콘 업데이트 하는 함수
   const handleChange = (title: number) => {
@@ -76,6 +76,7 @@ const frameImg = () => {
             y: 0,
             width: 120,
             height: 120,
+            rotation: 0
           },
         ];
         setIcons(updatedIcons);
@@ -104,7 +105,7 @@ const frameImg = () => {
               key={i}
               shapeProps={icon}
               onSelect={() => {
-                console.log(icon.id)
+                console.log(icon.id);
                 setSelectedId(icon.id);
               }}
               isSelected={icon.id === selectedId}
