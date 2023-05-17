@@ -178,7 +178,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     fun setString(id:Int): String{
         lateinit var tmp:String
-        val pinList = listGeofence as List<Pin>
+        val pinList = listGeofence
             pinList?.forEach{
                 if(it.pinId==id){
                     tmp = "${it.latitude}|${it.longitude}|${it.pinId}|poi|https://i-eum-u.com/|${it.pinId}"
