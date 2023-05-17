@@ -119,9 +119,14 @@ const GroupPhotoModal = ({
   const userName = useAppSelector((state) => state.userReducer.name);
 
   // 소켓 테스트
-  const goSocket = () => {
+  const goSocket = async () => {
     const encode = encodeURIComponent(userName + selected);
-    router.replace(`/soket/${encode}`);
+    if (photoInfo) {
+      dispatch(setFrameImg(photoInfo?.image));
+      await router.replace(`/${encode}/artpicture`);
+    } else {
+      alert("뒤로 가셔서 사진을 다시 선택해 주세요");
+    }
   };
 
   return (

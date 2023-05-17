@@ -14,11 +14,11 @@ const UserName = () => {
 
       ws.current.onmessage = (message) => {
         const dataSet = JSON.parse(message.data);
-        console.log(dataSet)
-    }
+        console.log(dataSet);
+      };
 
       const data = {
-        userName:userName,
+        userName: userName,
         roomId: decode,
         x: 25,
         y: 47,
@@ -32,12 +32,12 @@ const UserName = () => {
       };
     }
   };
-  
+
   const sendData = () => {
-    if (ws?.current?.readyState === 0 ){
+    if (ws?.current?.readyState === 0) {
       ws.current.onopen = () => {
-        console.log(ws.current?.readyState)
-      }
+        console.log(ws.current?.readyState);
+      };
     } else {
       const data = {
         roomId: decode,
@@ -45,9 +45,9 @@ const UserName = () => {
         y: 20,
       };
       const temp = JSON.stringify(data);
-      ws?.current?.send(temp)
+      ws?.current?.send(temp);
     }
-  }
+  };
 
   const roomCode = async () => {
     const code = pathName.substring(7);
@@ -61,6 +61,7 @@ const UserName = () => {
       if (clipboardPermission.state === "granted") {
         await navigator.clipboard.writeText(code);
       } else {
+        console.log("");
       }
     }
   };

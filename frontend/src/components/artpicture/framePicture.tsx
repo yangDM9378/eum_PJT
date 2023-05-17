@@ -6,13 +6,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { setFrameImg } from "@/redux/map/mapSlice";
+import { usePathname } from "next/navigation";
 
 const framePicture = (): JSX.Element => {
   const pictureImg = useAppSelector((state) => state.coordsReducer.frameImg);
   const stageRef = useRef<Konva.Stage>();
   const layerRef = useRef<Konva.Layer>();
   const [selectFrame, setSelectFrame] = useState("");
-
+  const path = usePathname();
   useEffect(() => {
     const stage = new Konva.Stage({
       container: "container",
@@ -88,7 +89,7 @@ const framePicture = (): JSX.Element => {
       stageRef.current.draw();
       const dataURL = await stageRef.current.toDataURL({ pixelRatio: 1 });
       dispatch(setFrameImg(dataURL));
-      await router.replace(`artpicture/frameimg`);
+      await router.replace(`${path}/frameimg`);
     }
   };
 

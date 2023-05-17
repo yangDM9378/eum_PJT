@@ -1,10 +1,81 @@
 "use client";
+// 스티커 컴포넌트
 
 import { useAppSelector } from "@/redux/hooks";
 import { useEffect, useState, useRef } from "react";
 import { Stage, Layer, Image, Group, Transformer } from "react-konva";
+import { usePathname } from "next/navigation";
 
 const FrameImg = () => {
+  // 꾸미기 방 초대 코드
+  const path = usePathname();
+  const decoCode = path.substring(1, path.length - 20);
+
+  const roomCode = async () => {
+    alert("초대 코드가 복사되었습니다." + decoCode);
+    if ((window as any).Android) {
+      (window as any).Android.copyToClipboard(decoCode);
+    } else {
+      const clipboardPermission = await navigator.permissions.query({
+        name: "clipboard-write" as PermissionName,
+      });
+      if (clipboardPermission.state === "granted") {
+        await navigator.clipboard.writeText(decoCode);
+      } else {
+        console.log("");
+      }
+    }
+  };
+
+  // 소켓 열기
+  const userName = useAppSelector((state) => state.userReducer.name);
+
+  const ws = useRef<null | WebSocket>(); //webSocket을 담는 변수,
+
+  const openSocket = () => {
+    if (ws) {
+      ws.current = new WebSocket("ws://localhost:8080/socket/room");
+      ws.current.onmessage = (message) => {
+        const dataSet = JSON.parse(message.data);
+        console.log(dataSet);
+      };
+
+      const data = {
+        frameUrl: frameImg,
+        userName: userName,
+        roomId: decoCode,
+      };
+
+      const temp = JSON.stringify(data);
+      console.log(temp);
+      ws.current.onopen = () => {
+        if (ws.current) {
+          ws.current.send(temp);
+        }
+      };
+    }
+  };
+
+  const sendData = () => {
+    if (ws?.current?.readyState === 0) {
+      ws.current.onopen = () => {
+        console.log(ws.current?.readyState);
+      };
+    } else {
+      const data = {
+        roomId: decoCode,
+        x: 1,
+        y: 20,
+      };
+      const temp = JSON.stringify(data);
+      ws?.current?.send(temp);
+    }
+  };
+
+  useEffect(() => {
+    openSocket();
+  }, []);
+
   const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
     undefined
   );
@@ -80,6 +151,9 @@ const FrameImg = () => {
 
   return (
     <div className="h-[92vh] flex flex-col items-center justify-center">
+      <div onClick={roomCode}>초대 코드</div>
+      <div onClick={sendData}>클릭하세요</div>
+
       <Stage width={300} height={350} ref={stageRef}>
         <Layer>
           {originImg && (

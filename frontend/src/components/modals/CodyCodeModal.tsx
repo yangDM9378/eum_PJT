@@ -31,7 +31,7 @@ const CodyCodeModal = ({ isOpen, setIsOpen }: ModalProps) => {
   const router = useRouter();
 
   const enterCode = () => {
-    router.replace(`/soket/${inputCode}`);
+    router.replace(`/${inputCode}/artpicture/frameimg`);
   };
   return (
     <Modal
