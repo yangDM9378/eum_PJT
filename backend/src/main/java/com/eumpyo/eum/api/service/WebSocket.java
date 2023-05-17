@@ -1,6 +1,8 @@
 package com.eumpyo.eum.api.service;
 
+import com.eumpyo.eum.api.request.StickerReq;
 import com.eumpyo.eum.api.request.WebSocketReq;
+import com.eumpyo.eum.api.response.StickerRes;
 import com.eumpyo.eum.api.response.WebSocketRes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +20,8 @@ import java.util.*;
 @Service
 @ServerEndpoint("/socket/room")
 public class WebSocket {
-    // 포함 되어야 할 정보 Session, roomId
-    private static Map<Session, String> clients = Collections.synchronizedMap(new HashMap<>());
+    // 포함 되어야 할 정보 Session, userName, roomId
+    private static Map<Session, Map<String, String>> clients = Collections.synchronizedMap(new HashMap<>());
     private static Map<String, WebSocketRes> rooms = Collections.synchronizedMap(new HashMap<>());
 
     @OnOpen
@@ -66,18 +68,43 @@ public class WebSocket {
             }
 
             // session과 roomId를 매핑 시켜줍니다.
-            clients.put(session, webSocketReq.getRoomId());
+            clients.put(session, new HashMap<>() {{
+                put("userName", webSocketReq.getUserName());
+                put("roomId", webSocketReq.getRoomId());
+            }});
 
-            // 생성한 사용자에게 메시지 전송
-            String webSocketJson = objectMapper.writeValueAsString(webSocketRes);
-
-            for (Session s : clients.keySet()) {
-                if (clients.get(s).equals(webSocketReq.getRoomId())) {
-                    s.getBasicRemote().sendText(webSocketJson);
+        } else { // 할당된 방에 수정된 좌표를 보여줍니다.
+            WebSocketRes room = rooms.get(webSocketReq.getRoomId());
+            Set<StickerRes> stickers = room.getStickerRes();
+            for (StickerRes sticker : stickers) {
+                if (sticker.getStickerId() == webSocketReq.getStickerReq().getStickerId()) {
+                    stickers.remove(sticker);
+                    break;
                 }
             }
+            StickerReq stickerReq = webSocketReq.getStickerReq();
+            StickerRes stickerRes = StickerRes
+                    .builder()
+                    .x(stickerReq.getX())
+                    .y(stickerReq.getY())
+                    .stickerId(stickerReq.getStickerId())
+                    .degree(stickerReq.getDegree())
+                    .width(stickerReq.getWidth())
+                    .height(stickerReq.getHeight())
+                    .build();
+
+            stickers.add(stickerRes);
         }
 
+        WebSocketRes webSocketRes = rooms.get(webSocketReq.getRoomId());
+        // 생성한 사용자에게 메시지 전송
+        String webSocketJson = objectMapper.writeValueAsString(webSocketRes);
+
+        for (Session s : clients.keySet()) {
+            if (clients.get(s).get("roomId").equals(webSocketReq.getRoomId())) {
+                s.getBasicRemote().sendText(webSocketJson);
+            }
+        }
 //         좌표를 받은 x, y 좌표로 변경해주세요.
         log.info("receive message : {}", message);
     }
@@ -85,6 +112,14 @@ public class WebSocket {
     @OnClose
     public void onClose(Session session) {
         log.info("session close : {}", session);
+        String roomId = clients.get(session).get("roomId");
+        WebSocketRes webSocketRes = rooms.get(roomId);
+        webSocketRes.deleteUser(clients.get(session).get("userName"));
+
+        // 사용자가 방에 존재하지 않으면 삭제
+        if (webSocketRes.getUserNames().size() == 0){
+            rooms.remove(roomId);
+        }
 
         // 세션에서 사용자 삭제
         clients.remove(session);

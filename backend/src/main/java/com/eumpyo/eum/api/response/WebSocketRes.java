@@ -29,4 +29,8 @@ public class WebSocketRes {
     public void addUser(String userName) {
         this.userNames.add(userName);
     }
+
+    public void deleteUser(String userName) {
+        this.userNames.remove(userName);
+    }
 }

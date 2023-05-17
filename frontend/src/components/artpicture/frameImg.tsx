@@ -77,7 +77,7 @@ const FrameImg = () => {
     const data = {
       roomId: decoCode,
       userName: userName,
-      stickerRes: stickerData,
+      stickerReq: stickerData,
       frameUrl: "https://webisfree.com/static/uploads/2019/6639_images194.jpg",
     };
 
