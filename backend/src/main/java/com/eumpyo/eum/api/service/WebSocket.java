@@ -49,10 +49,12 @@ public class WebSocket {
 
         // Null이면 사용자에게 방이 할당되어 있지 않음
         if (clients.get(session) == null && !webSocketReq.getUserName().equals("")) {
+            log.info("사용자에게 방을 할당 합니다.");
             WebSocketRes webSocketRes = rooms.getOrDefault(webSocketReq.getRoomId(), null);
 
             // 방이 존재하지 않으면 방 생성
             if (webSocketRes == null) {
+                log.info("방을 생성합니다.");
                 webSocketRes = WebSocketRes
                         .builder()
                         .frameUrl(webSocketReq.getFrameUrl())
@@ -64,9 +66,11 @@ public class WebSocket {
                 rooms.put(webSocketReq.getRoomId(), webSocketRes);
 
             } else { // 기존에 존재하던 방에 참여
+                log.info("기존의 방에 참여 합니다.");
                 webSocketRes.addUser(webSocketReq.getUserName());
             }
 
+            log.info("사용자와 방을 매핑 시켜줍니다.");
             // session과 roomId를 매핑 시켜줍니다.
             clients.put(session, new HashMap<>() {{
                 put("userName", webSocketReq.getUserName());
@@ -74,6 +78,7 @@ public class WebSocket {
             }});
 
         } else { // 할당된 방에 수정된 좌표를 보여줍니다.
+            log.info("좌표를 수정합니다.");
             WebSocketRes room = rooms.get(webSocketReq.getRoomId());
             Set<StickerRes> stickers = room.getStickerRes();
             for (StickerRes sticker : stickers) {
@@ -82,6 +87,8 @@ public class WebSocket {
                     break;
                 }
             }
+
+            log.info("새로운 스티커를 만듭니다.");
             StickerReq stickerReq = webSocketReq.getStickerReq();
             StickerRes stickerRes = StickerRes
                     .builder()
@@ -96,11 +103,14 @@ public class WebSocket {
             stickers.add(stickerRes);
         }
 
+        log.info("전송할 메시지를 가져옵니다.");
         WebSocketRes webSocketRes = rooms.get(webSocketReq.getRoomId());
         // 생성한 사용자에게 메시지 전송
         String webSocketJson = objectMapper.writeValueAsString(webSocketRes);
 
         for (Session s : clients.keySet()) {
+            log.info(clients.get(s).get("roomId"));
+            log.info(webSocketReq.getRoomId());
             if (clients.get(s).get("roomId").equals(webSocketReq.getRoomId())) {
                 s.getBasicRemote().sendText(webSocketJson);
             }
@@ -112,14 +122,14 @@ public class WebSocket {
     @OnClose
     public void onClose(Session session) {
         log.info("session close : {}", session);
-        String roomId = clients.get(session).get("roomId");
-        WebSocketRes webSocketRes = rooms.get(roomId);
-        webSocketRes.deleteUser(clients.get(session).get("userName"));
-
-        // 사용자가 방에 존재하지 않으면 삭제
-        if (webSocketRes.getUserNames().size() == 0){
-            rooms.remove(roomId);
-        }
+//        String roomId = clients.get(session).get("roomId");
+//        WebSocketRes webSocketRes = rooms.get(roomId);
+//        webSocketRes.deleteUser(clients.get(session).get("userName"));
+//
+//        // 사용자가 방에 존재하지 않으면 삭제
+//        if (webSocketRes.getUserNames().size() == 0){
+//            rooms.remove(roomId);
+//        }
 
         // 세션에서 사용자 삭제
         clients.remove(session);
