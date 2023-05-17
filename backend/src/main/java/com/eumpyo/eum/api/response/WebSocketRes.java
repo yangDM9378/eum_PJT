@@ -14,16 +14,19 @@ import java.util.Set;
 @Getter
 public class WebSocketRes {
     Set<String> userNames = new HashSet<>();
-    StickerRes stickerRes;
+    Set<StickerRes> stickerRes = new HashSet<>();
     String frameUrl;
 
     @Builder
-    public WebSocketRes(StickerRes stickerRes, String frameUrl) {
-        this.stickerRes = stickerRes;
+    public WebSocketRes(String frameUrl) {
         this.frameUrl = frameUrl;
     }
 
-    public void addUserName (String userName) {
-        userNames.add(userName);
+    public void addSticker(StickerRes stickerRes) {
+        this.stickerRes.add(stickerRes);
+    }
+
+    public void addUser(String userName) {
+        this.userNames.add(userName);
     }
 }
