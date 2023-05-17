@@ -190,9 +190,26 @@ const FrameImg = () => {
 
   return (
     <div className="h-[92vh] flex flex-col items-center justify-center">
-      <div onClick={roomCode}>초대 코드</div>
-      <div onClick={sendData}>클릭하세요</div>
-      {socketData ? <img src={socketData.frameUrl} alt="" /> : <></>}
+      <div className="flex w-[90%] pb-4 gap-2">
+        {socketData &&
+          socketData.userNames.map((name, idx) => {
+            return (
+              <div
+                key={idx}
+                className="flex flex-col items-center justify-center"
+              >
+                <div className="rounded-[50%] overflow-hidden w-[8vh] h-[8vh]">
+                  <img
+                    src="https://i.pinimg.com/564x/c5/c0/50/c5c050a124eff3c5656822db9abddd8c.jpg"
+                    alt=""
+                    className="w-[100%] h-[100%] "
+                  />
+                </div>
+                <div>{name}</div>
+              </div>
+            );
+          })}
+      </div>
       <Stage width={300} height={350} ref={stageRef}>
         <Layer>
           {originImg && (
@@ -241,6 +258,8 @@ const FrameImg = () => {
           </div>
         ))}
       </div>
+      <div onClick={roomCode}>초대 코드</div>
+      <div onClick={sendData}>클릭하세요</div>
     </div>
   );
 };
