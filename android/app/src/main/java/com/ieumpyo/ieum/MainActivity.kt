@@ -171,6 +171,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         fun reloadList(){
             initList("Bearer "+ accessToken.value.toString())
+            Log.d("reloadList","!!!!!!!!!!!!!!!")
 
         }
 
