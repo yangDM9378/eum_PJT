@@ -1,5 +1,6 @@
 package com.eumpyo.eum.api.request;
 
+import com.eumpyo.eum.api.response.StickerRes;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,11 +11,7 @@ import lombok.ToString;
 public class WebSocketReq {
     String roomId;
     String userName;
-    Long stickerId;
-    double x;
-    double y;
-    double width;
-    double height;
-    double degree;
+    StickerRes stickerRes;
+    String frameUrl;
 
 }

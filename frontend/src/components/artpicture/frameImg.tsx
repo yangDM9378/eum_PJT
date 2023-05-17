@@ -34,7 +34,17 @@ const FrameImg = () => {
         const dataSet = JSON.parse(message.data);
         console.log(dataSet);
       };
+    }
+  };
 
+  const sendData = () => {
+    openSocket()
+    if (ws?.current?.readyState === 0) {
+      ws.current.onopen = () => {
+        console.log(ws.current?.readyState);
+      };
+    } else {
+      
       const stickerData = {
         stickerId : null,
         x : null,
@@ -52,30 +62,14 @@ const FrameImg = () => {
       };
       const temp = JSON.stringify(data);
 
-      if(ws.current.readyState === 0) {   //readyState는 웹 소켓 연결 상태를 나타냄
+      if(ws?.current?.readyState === 0) {   //readyState는 웹 소켓 연결 상태를 나타냄
         ws.current.onopen = () => { //webSocket이 맺어지고 난 후, 실행
-            console.log(ws?.current?.readyState);
+            console.log(ws?.current?.readyState,'상황');
             ws?.current?.send(temp);
         }
     }else {
-        ws.current.send(temp);
+        ws?.current?.send(temp);
     }
-    }
-  };
-
-  const sendData = () => {
-    if (ws?.current?.readyState === 0) {
-      ws.current.onopen = () => {
-        console.log(ws.current?.readyState);
-      };
-    } else {
-      const data = {
-        roomId: decoCode,
-        x: 1,
-        y: 20,
-      };
-      const temp = JSON.stringify(data);
-      ws?.current?.send(temp);
     }
   };
 
@@ -99,9 +93,6 @@ const FrameImg = () => {
     }
   };
 
-  useEffect(() => {
-    openSocket();
-  }, []);
 
   const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
     undefined
@@ -123,6 +114,11 @@ const FrameImg = () => {
   const [selectedImageId, setSelectedImageId] = useState<number | null>(null); // 선택된 이미지 ID
   const [transformers, setTransformers] = useState<number[]>([]);
 
+  // useEffect(()=>{
+  //   openSocket();
+
+  // },[originImg])
+
   useEffect(() => {
     if (frameUrl) {
       const img = new window.Image();
@@ -130,7 +126,6 @@ const FrameImg = () => {
       img.onload = () => {
         setOriginImg(img);
           };
-      openSocket();
     }
   }, [frameUrl]);
 

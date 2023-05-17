@@ -1,6 +1,5 @@
 package com.eumpyo.eum.api.response;
 
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,18 +11,21 @@ import java.util.Set;
 
 @NoArgsConstructor
 @Getter
-public class WebSocketRes {
+public class WebSocketRoomRes {
     Set<String> userNames = new HashSet<>();
-    StickerRes stickerRes;
+    List<StickerRes> stickers = new ArrayList<>();
     String frameUrl;
 
     @Builder
-    public WebSocketRes(StickerRes stickerRes, String frameUrl) {
-        this.stickerRes = stickerRes;
+    public WebSocketRoomRes(String userNames, String frameUrl) {
+        this.userNames.add(userNames);
         this.frameUrl = frameUrl;
     }
-
-    public void addUserName (String userName) {
+    public void addUserName(String userName) {
         userNames.add(userName);
+    }
+
+    public void deleteUserName(String userName) {
+        userNames.remove(userName);
     }
 }
