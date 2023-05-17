@@ -2,11 +2,83 @@
 // 스티커 컴포넌트
 
 import { useAppSelector } from "@/redux/hooks";
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Stage, Layer, Image, Group, Transformer } from "react-konva";
 import { usePathname } from "next/navigation";
+interface StickerRes{
+  stickerId : number;
+  x : number;
+  y : number;
+  width : number;
+  height : number;
+  degree : number;
+}
+
+interface WebSocketReq {
+  roomId : string;
+  userName :string;
+  stickerRes : StickerRes;
+  frameUrl : string;
+}
 
 const FrameImg = () => {
+  const ws = useRef<null | WebSocket>(); //webSocket을 담는 변수,
+  const userName = useAppSelector((state) => state.userReducer.name);
+
+  // 소켓 열기
+  const openSocket = () => {
+    if (ws) {
+      ws.current = new WebSocket("ws://localhost:8080/socket/room");
+     
+      ws.current.onmessage = (message) => {
+        const dataSet = JSON.parse(message.data);
+        console.log(dataSet);
+      };
+
+      const stickerData = {
+        stickerId : null,
+        x : null,
+        y : null,
+        width : null,
+        height : null,
+        degree : null,
+      }
+
+      const data = {
+        roomId : decoCode,
+        userName :userName,
+        stickerRes : stickerData,
+        frameUrl : frameUrl,
+      };
+      const temp = JSON.stringify(data);
+
+      if(ws.current.readyState === 0) {   //readyState는 웹 소켓 연결 상태를 나타냄
+        ws.current.onopen = () => { //webSocket이 맺어지고 난 후, 실행
+            console.log(ws?.current?.readyState);
+            ws?.current?.send(temp);
+        }
+    }else {
+        ws.current.send(temp);
+    }
+    }
+  };
+
+  const sendData = () => {
+    if (ws?.current?.readyState === 0) {
+      ws.current.onopen = () => {
+        console.log(ws.current?.readyState);
+      };
+    } else {
+      const data = {
+        roomId: decoCode,
+        x: 1,
+        y: 20,
+      };
+      const temp = JSON.stringify(data);
+      ws?.current?.send(temp);
+    }
+  };
+
   // 꾸미기 방 초대 코드
   const path = usePathname();
   const decoCode = path.substring(1, path.length - 20);
@@ -27,51 +99,6 @@ const FrameImg = () => {
     }
   };
 
-  // 소켓 열기
-  const userName = useAppSelector((state) => state.userReducer.name);
-
-  const ws = useRef<null | WebSocket>(); //webSocket을 담는 변수,
-
-  const openSocket = () => {
-    if (ws) {
-      ws.current = new WebSocket("ws://localhost:8080/socket/room");
-      ws.current.onmessage = (message) => {
-        const dataSet = JSON.parse(message.data);
-        console.log(dataSet);
-      };
-
-      const data = {
-        frameUrl: frameImg,
-        userName: userName,
-        roomId: decoCode,
-      };
-
-      const temp = JSON.stringify(data);
-      console.log(temp);
-      ws.current.onopen = () => {
-        if (ws.current) {
-          ws.current.send(temp);
-        }
-      };
-    }
-  };
-
-  const sendData = () => {
-    if (ws?.current?.readyState === 0) {
-      ws.current.onopen = () => {
-        console.log(ws.current?.readyState);
-      };
-    } else {
-      const data = {
-        roomId: decoCode,
-        x: 1,
-        y: 20,
-      };
-      const temp = JSON.stringify(data);
-      ws?.current?.send(temp);
-    }
-  };
-
   useEffect(() => {
     openSocket();
   }, []);
@@ -79,7 +106,7 @@ const FrameImg = () => {
   const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
     undefined
   );
-  const frameImg = useAppSelector((state) => state.coordsReducer.frameImg);
+  const frameUrl = useAppSelector((state) => state.coordsReducer.frameImg);
   const stageRef = useRef(null);
   const transformerRef = useRef(null);
   const [images, setImages] = useState<
@@ -97,14 +124,15 @@ const FrameImg = () => {
   const [transformers, setTransformers] = useState<number[]>([]);
 
   useEffect(() => {
-    if (frameImg) {
+    if (frameUrl) {
       const img = new window.Image();
-      img.src = frameImg;
+      img.src = frameUrl;
       img.onload = () => {
         setOriginImg(img);
-      };
+          };
+      openSocket();
     }
-  }, [frameImg]);
+  }, [frameUrl]);
 
   const assets = [1, 2, 3, 4];
 
@@ -149,7 +177,8 @@ const FrameImg = () => {
     setSelectedImageId(null);
   };
 
-  return (
+
+return (
     <div className="h-[92vh] flex flex-col items-center justify-center">
       <div onClick={roomCode}>초대 코드</div>
       <div onClick={sendData}>클릭하세요</div>

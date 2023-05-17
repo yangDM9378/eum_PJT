@@ -3,6 +3,23 @@
 import React, { useEffect, useRef } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import { usePathname } from "next/navigation";
+
+interface StickerRes{
+  stickerId : number;
+  x : number;
+  y : number;
+  width : number;
+  height : number;
+  degree : number;
+}
+
+interface WebSocketReq {
+  roomId : string;
+  userName :string;
+  stickerRes : StickerRes;
+  frameUrl : string;
+}
+
 const UserName = () => {
   const ws = useRef<null | WebSocket>(); //webSocket을 담는 변수,
   const userName = useAppSelector((state) => state.userReducer.name);
@@ -11,7 +28,6 @@ const UserName = () => {
   const openSocket = () => {
     if (ws) {
       ws.current = new WebSocket("ws://localhost:8080/socket/room");
-
       ws.current.onmessage = (message) => {
         const dataSet = JSON.parse(message.data);
         console.log(dataSet);
