@@ -4,20 +4,20 @@ import React, { useEffect, useRef } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import { usePathname } from "next/navigation";
 
-interface StickerRes{
-  stickerId : number;
-  x : number;
-  y : number;
-  width : number;
-  height : number;
-  degree : number;
+interface StickerRes {
+  stickerId: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  degree: number;
 }
 
 interface WebSocketReq {
-  roomId : string;
-  userName :string;
-  stickerRes : StickerRes;
-  frameUrl : string;
+  roomId: string;
+  userName: string;
+  stickerRes: StickerRes;
+  frameUrl: string;
 }
 
 const UserName = () => {

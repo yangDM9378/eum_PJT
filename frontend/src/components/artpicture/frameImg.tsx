@@ -5,73 +5,138 @@ import { useAppSelector } from "@/redux/hooks";
 import React, { useEffect, useState, useRef } from "react";
 import { Stage, Layer, Image, Group, Transformer } from "react-konva";
 import { usePathname } from "next/navigation";
-interface StickerRes{
-  stickerId : number;
-  x : number;
-  y : number;
-  width : number;
-  height : number;
-  degree : number;
+interface StickerRes {
+  stickerId: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  degree: number;
 }
 
 interface WebSocketReq {
-  roomId : string;
-  userName :string;
-  stickerRes : StickerRes;
-  frameUrl : string;
+  roomId: string;
+  userName: string;
+  stickerRes: StickerRes;
+  frameUrl: string;
 }
 
 const FrameImg = () => {
   const ws = useRef<null | WebSocket>(); //webSocket을 담는 변수,
   const userName = useAppSelector((state) => state.userReducer.name);
+  const frameUrl = useAppSelector((state) => state.coordsReducer.frameImg);
 
-  // 소켓 열기
   const openSocket = () => {
     if (ws) {
       ws.current = new WebSocket("ws://localhost:8080/socket/room");
-     
       ws.current.onmessage = (message) => {
         const dataSet = JSON.parse(message.data);
         console.log(dataSet);
+      };
+
+      const stickerData = {
+        stickerId: null,
+        x: null,
+        y: null,
+        width: null,
+        height: null,
+        degree: null,
+      };
+      const data = {
+        roomId: decoCode,
+        userName: userName,
+        stickerRes: stickerData,
+        frameUrl:
+          "https://www.newyorker.com/culture/culture-desk/what-the-new-movie-misses-about-stephen-kings-it",
+      };
+
+      const temp = JSON.stringify(data);
+      console.log(temp);
+      ws.current.onopen = () => {
+        if (ws.current) {
+          ws.current.send(temp);
+        }
       };
     }
   };
 
   const sendData = () => {
-    openSocket()
+    const stickerData = {
+      stickerId: null,
+      x: null,
+      y: null,
+      width: null,
+      height: null,
+      degree: null,
+    };
+    const data = {
+      roomId: decoCode,
+      userName: userName,
+      stickerRes: stickerData,
+      frameUrl:
+        "https://www.newyorker.com/culture/culture-desk/what-the-new-movie-misses-about-stephen-kings-it",
+    };
+
+    const temp = JSON.stringify(data);
     if (ws?.current?.readyState === 0) {
       ws.current.onopen = () => {
         console.log(ws.current?.readyState);
+        ws?.current?.send(temp);
       };
     } else {
-      
-      const stickerData = {
-        stickerId : null,
-        x : null,
-        y : null,
-        width : null,
-        height : null,
-        degree : null,
-      }
-
-      const data = {
-        roomId : decoCode,
-        userName :userName,
-        stickerRes : stickerData,
-        frameUrl : frameUrl,
-      };
-      const temp = JSON.stringify(data);
-
-      if(ws?.current?.readyState === 0) {   //readyState는 웹 소켓 연결 상태를 나타냄
-        ws.current.onopen = () => { //webSocket이 맺어지고 난 후, 실행
-            console.log(ws?.current?.readyState,'상황');
-            ws?.current?.send(temp);
-        }
-    }else {
-        ws?.current?.send(temp);
-    }
+      ws?.current?.send(temp);
     }
   };
+
+  // 소켓 열기
+  // const openSocket = () => {
+  //   if (ws) {
+  //     ws.current = new WebSocket("ws://localhost:8080/socket/room");
+
+  //     ws.current.onmessage = (message) => {
+  //       const dataSet = JSON.parse(message.data);
+  //       console.log(dataSet);
+  //     };
+
+  //     console.log("소켓 연결");
+  //   }
+  // };
+
+  // const sendData = () => {
+  //   openSocket();
+  //   console.log("연결");
+  //   const stickerData = {
+  //     stickerId: null,
+  //     x: null,
+  //     y: null,
+  //     width: null,
+  //     height: null,
+  //     degree: null,
+  //   };
+  //   const data = {
+  //     roomId: decoCode,
+  //     userName: userName,
+  //     stickerRes: stickerData,
+  //     frameUrl:
+  //       "https://www.newyorker.com/culture/culture-desk/what-the-new-movie-misses-about-stephen-kings-it",
+  //   };
+
+  //   const temp = JSON.stringify(data);
+
+  //   if (ws?.current?.readyState === 0) {
+  //     ws.current.onopen = () => {
+  //       console.log(ws.current?.readyState);
+  //       ws?.current?.send(temp);
+  //     };
+  //   } else {
+  //     console.log(ws.current?.readyState);
+  //     ws?.current?.send(temp);
+  //   }
+  // };
+
+  useEffect(() => {
+    openSocket();
+  }, []);
 
   // 꾸미기 방 초대 코드
   const path = usePathname();
@@ -93,11 +158,9 @@ const FrameImg = () => {
     }
   };
 
-
   const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
     undefined
   );
-  const frameUrl = useAppSelector((state) => state.coordsReducer.frameImg);
   const stageRef = useRef(null);
   const transformerRef = useRef(null);
   const [images, setImages] = useState<
@@ -114,18 +177,13 @@ const FrameImg = () => {
   const [selectedImageId, setSelectedImageId] = useState<number | null>(null); // 선택된 이미지 ID
   const [transformers, setTransformers] = useState<number[]>([]);
 
-  // useEffect(()=>{
-  //   openSocket();
-
-  // },[originImg])
-
   useEffect(() => {
     if (frameUrl) {
       const img = new window.Image();
       img.src = frameUrl;
       img.onload = () => {
         setOriginImg(img);
-          };
+      };
     }
   }, [frameUrl]);
 
@@ -172,8 +230,7 @@ const FrameImg = () => {
     setSelectedImageId(null);
   };
 
-
-return (
+  return (
     <div className="h-[92vh] flex flex-col items-center justify-center">
       <div onClick={roomCode}>초대 코드</div>
       <div onClick={sendData}>클릭하세요</div>
