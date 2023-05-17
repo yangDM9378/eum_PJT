@@ -14,7 +14,6 @@ const frameImg = () => {
 
   const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
   useEffect(() => {
-    console.log(bgImg);
     if (bgImg) {
       const img = new window.Image();
       img.src = bgImg;
@@ -50,10 +49,7 @@ const frameImg = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(selectedId)
-  },[selectedId])
-
+  useEffect(() => {}, [selectedId]);
 
   // 아이콘 업데이트 하는 함수
   const handleChange = (title: number) => {
@@ -104,7 +100,6 @@ const frameImg = () => {
               key={i}
               shapeProps={icon}
               onSelect={() => {
-                console.log(icon.id)
                 setSelectedId(icon.id);
               }}
               isSelected={icon.id === selectedId}
