@@ -5,13 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.File;
+
 @ToString
 @Setter
 @Getter
 public class WebSocketReq {
-    String roomId;
     String userName;
-    StickerRes stickerRes;
+    String roomId;
+    StickerReq stickerReq;
     String frameUrl;
 
 }

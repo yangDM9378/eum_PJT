@@ -16,7 +16,7 @@ interface StickerRes {
 
 interface WebSocketRes {
   roomId: string;
-  userName: string;
+  userName: string[];
   stickerRes: StickerRes[];
   frameUrl: string;
 }
