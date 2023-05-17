@@ -18,8 +18,6 @@ interface IconProps {
   isSelected: boolean;
   onSelect: () => void;
   onChange: (newAttrs: ShapeProps) => void;
-  // onMouseDown: (e: any) => void;
-  // onTouchStart: (e: any) => void;
 }
 
 const FrameImgChild = ({
@@ -27,11 +25,10 @@ const FrameImgChild = ({
   isSelected,
   onSelect,
   onChange,
-  // onMouseDown,
-  // onTouchStart,
 }: IconProps) => {
   const shapeRef = useRef<any>();
   const groupRef = useRef<any>();
+  const imageRef = useRef<any>(null);
   const trRef = useRef<any>();
 
   const handleDragMove = (e: any) => {
@@ -71,16 +68,12 @@ const FrameImgChild = ({
     }
   }, [isSelected]);
 
-  const imageRef = useRef<any>(null);
-
   return (
     <Group
       ref={groupRef}
       draggable
       onDragMove={handleDragMove}
       onTransformEnd={handleTransformEnd}
-      // onMouseDown={onMouseDown}
-      // onTouchStart={onTouchStart}
     >
       <Rect
         onClick={onSelect}
@@ -91,9 +84,7 @@ const FrameImgChild = ({
         width={shapeProps.width}
         height={shapeProps.height}
         rotation={shapeProps.rotation}
-        // onMouseDown={onMouseDown}
-        // onTouchStart={onTouchStart}
-        onTransformEnd={(e) => {
+        onTransformEnd={() => {
           const node = shapeRef.current;
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();
@@ -121,8 +112,6 @@ const FrameImgChild = ({
         image={shapeProps.src}
         onClick={onSelect}
         onTap={onSelect}
-        // onMouseDown={onMouseDown}
-        // onTouchStart={onTouchStart}
         onTransformEnd={(e) => {
           const node = shapeRef.current;
           const scaleX = node.scaleX();
@@ -140,6 +129,7 @@ const FrameImgChild = ({
         }}
       />
 
+      {/* 선택된 아이콘만 Transformer 컴포넌트를 사용할 수 있음*/}
       {isSelected && (
         <Transformer
           ref={trRef}

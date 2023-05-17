@@ -43,13 +43,11 @@ const frameImg = () => {
   const [nextImageId, setNextImageId] = useState(0); // 초기 이미지 ID
 
   // 선택한거 취소하게 하는함수
-
   const checkDeselect = (e: any) => {
-    // deselect when clicked on empty area
+    // 빈 영역 선택하면 id값을 null로
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
       setSelectedId(null);
-      // setIcons(icons.filter((icon) => icon.id !== selectedId));
     }
   };
 
@@ -119,15 +117,14 @@ const frameImg = () => {
                 newicons[i] = newAttrs;
                 setIcons(newicons);
               }}
-              // onMouseDown={checkDeselect}
-              // onTouchStart={checkDeselect}
+  
             />
           ))}
         </Layer>
       </Stage>
       {/* 아이콘들 보여주기*/}
       <div className="flex mt-[5%]">
-        {initialicons.map((iconName, idx) => {
+        {initialicons.map((iconName) => {
           return (
             <img
               className=""
