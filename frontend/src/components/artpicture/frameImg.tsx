@@ -2,121 +2,112 @@
 
 import { useAppSelector } from "@/redux/hooks";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Stage, Layer, Group, Image } from "react-konva";
 import FrameImgChild from "./frameImgChild";
 
 const frameImg = () => {
-  const [originImg, setOriginImg] = useState<HTMLImageElement | undefined>(
+  const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
     undefined
   );
-  const frameImg = useAppSelector((state) => state.coordsReducer.frameImg);
+  const stageRef = useRef(null);
 
+  const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
   useEffect(() => {
-    if (frameImg) {
+    console.log(bgImg);
+    if (bgImg) {
       const img = new window.Image();
-      img.src = frameImg;
+      img.src = bgImg;
       img.onload = () => {
         setOriginImg(img);
       };
     }
-  }, []);
-  const initialicons = [
-    {
-      x: 10,
-      y: 10,
-      width: 50,
-      height: 50,
-      title: 1,
-    },
-    {
-      x: 10,
-      y: 10,
-      width: 50,
-      height: 50,
-      title: 2,
-    },
-    {
-      x: 10,
-      y: 10,
-      width: 50,
-      height: 50,
-      title: 3,
-    },
-    {
-      x: 10,
-      y: 10,
-      width: 50,
-      height: 50,
-      title: 4,
-    },
-    {
-      x: 10,
-      y: 10,
-      width: 50,
-      height: 50,
-      title: 5,
-    },
-    {
-      x: 10,
-      y: 10,
-      width: 50,
-      height: 50,
-      title: 6,
-    },
-    {
-      x: 10,
-      y: 10,
-      width: 50,
-      height: 50,
-      title: 7,
-    },
-  ];
+  }, [bgImg]);
 
-  const [icons, setIcons] = useState(initialicons);
+  // 원본 아이콘
+  const initialicons = [1, 2, 3, 4, 5, 6, 7];
+
+  const [icons, setIcons] = useState<
+    {
+      id: number;
+      src: CanvasImageSource;
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    }[]
+  >([]);
+
   const [selectedId, setSelectedId] = useState(0);
-
-  useEffect(() => {
-    console.log(selectedId, "🎈");
-  }, [selectedId]);
+  const [nextImageId, setNextImageId] = useState(0); // 초기 이미지 ID
 
   // 선택한거 취소하게 하는함수
   const checkDeselect = (e: any) => {
+    // deselect when clicked on empty area
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
-      setSelectedId(0);
+      setSelectedId(-1);
     }
-    e.cancelBubble = true;
+  };
+
+  useEffect(() => {
+    console.log(selectedId)
+  },[selectedId])
+
+
+  // 아이콘 업데이트 하는 함수
+  const handleChange = (title: number) => {
+    const newIcon = new window.Image();
+    newIcon.src = `/icons/${title}.png`;
+    newIcon.onload = () => {
+      const newKonvaImage = new window.Image();
+      newKonvaImage.src = newIcon.src;
+      newKonvaImage.onload = () => {
+        const iconId = nextImageId; // 새로운 이미지 ID 할당
+        // setNextImageId((prevId) => prevId + 1); // 다음 이미지 ID 업데이트
+        setNextImageId(nextImageId + 1); // 다음 이미지 ID 업데이트
+
+        const updatedIcons = [
+          ...icons,
+          {
+            id: iconId,
+            src: newIcon,
+            x: 0,
+            y: 0,
+            width: 120,
+            height: 120,
+          },
+        ];
+        setIcons(updatedIcons);
+      };
+    };
   };
 
   return (
     <div className="h-[92vh] flex flex-col items-center justify-center">
-      <Stage
-        width={360}
-        height={350}
-        onMouseDown={checkDeselect}
-        onTouchStart={checkDeselect}
-      >
+      {/* 캔버스 */}
+      <Stage width={300} height={350} ref={stageRef}>
         <Layer>
           {originImg && (
-            <div className="flex items-center justify-center border rounded-lg">
-              <Image
-                image={originImg}
-                alt="frameImg"
-                width={300}
-                height={350}
-              />
-            </div>
+            <Image
+              image={originImg}
+              alt="frameImg"
+              width={300}
+              height={350}
+              draggable={false}
+              // onMouseDown={checkDeselect}
+              // onTouchStart={checkDeselect}
+            />
           )}
-
-          {icons.map((icon, i) => (
+          {icons?.map((icon, i) => (
             <FrameImgChild
               key={i}
               shapeProps={icon}
               onSelect={() => {
-                setSelectedId(i);
+                console.log(icon.id)
+                setSelectedId(icon.id);
               }}
-              isSelected={i === selectedId}
+              isSelected={icon.id === selectedId}
               onChange={(newAttrs) => {
                 const newicons = icons.slice();
                 newicons[i] = newAttrs;
@@ -126,24 +117,19 @@ const frameImg = () => {
           ))}
         </Layer>
       </Stage>
-
-
-
+      {/* 아이콘들 보여주기*/}
       <div className="flex mt-[5%]">
         {initialicons.map((iconName, idx) => {
-          const newimg = new window.Image();
-          newimg.src = `/icons/${iconName.title}.png`;
           return (
-            <Group key={idx}>
-              <Image
-                className=""
-                image={newimg}
-                alt=""
-                width={50}
-                height={100}
-                style={{ width: iconName.width, height: iconName.height }}
-              />
-            </Group>
+            <img
+              className=""
+              src={`/icons/${iconName}.png`}
+              alt=""
+              width={50}
+              height={100}
+              // 클릭하면 icosn 업데이트 해주는 함수 호출
+              onClick={() => handleChange(iconName)}
+            />
           );
         })}
       </div>

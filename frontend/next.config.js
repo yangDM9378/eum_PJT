@@ -4,11 +4,14 @@ const nextConfig = {
     appDir: true,
   },
   images: {
-    domains: ["d3geiv4ai2wdw1.cloudfront.net"],
     remotePatterns: [
       {
         protocol: "https",
         hostname: "ai-result-rapidapi.ailabtools.com",
+      },
+      {
+        protocol: "https",
+        hostname: "d3geiv4ai2wdw1.cloudfront.net",
       },
     ],
   },
