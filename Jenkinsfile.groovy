@@ -18,7 +18,6 @@ pipeline {
                         sh 'docker container prune -f'
                         sh 'docker image prune -af'
                         echo 'frontend build and up'
-                        sh 'docker-compose build frontend'
                         sh 'docker-compose up -d frontend'
                     }
                 }
