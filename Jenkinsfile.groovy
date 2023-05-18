@@ -10,15 +10,19 @@ pipeline {
             parallel {
                 stage ('docker frontend run') {
                     steps {
-                        echo 'git pull'
-                        git branch: 'develop', credentialsId: 'admin', url: 'https://lab.ssafy.com/s08-final/S08P31C103.git'
-
-                        echo 'frontend container, image remove'
-                        sh 'pwd'
-                        sh 'docker container prune -f'
-                        sh 'docker image prune -af'
-                        echo 'frontend build and up'
-                        sh 'docker-compose up --build -d frontend'
+                        sshagent (credentials: ['ssh_admin']) {
+                        sh """
+                            ssh -o StrictHostKeyChecking=no ${TARGET_HOST_FRONTEND} '
+                            cd /home/S08P31C103
+                            sudo git pull origin develop
+                            cd frontend/
+                            sudo npm install
+                            sudo npm run build
+                            pm2 delete 0
+                            pm2 --name frontend start npm -- start
+                            '
+                        """
+                        }
                     }
                 }
 
@@ -26,7 +30,7 @@ pipeline {
                     steps {
                         sshagent (credentials: ['ssh_admin']) {
                         sh """
-                            ssh -o StrictHostKeyChecking=no ${TARGET_HOST} '
+                            ssh -o StrictHostKeyChecking=no ${TARGET_HOST_BACKEND} '
                             cd /home/S08P31C103/
                             sudo git pull origin develop
                             sudo docker container prune -f
@@ -44,7 +48,8 @@ pipeline {
     }
 
     environment {
-        TARGET_HOST = "ubuntu@18.118.212.73"
+        TARGET_HOST_FRONTEND = "ubuntu@3.145.0.19"
+        TARGET_HOST_BACKEND = "ubuntu@18.118.212.73"
 
     }
 }
