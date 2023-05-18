@@ -36,7 +36,7 @@ const Main = () => {
     <div>
       {size > 450 ? (
         // 웹페이지 버전입니다.
-        <section className="w-[100vw] h-[50vh] flex">
+        <section className="w-[100vw] h-[100vh] flex">
           <MainDescription markerList={data} />
           <MapUpper markerList={data} />
         </section>

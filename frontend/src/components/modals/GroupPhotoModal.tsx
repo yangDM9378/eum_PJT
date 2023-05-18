@@ -11,6 +11,7 @@ import { isConstructorDeclaration } from "typescript";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";
 import { setFrameImg } from "@/redux/map/mapSlice";
+import { useAppSelector } from "@/redux/hooks";
 
 type ModalProps = {
   isOpen: boolean;
@@ -115,6 +116,18 @@ const GroupPhotoModal = ({
       alert("뒤로 가셔서 사진을 다시 선택해 주세요");
     }
   };
+  const userName = useAppSelector((state) => state.userReducer.name);
+
+  // 소켓 테스트
+  const goSocket = async () => {
+    const encode = encodeURIComponent(userName + selected);
+    if (photoInfo) {
+      dispatch(setFrameImg(photoInfo?.image));
+      await router.replace(`/${encode}/artpicture`);
+    } else {
+      alert("뒤로 가셔서 사진을 다시 선택해 주세요");
+    }
+  };
 
   return (
     <Modal
@@ -148,19 +161,22 @@ const GroupPhotoModal = ({
             className="w-[100%] h-[100%]"
           />
         )}
-
-        <button
-          className="bg-brand-green w-[50%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl"
-          onClick={sharephoto}
-        >
-          공유하기
-        </button>
-        <button
-          className="bg-brand-green w-[50%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl"
-          onClick={goFrame}
-        >
-          꾸미기
-        </button>
+        <div className="flex w-[100%] justify-around">
+          <button
+            className="bg-brand-green w-[40%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl"
+            onClick={sharephoto}
+          >
+            공유하기
+          </button>
+          <button
+            className="bg-brand-green w-[40%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl "
+            // onClick={goFrame}
+            onClick={goSocket}
+          >
+            꾸미기
+          </button>
+        </div>
+        {/* <button onClick={goSocket}>소켓방으로</button> */}
       </div>
     </Modal>
   );

@@ -9,8 +9,9 @@ type ShapeProps = {
   y: number;
   width: number;
   height: number;
+  rotation: number;
   src: CanvasImageSource;
-  rotation:number;
+  title: number;
 };
 
 interface IconProps {

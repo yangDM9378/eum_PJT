@@ -44,7 +44,7 @@ public class SecurityConfig {
             .csrf().disable()
             // 권한 설정
             .authorizeRequests()
-            .antMatchers("/oauth2/**").permitAll()
+            .antMatchers("/oauth2/**", "/socket/room").permitAll()
             .antMatchers(HttpMethod.GET, "/pins").permitAll()
             .anyRequest().authenticated()
             .and()

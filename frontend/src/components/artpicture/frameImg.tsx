@@ -1,37 +1,141 @@
 "use client";
+// 스티커 컴포넌트
 
 import { useAppSelector } from "@/redux/hooks";
-
-import { useEffect, useRef, useState } from "react";
-import { Stage, Layer, Image } from "react-konva";
+import React, { useEffect, useState, useRef } from "react";
+import { Stage, Layer, Image, Group, Transformer } from "react-konva";
+import { usePathname } from "next/navigation";
 import FrameImgChild from "./frameImgChild";
+interface StickerRes {
+  id: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation: number;
+  title: number;
+}
 
-const frameImg = () => {
-  const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
-    undefined
-  );
-  
-  const stageRef = useRef<any>(null);
+interface WebSocketRes {
+  roomId: string;
+  userNames: string[];
+  stickerRes: StickerRes[];
+  frameUrl: string;
+}
 
-  // 선택한거 취소하게 하는함수
-  const checkDeselect = (e: any) => {
-    // 빈 영역 선택하면 id값을 null로
-    const clickedOnEmpty =
-      e.target === e.target.getStage() || e.target.attrs.id === "background";
-    if (clickedOnEmpty) {
-      setSelectedId(null);
-      console.log(selectedId);
+const FrameImg = () => {
+  const ws = useRef<null | WebSocket>(); //webSocket을 담는 변수,
+  const userName = useAppSelector((state) => state.userReducer.name);
+  const [socketData, setSocketData] = useState<WebSocketRes>();
+  const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
+
+  const openSocket = () => {
+    if (ws) {
+      ws.current = new WebSocket("ws://localhost:8080/socket/room");
+      ws.current.onmessage = (message) => {
+        const dataSet: WebSocketRes = JSON.parse(message.data);
+        // console.log("소켓에서 받은 데이터입니다.", dataSet);
+        setSocketData(dataSet);
+      };
+
+      const stickerData = {
+        stickerId: null,
+        x: null,
+        y: null,
+        width: null,
+        height: null,
+        degree: null,
+      };
+      // 방만들기 요청 데이터
+      const data = {
+        roomId: decoCode,
+        userName: userName,
+        frameUrl: bgImg,
+      };
+      const temp = JSON.stringify(data);
+      console.log(temp);
+      ws.current.onopen = () => {
+        if (ws.current) {
+          ws.current.send(temp);
+        }
+      };
+    } else {
+      console.log("없어요");
+    }
+  };
+  // 소켓에 움직이는 스티커 데이터를 넘겨줍니다.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const sendData = async (newAttrs: {
+    id: number;
+    src: CanvasImageSource;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    rotation: number;
+    title: number;
+  }) => {
+    const stickerData = {
+      id: newAttrs.id,
+      x: newAttrs.x,
+      y: newAttrs.y,
+      width: newAttrs.width,
+      height: newAttrs.height,
+      rotation: newAttrs.rotation,
+      title: newAttrs.title,
+    };
+
+    // console.log("send", newAttrs);
+
+    // 움직이는 시간
+    const data = {
+      roomId: decoCode,
+      userName: userName,
+      stickerReq: stickerData,
+      frameUrl: bgImg,
+    };
+
+    const temp = JSON.stringify(data);
+    if (ws?.current?.readyState === 0) {
+      ws.current.onopen = () => {
+        console.log(ws.current?.readyState);
+        ws?.current?.send(temp);
+      };
+    } else {
+      ws?.current?.send(temp);
     }
   };
 
-  // useEffect(() => {
-  //   const stage = stageRef.current;
-  //   if (stage) {
-  //     stage.on("click", checkDeselect);
-  //   }
-  // }, []);
+  useEffect(() => {
+    openSocket();
+  }, []);
 
-  const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
+  // 꾸미기 방 초대 코드
+  const path = usePathname();
+  const decoCode = path.substring(1, path.length - 20);
+
+  const roomCode = async () => {
+    alert("초대 코드가 복사되었습니다.");
+    if ((window as any).Android) {
+      (window as any).Android.copyToClipboard(decoCode);
+    } else {
+      const clipboardPermission = await navigator.permissions.query({
+        name: "clipboard-write" as PermissionName,
+      });
+      if (clipboardPermission.state === "granted") {
+        await navigator.clipboard.writeText(decoCode);
+      } else {
+        console.log("");
+      }
+    }
+  };
+  // 스티커 꾸미기 함수
+
+  const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
+    undefined
+  );
+  const stageRef = useRef(null);
+
   useEffect(() => {
     if (bgImg) {
       const img = new window.Image();
@@ -41,6 +145,28 @@ const frameImg = () => {
       };
     }
   }, [bgImg]);
+
+  // 소켓 통신으로 받아온 데이터를 렌더링 합니다.
+  useEffect(() => {
+    if (socketData) {
+      const img = new window.Image();
+      img.src = socketData.frameUrl;
+      img.onload = () => {
+        setOriginImg(img);
+      };
+
+      const socketIconArr = socketData.stickerRes;
+      const newArr = socketIconArr.map((icon) => {
+        // console.log(icon);
+        const newIcon = new window.Image();
+        newIcon.src = `/icons/${icon.title}.png`;
+        return { ...icon, src: newIcon };
+      });
+      const iconArr = newArr.sort((a, b) => a.id - b.id);
+      // console.log("새로운 리스트", iconArr);
+      setIcons(iconArr);
+    }
+  }, [socketData]);
 
   // 원본 아이콘
   const initialicons = [1, 2, 3, 4, 5, 6, 7];
@@ -55,13 +181,25 @@ const frameImg = () => {
       width: number;
       height: number;
       rotation: number;
+      title: number;
     }[]
   >([]);
 
   const [selectedId, setSelectedId] = useState<null | number>(0);
   const [nextImageId, setNextImageId] = useState(0); // 초기 이미지 ID
 
-  useEffect(() => {}, [selectedId]);
+  // 선택한거 취소하게 하는함수
+  const checkDeselect = (e: any) => {
+    // 빈 영역 선택하면 id값을 null로
+    const clickedOnEmpty = e.target === e.target.getStage();
+    if (clickedOnEmpty) {
+      setSelectedId(null);
+    }
+  };
+
+  useEffect(() => {
+    console.log(selectedId);
+  }, [selectedId]);
 
   // 아이콘 업데이트 하는 함수
   const handleChange = (title: number) => {
@@ -85,6 +223,7 @@ const frameImg = () => {
             width: 120,
             height: 120,
             rotation: 0,
+            title: title,
           },
         ];
         setIcons(updatedIcons);
@@ -94,6 +233,34 @@ const frameImg = () => {
 
   return (
     <div className="h-[92vh] flex flex-col items-center justify-center">
+      <div className="w-[90%] flex justify-end">
+        <div
+          onClick={roomCode}
+          className=" bg-brand-red p-2 rounded-lg text-white"
+        >
+          초대 코드
+        </div>
+      </div>
+      <div className="flex w-[90%] pb-4 gap-2">
+        {socketData &&
+          socketData.userNames.map((name, idx) => {
+            return (
+              <div
+                key={idx}
+                className="flex flex-col items-center justify-center"
+              >
+                <div className="rounded-[50%] overflow-hidden w-[8vh] h-[8vh]">
+                  <img
+                    src="https://i.pinimg.com/564x/c5/c0/50/c5c050a124eff3c5656822db9abddd8c.jpg"
+                    alt=""
+                    className="w-[100%] h-[100%] "
+                  />
+                </div>
+                <div>{name}</div>
+              </div>
+            );
+          })}
+      </div>
       {/* 캔버스 */}
       <Stage
         width={300}
@@ -128,6 +295,7 @@ const frameImg = () => {
                 const newicons = icons.slice();
                 newicons[i] = newAttrs;
                 setIcons(newicons);
+                sendData(newAttrs);
               }}
             />
           ))}
@@ -135,9 +303,10 @@ const frameImg = () => {
       </Stage>
       {/* 아이콘들 보여주기*/}
       <div className="flex mt-[5%]">
-        {initialicons.map((iconName) => {
+        {initialicons.map((iconName, idx) => {
           return (
             <img
+              key={idx}
               className=""
               src={`/icons/${iconName}.png`}
               alt=""
@@ -153,4 +322,4 @@ const frameImg = () => {
   );
 };
 
-export default frameImg;
+export default FrameImg;
