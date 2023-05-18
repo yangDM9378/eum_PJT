@@ -7,8 +7,8 @@ class CulturalProperty {
 
     companion object{
 
-        fun getCP(culturalProperty : String?, cpData : List<String>): String {
-            val tmp=culturalProperty?.split("|")
+        fun getCP(culturalProperty : String, cpData : List<String>): String {
+            val tmp=culturalProperty.split("|")
             for (data:String in cpData) {
                 var dataArray = data.split("|")
                 if (tmp != null) {

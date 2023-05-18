@@ -1,6 +1,8 @@
 "use client";
 
 import { useAppSelector } from "@/redux/hooks";
+import { useEffect, useState, useRef } from "react";
+import { Stage, Layer, Image, Group, Transformer } from "react-konva";
 
 import { useEffect, useRef, useState } from "react";
 import { Stage, Layer, Image } from "react-konva";
@@ -10,7 +12,22 @@ const frameImg = () => {
   const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
     undefined
   );
+  const frameImg = useAppSelector((state) => state.coordsReducer.frameImg);
   const stageRef = useRef(null);
+  const transformerRef = useRef(null);
+  const [images, setImages] = useState<
+    {
+      id: number;
+      src: CanvasImageSource;
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    }[]
+  >([]);
+  const [nextImageId, setNextImageId] = useState(1); // 초기 이미지 ID
+  const [selectedImageId, setSelectedImageId] = useState<number | null>(null); // 선택된 이미지 ID
+  const [transformers, setTransformers] = useState<number[]>([]);
 
   const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
   useEffect(() => {
@@ -52,9 +69,7 @@ const frameImg = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(selectedId);
-  }, [selectedId]);
+  useEffect(() => {}, [selectedId]);
 
   // 아이콘 업데이트 하는 함수
   const handleChange = (title: number) => {
@@ -145,4 +160,4 @@ const frameImg = () => {
   );
 };
 
-export default frameImg;
+export default FrameImg;
