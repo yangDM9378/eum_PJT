@@ -1,8 +1,6 @@
 "use client";
 
 import { useAppSelector } from "@/redux/hooks";
-import { useEffect, useState, useRef } from "react";
-import { Stage, Layer, Image, Group, Transformer } from "react-konva";
 
 import { useEffect, useRef, useState } from "react";
 import { Stage, Layer, Image } from "react-konva";
@@ -12,22 +10,26 @@ const frameImg = () => {
   const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
     undefined
   );
-  const frameImg = useAppSelector((state) => state.coordsReducer.frameImg);
-  const stageRef = useRef(null);
-  const transformerRef = useRef(null);
-  const [images, setImages] = useState<
-    {
-      id: number;
-      src: CanvasImageSource;
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    }[]
-  >([]);
-  const [nextImageId, setNextImageId] = useState(1); // 초기 이미지 ID
-  const [selectedImageId, setSelectedImageId] = useState<number | null>(null); // 선택된 이미지 ID
-  const [transformers, setTransformers] = useState<number[]>([]);
+  
+  const stageRef = useRef<any>(null);
+
+  // 선택한거 취소하게 하는함수
+  const checkDeselect = (e: any) => {
+    // 빈 영역 선택하면 id값을 null로
+    const clickedOnEmpty =
+      e.target === e.target.getStage() || e.target.attrs.id === "background";
+    if (clickedOnEmpty) {
+      setSelectedId(null);
+      console.log(selectedId);
+    }
+  };
+
+  // useEffect(() => {
+  //   const stage = stageRef.current;
+  //   if (stage) {
+  //     stage.on("click", checkDeselect);
+  //   }
+  // }, []);
 
   const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
   useEffect(() => {
@@ -58,16 +60,6 @@ const frameImg = () => {
 
   const [selectedId, setSelectedId] = useState<null | number>(0);
   const [nextImageId, setNextImageId] = useState(0); // 초기 이미지 ID
-
-  // 선택한거 취소하게 하는함수
-  const checkDeselect = (e: any) => {
-    // 빈 영역 선택하면 id값을 null로
-    const clickedOnEmpty = e.target === e.target.getStage();
-    if (clickedOnEmpty) {
-      setSelectedId(null);
-      console.log(selectedId);
-    }
-  };
 
   useEffect(() => {}, [selectedId]);
 
@@ -121,6 +113,7 @@ const frameImg = () => {
               onClick={checkDeselect}
               onMouseDown={checkDeselect}
               onTouchStart={checkDeselect}
+              id="background" // Add the id attribute
             />
           )}
           {icons?.map((icon, i) => (
@@ -160,4 +153,4 @@ const frameImg = () => {
   );
 };
 
-export default FrameImg;
+export default frameImg;
