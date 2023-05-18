@@ -7,18 +7,19 @@ import { Stage, Layer, Image, Group, Transformer } from "react-konva";
 import { usePathname } from "next/navigation";
 import FrameImgChild from "./frameImgChild";
 interface StickerRes {
-  stickerId: number;
+  id: number;
   x: number;
   y: number;
   width: number;
   height: number;
-  degree: number;
+  rotation: number;
+  title: number;
 }
 
 interface WebSocketRes {
   roomId: string;
   userNames: string[];
-  stickers: StickerRes[];
+  stickerRes: StickerRes[];
   frameUrl: string;
 }
 
@@ -33,7 +34,7 @@ const FrameImg = () => {
       ws.current = new WebSocket("ws://localhost:8080/socket/room");
       ws.current.onmessage = (message) => {
         const dataSet: WebSocketRes = JSON.parse(message.data);
-        console.log("data", dataSet);
+        console.log("소켓에서 받은 데이터입니다.", dataSet);
         setSocketData(dataSet);
       };
 
@@ -62,17 +63,29 @@ const FrameImg = () => {
       console.log("없어요");
     }
   };
-
-  const sendData = async () => {
+  // 소켓에 움직이는 스티커 데이터를 넘겨줍니다.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const sendData = async (newAttrs: {
+    id: number;
+    src: CanvasImageSource;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    rotation: number;
+    title: number;
+  }) => {
     const stickerData = {
-      id: null,
-      x: null,
-      y: null,
-      width: null,
-      height: null,
-      rotation: null,
-      title: null,
+      id: newAttrs.id,
+      x: newAttrs.x,
+      y: newAttrs.y,
+      width: newAttrs.width,
+      height: newAttrs.height,
+      rotation: newAttrs.rotation,
+      title: newAttrs.title,
     };
+
+    console.log("send", newAttrs);
 
     // 움직이는 시간
     const data = {
@@ -133,6 +146,7 @@ const FrameImg = () => {
     }
   }, [bgImg]);
 
+  // 소켓 통신으로 받아온 데이터를 렌더링 합니다.
   useEffect(() => {
     if (socketData) {
       const img = new window.Image();
@@ -140,6 +154,17 @@ const FrameImg = () => {
       img.onload = () => {
         setOriginImg(img);
       };
+
+      const socketIconArr = socketData.stickerRes;
+      const newArr = socketIconArr.map((icon) => {
+        console.log(icon);
+        const newIcon = new window.Image();
+        newIcon.src = `/icons/${icon.title}.png`;
+        return { ...icon, src: newIcon };
+      });
+      const iconArr = newArr.sort((a, b) => a.id - b.id);
+      console.log("새로운 리스트", iconArr);
+      setIcons(iconArr);
     }
   }, [socketData]);
 
@@ -156,10 +181,9 @@ const FrameImg = () => {
       width: number;
       height: number;
       rotation: number;
+      title: number;
     }[]
   >([]);
-
-  console.log(icons);
 
   const [selectedId, setSelectedId] = useState<null | number>(0);
   const [nextImageId, setNextImageId] = useState(0); // 초기 이미지 ID
@@ -199,6 +223,7 @@ const FrameImg = () => {
             width: 120,
             height: 120,
             rotation: 0,
+            title: title,
           },
         ];
         setIcons(updatedIcons);
@@ -262,6 +287,7 @@ const FrameImg = () => {
                 const newicons = icons.slice();
                 newicons[i] = newAttrs;
                 setIcons(newicons);
+                sendData(newAttrs);
               }}
             />
           ))}
@@ -285,7 +311,7 @@ const FrameImg = () => {
         })}
       </div>
       <div onClick={roomCode}>초대 코드</div>
-      <div onClick={sendData}>클릭하세요</div>
+      {/* <div onClick={sendData}>클릭하세요</div> */}
     </div>
   );
 };
