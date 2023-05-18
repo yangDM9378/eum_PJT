@@ -92,6 +92,8 @@ const FrameImg = () => {
       title: newAttrs.title,
     };
 
+    // console.log("send", newAttrs);
+
     // 움직이는 시간
     const data = {
       roomId: decoCode,
@@ -164,9 +166,6 @@ const FrameImg = () => {
 
       const socketIconArr = socketData.stickerRes;
       const newArr = socketIconArr.map((icon) => {
-        if (icon.title === -5) {
-          router.replace(`/map/${groupId}`);
-        }
         // console.log(icon);
         const newIcon = new window.Image();
         newIcon.crossOrigin = "anonymous";
@@ -271,23 +270,6 @@ const FrameImg = () => {
       await EventMutation.mutate(formData);
       await router.replace(`/map/${groupId}`);
     }
-    if (socketData) {
-      const img = new window.Image();
-      img.crossOrigin = "anonymous";
-      img.src = socketData.frameUrl;
-      // 종료조건
-      const endArr = {
-        id: socketData?.stickerRes[0].id,
-        x: socketData?.stickerRes[0].x,
-        y: socketData?.stickerRes[0].y,
-        width: socketData?.stickerRes[0].width,
-        height: socketData?.stickerRes[0].height,
-        rotation: socketData?.stickerRes[0].rotation,
-        title: -5,
-        src: img,
-      };
-      sendData(endArr);
-    }
   };
 
   return (
@@ -377,18 +359,12 @@ const FrameImg = () => {
           );
         })}
       </div>
-      {decoCode.includes(userName) ? (
-        <button
-          onClick={saveeImg}
-          className="my-[2vh] bg-brand-blue text-white py-[1.5vh] px-[6vw] rounded-md shadow-xl font-brand-gmarketsans"
-        >
-          사진저장
-        </button>
-      ) : (
-        <button className="my-[2vh] bg-brand-blue text-white py-[1.5vh] px-[6vw] rounded-md shadow-xl font-brand-gmarketsans">
-          사진저장
-        </button>
-      )}
+      <button
+        onClick={saveeImg}
+        className="my-[2vh] bg-brand-blue text-white py-[1.5vh] px-[6vw] rounded-md shadow-xl font-brand-gmarketsans"
+      >
+        사진저장
+      </button>
     </div>
   );
 };
