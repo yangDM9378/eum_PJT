@@ -1,16 +1,29 @@
 "use client";
 
 import { useAppSelector } from "@/redux/hooks";
+import { useEffect, useState, useRef } from "react";
+import { Stage, Layer, Image, Group, Transformer } from "react-konva";
 
-import { useEffect, useRef, useState } from "react";
-import { Stage, Layer, Group, Image } from "react-konva";
-import FrameImgChild from "./frameImgChild";
-
-const frameImg = () => {
+const FrameImg = () => {
   const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
     undefined
   );
+  const frameImg = useAppSelector((state) => state.coordsReducer.frameImg);
   const stageRef = useRef(null);
+  const transformerRef = useRef(null);
+  const [images, setImages] = useState<
+    {
+      id: number;
+      src: CanvasImageSource;
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    }[]
+  >([]);
+  const [nextImageId, setNextImageId] = useState(1); // 초기 이미지 ID
+  const [selectedImageId, setSelectedImageId] = useState<number | null>(null); // 선택된 이미지 ID
+  const [transformers, setTransformers] = useState<number[]>([]);
 
   const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
   useEffect(() => {
@@ -132,4 +145,4 @@ const frameImg = () => {
   );
 };
 
-export default frameImg;
+export default FrameImg;
