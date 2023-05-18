@@ -5,6 +5,7 @@ import { useAppSelector } from "@/redux/hooks";
 import React, { useEffect, useState, useRef } from "react";
 import { Stage, Layer, Image, Group, Transformer } from "react-konva";
 import { usePathname } from "next/navigation";
+import FrameImgChild from "./frameImgChild";
 interface StickerRes {
   stickerId: number;
   x: number;
@@ -24,7 +25,6 @@ interface WebSocketRes {
 const FrameImg = () => {
   const ws = useRef<null | WebSocket>(); //webSocket을 담는 변수,
   const userName = useAppSelector((state) => state.userReducer.name);
-  const frameUrl = useAppSelector((state) => state.coordsReducer.frameImg);
   const [socketData, setSocketData] = useState<WebSocketRes>();
 
   const openSocket = () => {
@@ -115,13 +115,29 @@ const FrameImg = () => {
       }
     }
   };
+  // 스티커 꾸미기 함수
 
   const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
     undefined
   );
   const stageRef = useRef(null);
-  const transformerRef = useRef(null);
-  const [images, setImages] = useState<
+
+  const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
+  useEffect(() => {
+    if (bgImg) {
+      const img = new window.Image();
+      img.src = bgImg;
+      img.onload = () => {
+        setOriginImg(img);
+      };
+    }
+  }, [bgImg]);
+
+  // 원본 아이콘
+  const initialicons = [1, 2, 3, 4, 5, 6, 7];
+
+  // 상태를 변화할
+  const [icons, setIcons] = useState<
     {
       id: number;
       src: CanvasImageSource;
@@ -129,63 +145,53 @@ const FrameImg = () => {
       y: number;
       width: number;
       height: number;
+      rotation: number;
     }[]
   >([]);
-  const [nextImageId, setNextImageId] = useState(1); // 초기 이미지 ID
-  const [selectedImageId, setSelectedImageId] = useState<number | null>(null); // 선택된 이미지 ID
-  const [transformers, setTransformers] = useState<number[]>([]);
+
+  const [selectedId, setSelectedId] = useState<null | number>(0);
+  const [nextImageId, setNextImageId] = useState(0); // 초기 이미지 ID
+
+  // 선택한거 취소하게 하는함수
+  const checkDeselect = (e: any) => {
+    // 빈 영역 선택하면 id값을 null로
+    const clickedOnEmpty = e.target === e.target.getStage();
+    if (clickedOnEmpty) {
+      setSelectedId(null);
+    }
+  };
 
   useEffect(() => {
-    if (frameUrl) {
-      const img = new window.Image();
-      img.src = frameUrl;
-      img.onload = () => {
-        setOriginImg(img);
-      };
-    }
-  }, [frameUrl]);
+    console.log(selectedId);
+  }, [selectedId]);
 
-  const assets = [1, 2, 3, 4];
-
-  const handleImageClick = (imageName: number) => {
-    const newImage = new window.Image();
-    newImage.src = `/frame/${imageName}.png`;
-    newImage.onload = () => {
+  // 아이콘 업데이트 하는 함수
+  const handleChange = (title: number) => {
+    const newIcon = new window.Image();
+    newIcon.src = `/icons/${title}.png`;
+    newIcon.onload = () => {
       const newKonvaImage = new window.Image();
-      newKonvaImage.src = newImage.src;
+      newKonvaImage.src = newIcon.src;
       newKonvaImage.onload = () => {
-        const imageId = nextImageId; // 새로운 이미지 ID 할당
-        setNextImageId((prevId) => prevId + 1); // 다음 이미지 ID 업데이트
+        const iconId = nextImageId; // 새로운 이미지 ID 할당
+        setNextImageId(nextImageId + 1); // 다음 이미지 ID 업데이트
 
-        const updatedImages = [
-          ...images,
+        // 변형할 아이콘들을 추가해주는 작업
+        const updatedIcons = [
+          ...icons,
           {
-            id: imageId,
-            src: newKonvaImage,
-            x: 0, // 이미지의 x 좌표 설정
-            y: 0, // 이미지의 y 좌표 설정
+            id: iconId,
+            src: newIcon,
+            x: 0,
+            y: 0,
             width: 120,
-            height: 140,
+            height: 120,
+            rotation: 0,
           },
         ];
-        setImages(updatedImages);
+        setIcons(updatedIcons);
       };
     };
-  };
-
-  const handleSelectImage = (imageId: number) => {
-    setSelectedImageId(imageId);
-    if (!transformers.includes(imageId)) {
-      setTransformers([...transformers, imageId]);
-    }
-  };
-
-  const handleDeselectImage = (imageId: number) => {
-    setSelectedImageId(null);
-    setTransformers(transformers.filter((id) => id !== imageId));
-  };
-  const handleStageClick = () => {
-    setSelectedImageId(null);
   };
 
   return (
@@ -210,56 +216,60 @@ const FrameImg = () => {
             );
           })}
       </div>
-      <Stage width={300} height={350} ref={stageRef}>
+      {/* 캔버스 */}
+      <Stage
+        width={300}
+        height={350}
+        ref={stageRef}
+        onMouseDown={checkDeselect}
+        onTouchStart={checkDeselect}
+      >
         <Layer>
           {originImg && (
             <Image
               image={originImg}
+              alt="frameImg"
               width={300}
               height={350}
               draggable={false}
-              onTap={handleStageClick}
+              onMouseDown={checkDeselect}
+              onTouchStart={checkDeselect}
             />
           )}
-          {images.map((image) => (
-            <Group key={image.id}>
-              <Image
-                image={image.src}
-                x={image.x}
-                y={image.y}
-                width={image.width}
-                height={image.height}
-                draggable
-                onTap={() => handleSelectImage(image.id)}
-              />
-              {selectedImageId === image.id && (
-                <Transformer
-                  nodeRef={stageRef}
-                  selectedNode={image.id === selectedImageId}
-                  ref={transformerRef}
-                  rotateEnabled={true}
-                />
-              )}
-            </Group>
+          {icons?.map((icon, i) => (
+            <FrameImgChild
+              key={i}
+              shapeProps={icon}
+              onSelect={() => {
+                setSelectedId(icon.id);
+              }}
+              isSelected={icon.id === selectedId}
+              onChange={(newAttrs) => {
+                const newicons = icons.slice();
+                newicons[i] = newAttrs;
+                setIcons(newicons);
+              }}
+            />
           ))}
         </Layer>
       </Stage>
-      <div className="flex justify-center">
-        {selectedImageId}
-        {assets.map((imageName, index) => (
-          <div key={index} className="py-[5vh] px-[5vw] w-[20vw]">
+      {/* 아이콘들 보여주기*/}
+      <div className="flex mt-[5%]">
+        {initialicons.map((iconName, idx) => {
+          return (
             <img
+              key={idx}
               className=""
-              src={`/frame/${imageName}.png`}
-              width={120}
-              height={140}
-              onClick={() => handleImageClick(imageName)}
+              src={`/icons/${iconName}.png`}
+              alt=""
+              width={50}
+              height={100}
+              // 클릭하면 icosn 업데이트 해주는 함수 호출
+              onClick={() => handleChange(iconName)}
             />
-          </div>
-        ))}
+          );
+        })}
       </div>
-      <div onClick={roomCode}>초대 코드</div>
-      <div onClick={sendData}>클릭하세요</div>
     </div>
   );
 };
