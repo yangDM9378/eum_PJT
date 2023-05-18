@@ -110,8 +110,8 @@ const EventPose = () => {
             className="h-[36vh] my-[1vh] rounded-lg jborder border-brand-blue border-spacing-1 drop-shadow-2xl"
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${pinImg}`}
             alt="pinImg"
-            width={320}
-            height={260}
+            width={300}
+            height={350}
           />
         )}
 
@@ -121,8 +121,8 @@ const EventPose = () => {
             className="h-[36vh] my-[1vh] border rounded-lg border-brand-blue border-spacing-1 drop-shadow-2xl"
             src={picImg}
             alt="picImg"
-            width={320}
-            height={260}
+            width={300}
+            height={350}
           />
         )}
       </div>
