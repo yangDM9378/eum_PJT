@@ -244,8 +244,10 @@ const FrameImg = () => {
               width={300}
               height={350}
               draggable={false}
+              onClick={checkDeselect}
               onMouseDown={checkDeselect}
               onTouchStart={checkDeselect}
+              id="background" // Add the id attribute
             />
           )}
           {icons?.map((icon, i) => (
