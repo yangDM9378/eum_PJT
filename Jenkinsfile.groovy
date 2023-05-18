@@ -17,7 +17,6 @@ pipeline {
                             sudo git pull origin develop
                             cd frontend/
                             sudo npm install
-                            sudo npm run build
                             pm2 delete 0
                             pm2 --name frontend start npm -- start
                             '
