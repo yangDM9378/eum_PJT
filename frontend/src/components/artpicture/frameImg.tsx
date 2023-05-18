@@ -4,9 +4,11 @@
 import { useAppSelector } from "@/redux/hooks";
 import React, { useEffect, useState, useRef } from "react";
 import { Stage, Layer, Image, Group, Transformer } from "react-konva";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import FrameImgChild from "./frameImgChild";
 import Konva from "konva";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { pictureEventApi } from "@/services/eventApi";
 interface StickerRes {
   id: number;
   x: number;
@@ -29,7 +31,6 @@ const FrameImg = () => {
   const userName = useAppSelector((state) => state.userReducer.name);
   const [socketData, setSocketData] = useState<WebSocketRes>();
   const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
-
   const openSocket = () => {
     if (ws) {
       ws.current = new WebSocket(`${process.env.NEXT_PUBLIC_SOCKET}`);
@@ -195,7 +196,8 @@ const FrameImg = () => {
   // 선택한거 취소하게 하는함수
   const checkDeselect = (e: any) => {
     // 빈 영역 선택하면 id값을 null로
-    const clickedOnEmpty = e.target === e.target.getStage();
+    const clickedOnEmpty =
+      e.target === e.target.getStage() || e.target.attrs.id === "background";
     if (clickedOnEmpty) {
       setSelectedId(null);
     }
@@ -238,9 +240,30 @@ const FrameImg = () => {
   };
 
   //사진 저장
+  const queryClient = useQueryClient();
+  const EventMutation = useMutation(pictureEventApi, {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["initial-pinpicture"] });
+    },
+  });
+  const router = useRouter();
+  const groupId = useAppSelector((state) => state.coordsReducer.groupId);
+  const pinId = useAppSelector((state) => state.coordsReducer.pinId);
   const saveeImg = async () => {
+    setSelectedId(null);
     if (stageRef.current) {
       const dataURL = await stageRef.current.toDataURL({ pixelRatio: 1 });
+      const jsonReq = { groupId: groupId, pinId: pinId };
+      const blobRes = await (await fetch(dataURL)).blob();
+
+      const formData = new FormData();
+      formData.append("image", blobRes, "image.png");
+      formData.append(
+        "pictureAddReq",
+        new Blob([JSON.stringify(jsonReq)], { type: "application/json" })
+      );
+      await EventMutation.mutate(formData);
+      await router.replace(`/map/${groupId}`);
     }
   };
 
@@ -293,7 +316,7 @@ const FrameImg = () => {
               onClick={checkDeselect}
               onMouseDown={checkDeselect}
               onTouchStart={checkDeselect}
-              id="background" // Add the id attribute
+              id="background"
             />
           )}
           {icons?.map((icon, i) => (
