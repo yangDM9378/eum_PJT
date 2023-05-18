@@ -31,6 +31,27 @@ const FrameImg = () => {
   const userName = useAppSelector((state) => state.userReducer.name);
   const [socketData, setSocketData] = useState<WebSocketRes>();
   const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
+
+  // 꾸미기 방 초대 코드
+  const path = usePathname();
+  const decoCode = path.substring(1, path.length - 20);
+  const rommNo = decodeURIComponent(decoCode);
+  const roomCode = async () => {
+    alert("초대 코드가 복사되었습니다.");
+    if ((window as any).Android) {
+      (window as any).Android.copyToClipboard(decoCode);
+    } else {
+      const clipboardPermission = await navigator.permissions.query({
+        name: "clipboard-write" as PermissionName,
+      });
+      if (clipboardPermission.state === "granted") {
+        await navigator.clipboard.writeText(decoCode);
+      } else {
+        console.log("");
+      }
+    }
+  };
+
   const openSocket = () => {
     if (ws) {
       ws.current = new WebSocket(`${process.env.NEXT_PUBLIC_SOCKET}`);
@@ -55,7 +76,7 @@ const FrameImg = () => {
         frameUrl: bgImg,
       };
       const temp = JSON.stringify(data);
-      console.log(temp);
+      // console.log(temp);
       ws.current.onopen = () => {
         if (ws.current) {
           ws.current.send(temp);
@@ -117,25 +138,6 @@ const FrameImg = () => {
     openSocket();
   }, []);
 
-  // 꾸미기 방 초대 코드
-  const path = usePathname();
-  const decoCode = path.substring(1, path.length - 20);
-
-  const roomCode = async () => {
-    alert("초대 코드가 복사되었습니다.");
-    if ((window as any).Android) {
-      (window as any).Android.copyToClipboard(decoCode);
-    } else {
-      const clipboardPermission = await navigator.permissions.query({
-        name: "clipboard-write" as PermissionName,
-      });
-      if (clipboardPermission.state === "granted") {
-        await navigator.clipboard.writeText(decoCode);
-      } else {
-        console.log("");
-      }
-    }
-  };
   // 스티커 꾸미기 함수
 
   const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
@@ -157,6 +159,14 @@ const FrameImg = () => {
   // 소켓 통신으로 받아온 데이터를 렌더링 합니다.
   useEffect(() => {
     if (socketData) {
+      const filtUser = socketData.userNames.filter((user) =>
+        rommNo.includes(user)
+      );
+
+      if (filtUser.length === 0) {
+        alert("꾸미기가 종료되었습니다.");
+        router.replace(`/map/${groupId}`);
+      }
       const img = new window.Image();
       img.crossOrigin = "anonymous";
       img.src = socketData.frameUrl;
@@ -209,7 +219,7 @@ const FrameImg = () => {
   };
 
   useEffect(() => {
-    console.log(selectedId);
+    // console.log(selectedId);
   }, [selectedId]);
 
   // 아이콘 업데이트 하는 함수
@@ -268,6 +278,7 @@ const FrameImg = () => {
         new Blob([JSON.stringify(jsonReq)], { type: "application/json" })
       );
       await EventMutation.mutate(formData);
+      alert("꾸미기가 종료되었습니다.");
       await router.replace(`/map/${groupId}`);
     }
   };
