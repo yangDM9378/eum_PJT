@@ -110,10 +110,14 @@ public class WebSocket {
         String webSocketJson = objectMapper.writeValueAsString(webSocketRes);
 
         for (Session s : clients.keySet()) {
-            log.info(clients.get(s).get("roomId"));
-            log.info(webSocketReq.getRoomId());
-            if (clients.get(s).get("roomId").equals(webSocketReq.getRoomId())) {
-                s.getBasicRemote().sendText(webSocketJson);
+            if(!clients.get(s).isEmpty() && !clients.get(s).get("roomId").isEmpty()) {
+                log.info(clients.get(s).get("roomId"));
+                log.info(webSocketReq.getRoomId());
+                if (clients.get(s).get("roomId").equals(webSocketReq.getRoomId())) {
+                    s.getBasicRemote().sendText(webSocketJson);
+                }
+            } else {
+                clients.remove(s);
             }
         }
 //         좌표를 받은 x, y 좌표로 변경해주세요.
