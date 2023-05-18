@@ -10,6 +10,7 @@ const frameImg = () => {
   const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
     undefined
   );
+  
   const stageRef = useRef<any>(null);
 
   // 선택한거 취소하게 하는함수
@@ -23,12 +24,12 @@ const frameImg = () => {
     }
   };
 
-  useEffect(() => {
-    const stage = stageRef.current;
-    if (stage) {
-      stage.on("click", checkDeselect);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const stage = stageRef.current;
+  //   if (stage) {
+  //     stage.on("click", checkDeselect);
+  //   }
+  // }, []);
 
   const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
   useEffect(() => {
@@ -60,9 +61,7 @@ const frameImg = () => {
   const [selectedId, setSelectedId] = useState<null | number>(0);
   const [nextImageId, setNextImageId] = useState(0); // 초기 이미지 ID
 
-  useEffect(() => {
-    console.log(selectedId);
-  }, [selectedId]);
+  useEffect(() => {}, [selectedId]);
 
   // 아이콘 업데이트 하는 함수
   const handleChange = (title: number) => {

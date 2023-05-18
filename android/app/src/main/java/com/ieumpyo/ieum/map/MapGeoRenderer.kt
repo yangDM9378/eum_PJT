@@ -76,7 +76,7 @@ data class MapArea(
     val locationData: MutableList<LocationData>
 )
 
-class MapGeoRenderer(val activity: MapGeoActivity, val culturalProperty: String?) :
+class MapGeoRenderer(val activity: MapGeoActivity, val culturalProperty: String) :
     SampleRender.Renderer, DefaultLifecycleObserver {
     //<editor-fold desc="ARCore initialization" defaultstate="collapsed">
     companion object {

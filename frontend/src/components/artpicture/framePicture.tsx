@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { setFrameImg } from "@/redux/map/mapSlice";
+import uploadImageToS3 from "@/libs/helper/fileUpload";
 
 const framePicture = (): JSX.Element => {
   const pictureImg = useAppSelector((state) => state.coordsReducer.frameImg);
@@ -88,7 +89,12 @@ const framePicture = (): JSX.Element => {
       stageRef.current.draw();
       const dataURL = await stageRef.current.toDataURL({ pixelRatio: 1 });
       dispatch(setFrameImg(dataURL));
-      await router.replace(`artpicture/frameimg`);
+      const imageUrl = await uploadImageToS3(
+        dataURL,
+        `eum/temp/${Date.now().toString() + Math.random().toString()}.png`
+      );
+      console.log(imageUrl);
+      // router.replace(`artpicture/frameimg`);
     }
   };
 
