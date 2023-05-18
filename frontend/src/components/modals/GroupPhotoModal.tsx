@@ -161,20 +161,22 @@ const GroupPhotoModal = ({
             className="w-[100%] h-[100%]"
           />
         )}
-
-        <button
-          className="bg-brand-green w-[50%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl"
-          onClick={sharephoto}
-        >
-          공유하기
-        </button>
-        <button
-          className="bg-brand-green w-[50%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl"
-          onClick={goFrame}
-        >
-          꾸미기
-        </button>
-        <button onClick={goSocket}>소켓방으로</button>
+        <div className="flex w-[100%]">
+          <button
+            className="bg-brand-green w-[40%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl"
+            onClick={sharephoto}
+          >
+            공유하기
+          </button>
+          <button
+            className="bg-brand-green w-[40%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl justify-between"
+            // onClick={goFrame}
+            onClick={goSocket}
+          >
+            꾸미기
+          </button>
+        </div>
+        {/* <button onClick={goSocket}>소켓방으로</button> */}
       </div>
     </Modal>
   );

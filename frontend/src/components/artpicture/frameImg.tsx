@@ -34,7 +34,7 @@ const FrameImg = () => {
       ws.current = new WebSocket("ws://localhost:8080/socket/room");
       ws.current.onmessage = (message) => {
         const dataSet: WebSocketRes = JSON.parse(message.data);
-        console.log("소켓에서 받은 데이터입니다.", dataSet);
+        // console.log("소켓에서 받은 데이터입니다.", dataSet);
         setSocketData(dataSet);
       };
 
@@ -85,7 +85,7 @@ const FrameImg = () => {
       title: newAttrs.title,
     };
 
-    console.log("send", newAttrs);
+    // console.log("send", newAttrs);
 
     // 움직이는 시간
     const data = {
@@ -157,13 +157,13 @@ const FrameImg = () => {
 
       const socketIconArr = socketData.stickerRes;
       const newArr = socketIconArr.map((icon) => {
-        console.log(icon);
+        // console.log(icon);
         const newIcon = new window.Image();
         newIcon.src = `/icons/${icon.title}.png`;
         return { ...icon, src: newIcon };
       });
       const iconArr = newArr.sort((a, b) => a.id - b.id);
-      console.log("새로운 리스트", iconArr);
+      // console.log("새로운 리스트", iconArr);
       setIcons(iconArr);
     }
   }, [socketData]);
@@ -233,6 +233,7 @@ const FrameImg = () => {
 
   return (
     <div className="h-[92vh] flex flex-col items-center justify-center">
+      <div onClick={roomCode}>초대 코드</div>
       <div className="flex w-[90%] pb-4 gap-2">
         {socketData &&
           socketData.userNames.map((name, idx) => {
@@ -310,8 +311,6 @@ const FrameImg = () => {
           );
         })}
       </div>
-      <div onClick={roomCode}>초대 코드</div>
-      {/* <div onClick={sendData}>클릭하세요</div> */}
     </div>
   );
 };
