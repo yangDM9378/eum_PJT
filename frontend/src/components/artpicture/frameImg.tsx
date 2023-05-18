@@ -4,7 +4,11 @@ import { useAppSelector } from "@/redux/hooks";
 import { useEffect, useState, useRef } from "react";
 import { Stage, Layer, Image, Group, Transformer } from "react-konva";
 
-const FrameImg = () => {
+import { useEffect, useRef, useState } from "react";
+import { Stage, Layer, Image } from "react-konva";
+import FrameImgChild from "./frameImgChild";
+
+const frameImg = () => {
   const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
     undefined
   );
@@ -39,6 +43,7 @@ const FrameImg = () => {
   // 원본 아이콘
   const initialicons = [1, 2, 3, 4, 5, 6, 7];
 
+  // 상태를 변화할
   const [icons, setIcons] = useState<
     {
       id: number;
@@ -47,18 +52,20 @@ const FrameImg = () => {
       y: number;
       width: number;
       height: number;
+      rotation: number;
     }[]
   >([]);
 
-  const [selectedId, setSelectedId] = useState(0);
+  const [selectedId, setSelectedId] = useState<null | number>(0);
   const [nextImageId, setNextImageId] = useState(0); // 초기 이미지 ID
 
   // 선택한거 취소하게 하는함수
   const checkDeselect = (e: any) => {
-    // deselect when clicked on empty area
+    // 빈 영역 선택하면 id값을 null로
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
-      setSelectedId(-1);
+      setSelectedId(null);
+      console.log(selectedId);
     }
   };
 
@@ -73,9 +80,9 @@ const FrameImg = () => {
       newKonvaImage.src = newIcon.src;
       newKonvaImage.onload = () => {
         const iconId = nextImageId; // 새로운 이미지 ID 할당
-        // setNextImageId((prevId) => prevId + 1); // 다음 이미지 ID 업데이트
         setNextImageId(nextImageId + 1); // 다음 이미지 ID 업데이트
 
+        // 변형할 아이콘들을 추가해주는 작업
         const updatedIcons = [
           ...icons,
           {
@@ -85,6 +92,7 @@ const FrameImg = () => {
             y: 0,
             width: 120,
             height: 120,
+            rotation: 0,
           },
         ];
         setIcons(updatedIcons);
@@ -95,7 +103,13 @@ const FrameImg = () => {
   return (
     <div className="h-[92vh] flex flex-col items-center justify-center">
       {/* 캔버스 */}
-      <Stage width={300} height={350} ref={stageRef}>
+      <Stage
+        width={300}
+        height={350}
+        ref={stageRef}
+        onMouseDown={checkDeselect}
+        onTouchStart={checkDeselect}
+      >
         <Layer>
           {originImg && (
             <Image
@@ -104,8 +118,9 @@ const FrameImg = () => {
               width={300}
               height={350}
               draggable={false}
-              // onMouseDown={checkDeselect}
-              // onTouchStart={checkDeselect}
+              onClick={checkDeselect}
+              onMouseDown={checkDeselect}
+              onTouchStart={checkDeselect}
             />
           )}
           {icons?.map((icon, i) => (
@@ -127,7 +142,7 @@ const FrameImg = () => {
       </Stage>
       {/* 아이콘들 보여주기*/}
       <div className="flex mt-[5%]">
-        {initialicons.map((iconName, idx) => {
+        {initialicons.map((iconName) => {
           return (
             <img
               className=""
