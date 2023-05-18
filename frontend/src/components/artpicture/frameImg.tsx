@@ -48,6 +48,7 @@ const frameImg = () => {
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
       setSelectedId(null);
+      console.log(selectedId);
     }
   };
 
@@ -102,6 +103,9 @@ const frameImg = () => {
               width={300}
               height={350}
               draggable={false}
+              onClick={checkDeselect}
+              onMouseDown={checkDeselect}
+              onTouchStart={checkDeselect}
             />
           )}
           {icons?.map((icon, i) => (
@@ -117,7 +121,6 @@ const frameImg = () => {
                 newicons[i] = newAttrs;
                 setIcons(newicons);
               }}
-  
             />
           ))}
         </Layer>
