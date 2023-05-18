@@ -10,7 +10,25 @@ const frameImg = () => {
   const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
     undefined
   );
-  const stageRef = useRef(null);
+  const stageRef = useRef<any>(null);
+
+  // 선택한거 취소하게 하는함수
+  const checkDeselect = (e: any) => {
+    // 빈 영역 선택하면 id값을 null로
+    const clickedOnEmpty =
+      e.target === e.target.getStage() || e.target.attrs.id === "background";
+    if (clickedOnEmpty) {
+      setSelectedId(null);
+      console.log(selectedId);
+    }
+  };
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (stage) {
+      stage.on("click", checkDeselect);
+    }
+  }, []);
 
   const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
   useEffect(() => {
@@ -41,16 +59,6 @@ const frameImg = () => {
 
   const [selectedId, setSelectedId] = useState<null | number>(0);
   const [nextImageId, setNextImageId] = useState(0); // 초기 이미지 ID
-
-  // 선택한거 취소하게 하는함수
-  const checkDeselect = (e: any) => {
-    // 빈 영역 선택하면 id값을 null로
-    const clickedOnEmpty = e.target === e.target.getStage();
-    if (clickedOnEmpty) {
-      setSelectedId(null);
-      console.log(selectedId);
-    }
-  };
 
   useEffect(() => {
     console.log(selectedId);
@@ -106,6 +114,7 @@ const frameImg = () => {
               onClick={checkDeselect}
               onMouseDown={checkDeselect}
               onTouchStart={checkDeselect}
+              id="background" // Add the id attribute
             />
           )}
           {icons?.map((icon, i) => (
