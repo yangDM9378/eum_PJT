@@ -6,9 +6,11 @@ const agingApi = async (imageUrl: string) => {
     const kidFormData = new FormData();
     const blob = await (await fetch(imageUrl)).blob();
     oldFormData.append("image", blob, "oldimage.png");
-    oldFormData.append("action_type", "TO_OLD");
+    oldFormData.append("action_type", "V2_AGE");
+    oldFormData.append("target", "55");
     kidFormData.append("image", blob, "kidimage.png");
-    kidFormData.append("action_type", "TO_KID");
+    kidFormData.append("action_type", "V2_AGE");
+    kidFormData.append("target", "15");
 
     const response = await axios.all([
       axios.post(
