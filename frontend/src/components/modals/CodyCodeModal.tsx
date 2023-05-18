@@ -49,16 +49,16 @@ const CodyCodeModal = ({ isOpen, setIsOpen }: ModalProps) => {
           className="absolute left-[95%] top-[-4%]"
           onClick={() => setIsOpen(false)}
         />
-        <p className="pt-[5%]">그룹 코드를 입력해 주세요.</p>
+        <p className="pt-[5%]">꾸미기 방 코드를 입력해주세요.</p>
         <input
           type="text"
-          className=" mt-[5%] p-[5%] bg-transparent border border-brand-baige-2"
+          className=" mt-[5%] p-[5%] w-[70%] bg-transparent border border-brand-baige-2"
           onChange={(e) => setInputCode(e.target.value)}
         />
         <button
           type="button"
           onClick={enterCode}
-          className="bg-brand-red w-[70%] h-[5vh] mt-[10%] font-gmarket-thin"
+          className="bg-brand-red w-[80%] h-[5vh] mt-[10%] font-gmarket-thin"
         >
           들어가기
         </button>
