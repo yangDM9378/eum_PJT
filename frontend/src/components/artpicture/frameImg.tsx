@@ -26,6 +26,7 @@ const FrameImg = () => {
   const ws = useRef<null | WebSocket>(); //webSocket을 담는 변수,
   const userName = useAppSelector((state) => state.userReducer.name);
   const [socketData, setSocketData] = useState<WebSocketRes>();
+  const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
 
   const openSocket = () => {
     if (ws) {
@@ -48,8 +49,7 @@ const FrameImg = () => {
       const data = {
         roomId: decoCode,
         userName: userName,
-        frameUrl:
-          "https://webisfree.com/static/uploads/2019/6639_images194.jpg",
+        frameUrl: bgImg,
       };
       const temp = JSON.stringify(data);
       console.log(temp);
@@ -65,12 +65,13 @@ const FrameImg = () => {
 
   const sendData = async () => {
     const stickerData = {
-      stickerId: null,
+      id: null,
       x: null,
       y: null,
       width: null,
       height: null,
-      degree: null,
+      rotation: null,
+      title: null,
     };
 
     // 움직이는 시간
@@ -78,7 +79,7 @@ const FrameImg = () => {
       roomId: decoCode,
       userName: userName,
       stickerReq: stickerData,
-      frameUrl: "https://webisfree.com/static/uploads/2019/6639_images194.jpg",
+      frameUrl: bgImg,
     };
 
     const temp = JSON.stringify(data);
@@ -122,7 +123,6 @@ const FrameImg = () => {
   );
   const stageRef = useRef(null);
 
-  const bgImg = useAppSelector((state) => state.coordsReducer.frameImg);
   useEffect(() => {
     if (bgImg) {
       const img = new window.Image();
@@ -132,6 +132,16 @@ const FrameImg = () => {
       };
     }
   }, [bgImg]);
+
+  useEffect(() => {
+    if (socketData) {
+      const img = new window.Image();
+      img.src = socketData.frameUrl;
+      img.onload = () => {
+        setOriginImg(img);
+      };
+    }
+  }, [socketData]);
 
   // 원본 아이콘
   const initialicons = [1, 2, 3, 4, 5, 6, 7];
@@ -148,6 +158,8 @@ const FrameImg = () => {
       rotation: number;
     }[]
   >([]);
+
+  console.log(icons);
 
   const [selectedId, setSelectedId] = useState<null | number>(0);
   const [nextImageId, setNextImageId] = useState(0); // 초기 이미지 ID
@@ -270,6 +282,8 @@ const FrameImg = () => {
           );
         })}
       </div>
+      <div onClick={roomCode}>초대 코드</div>
+      <div onClick={sendData}>클릭하세요</div>
     </div>
   );
 };

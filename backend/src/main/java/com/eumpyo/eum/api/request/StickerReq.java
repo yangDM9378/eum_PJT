@@ -7,20 +7,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class StickerReq {
-    Long stickerId;
+    Long id;
+    int title;
     double x;
     double y;
     double width;
     double height;
-    double degree;
+    double rotation;
 
     @Builder
-    public StickerReq(Long stickerId, double x, double y, double width, double height, double degree) {
-        this.stickerId = stickerId;
+    public StickerReq(Long id, int title, double x, double y, double width, double height, double rotation) {
+        this.id= id;
+        this.title = title;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.degree = degree;
+        this.rotation = rotation;
     }
 }

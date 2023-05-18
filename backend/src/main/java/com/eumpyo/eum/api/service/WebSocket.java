@@ -82,7 +82,7 @@ public class WebSocket {
             WebSocketRes room = rooms.get(webSocketReq.getRoomId());
             Set<StickerRes> stickers = room.getStickerRes();
             for (StickerRes sticker : stickers) {
-                if (sticker.getStickerId() == webSocketReq.getStickerReq().getStickerId()) {
+                if (sticker.getId() == webSocketReq.getStickerReq().getId()) {
                     stickers.remove(sticker);
                     break;
                 }
@@ -92,10 +92,11 @@ public class WebSocket {
             StickerReq stickerReq = webSocketReq.getStickerReq();
             StickerRes stickerRes = StickerRes
                     .builder()
+                    .id(stickerReq.getId())
+                    .title(stickerReq.getTitle())
                     .x(stickerReq.getX())
                     .y(stickerReq.getY())
-                    .stickerId(stickerReq.getStickerId())
-                    .degree(stickerReq.getDegree())
+                    .rotation(stickerReq.getRotation())
                     .width(stickerReq.getWidth())
                     .height(stickerReq.getHeight())
                     .build();
@@ -122,14 +123,16 @@ public class WebSocket {
     @OnClose
     public void onClose(Session session) {
         log.info("session close : {}", session);
-//        String roomId = clients.get(session).get("roomId");
-//        WebSocketRes webSocketRes = rooms.get(roomId);
-//        webSocketRes.deleteUser(clients.get(session).get("userName"));
+        String roomId = clients.get(session).get("roomId");
+        WebSocketRes webSocketRes = rooms.get(roomId);
+        if (webSocketRes.getUserNames().contains(clients.get(session).get("userName"))) {
+            webSocketRes.deleteUser(clients.get(session).get("userName"));
+        }
 //
 //        // 사용자가 방에 존재하지 않으면 삭제
-//        if (webSocketRes.getUserNames().size() == 0){
-//            rooms.remove(roomId);
-//        }
+        if (webSocketRes.getUserNames().size() == 0){
+            rooms.remove(roomId);
+        }
 
         // 세션에서 사용자 삭제
         clients.remove(session);
