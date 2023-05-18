@@ -115,7 +115,7 @@ const FrameImg = () => {
   const decoCode = path.substring(1, path.length - 20);
 
   const roomCode = async () => {
-    alert("초대 코드가 복사되었습니다." + decoCode);
+    alert("초대 코드가 복사되었습니다.");
     if ((window as any).Android) {
       (window as any).Android.copyToClipboard(decoCode);
     } else {
@@ -233,7 +233,14 @@ const FrameImg = () => {
 
   return (
     <div className="h-[92vh] flex flex-col items-center justify-center">
-      <div onClick={roomCode}>초대 코드</div>
+      <div className="w-[90%] flex justify-end">
+        <div
+          onClick={roomCode}
+          className=" bg-brand-red p-2 rounded-lg text-white"
+        >
+          초대 코드
+        </div>
+      </div>
       <div className="flex w-[90%] pb-4 gap-2">
         {socketData &&
           socketData.userNames.map((name, idx) => {

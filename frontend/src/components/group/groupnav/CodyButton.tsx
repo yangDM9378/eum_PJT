@@ -16,10 +16,18 @@ const CodyButton = () => {
   }
 
   return (
-    <div className="pl-[5vw] text-[15px]  font-gmarket-thin ">
+    <div className="text-[15px] pr-2 font-gmarket-thin flex justify-center items-center ">
       <button
         onClick={openModal}
-        className={`w-[35vw] h-[5vh] rounded-lg ${moveGroupCss(isOpen)}`}
+        className={`p-2
+                  text-xs 
+                  rounded-md
+                   bg-transparent border-2 
+                    border-brand-red
+                     hover:bg-brand-red
+                      active:bg-brand-red
+                      focus:bg-brand-red
+                     font-gmarket-thin `}
       >
         함께 꾸미기
       </button>

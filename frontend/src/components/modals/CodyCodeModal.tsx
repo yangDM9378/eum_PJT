@@ -42,17 +42,17 @@ const CodyCodeModal = ({ isOpen, setIsOpen }: ModalProps) => {
       ariaHideApp={false}
       style={customStyles}
     >
-      <section className=" relative">
+      <section className=" relative flex flex-col justify-center items-center">
         <img
           src="/modal/closeBTN.png"
           alt="닫기버튼"
-          className="absolute left-[95%] top-[-13%]"
+          className="absolute left-[95%] top-[-4%]"
           onClick={() => setIsOpen(false)}
         />
-        <p className="pt-[15%]">그룹 코드를 입력해 주세요.</p>
+        <p className="pt-[5%]">그룹 코드를 입력해 주세요.</p>
         <input
           type="text"
-          className=" mt-[5%] pt-[10%] bg-transparent border border-brand-baige-2"
+          className=" mt-[5%] p-[5%] bg-transparent border border-brand-baige-2"
           onChange={(e) => setInputCode(e.target.value)}
         />
         <button

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import GroupCodeModal from "../modals/GroupCodeModal";
 import { useRouter } from "next/navigation";
-
+import CodyButton from "../group/groupnav/CodyButton";
 interface Props {
   groupId: number;
 }
@@ -39,6 +39,7 @@ const GroupInfo = ({ groupId }: Props) => {
         await navigator.clipboard.writeText(text);
         setIsOpen(true);
       } else {
+        console.log("");
       }
     }
   };
@@ -58,18 +59,17 @@ const GroupInfo = ({ groupId }: Props) => {
             />
           </div>
           <div className="w-[70%] h-[80%] flex flex-col justify-center">
-            <div className="flex justify-between items-center mt-[20%]">
+            <div className="flex justify-between items-center">
               <div className="py-2 text-[90%] font-bold">{data.name}</div>
               <div className="p-1 mr-3 " onClick={() => goToGallery(groupId)}>
                 <img src="/map/gallery.png" alt="mapgallery" />
               </div>
             </div>
             <div className="py-2 text-xs">{data.description}</div>
-            <div className="flex justify-end p-2">
+            <div className="flex px-2 w-[100%] justify-end">
+              <CodyButton />
               <div
                 className="p-2
-                mb-[15%] 
-                 mr-[3%]
                   text-xs 
                   rounded-md
                    bg-transparent border-2 

@@ -161,7 +161,7 @@ const GroupPhotoModal = ({
             className="w-[100%] h-[100%]"
           />
         )}
-        <div className="flex w-[100%]">
+        <div className="flex w-[100%] justify-around">
           <button
             className="bg-brand-green w-[40%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl"
             onClick={sharephoto}
@@ -169,7 +169,7 @@ const GroupPhotoModal = ({
             공유하기
           </button>
           <button
-            className="bg-brand-green w-[40%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl justify-between"
+            className="bg-brand-green w-[40%] h-[5vh] my-[5%] font-gmarket-thin rounded-xl "
             // onClick={goFrame}
             onClick={goSocket}
           >

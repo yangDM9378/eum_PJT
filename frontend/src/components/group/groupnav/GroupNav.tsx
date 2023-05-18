@@ -1,5 +1,4 @@
 import React from "react";
-import CodyButton from "./CodyButton";
 import EnterButton from "./EnterButton";
 import MakeButton from "./MakeButton";
 import UserInfo from "./UserInfo";
@@ -16,7 +15,6 @@ export default function groupnav() {
       <div className="flex flex-row justify-center mt-[2%]">
         <MakeButton />
         <EnterButton />
-        <CodyButton />
       </div>
     </div>
   );
