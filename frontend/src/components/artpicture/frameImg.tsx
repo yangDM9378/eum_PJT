@@ -61,6 +61,11 @@ const FrameImg = () => {
           ws.current.send(temp);
         }
       };
+
+      ws.current.onclose = (e) => {
+        // connection closed
+        console.log(e.code, e.reason);
+      };
     } else {
       console.log("없어요");
     }
@@ -354,7 +359,12 @@ const FrameImg = () => {
           );
         })}
       </div>
-      <button onClick={saveeImg}>사진저장</button>
+      <button
+        onClick={saveeImg}
+        className="my-[2vh] bg-brand-blue text-white py-[1.5vh] px-[6vw] rounded-md shadow-xl font-brand-gmarketsans"
+      >
+        사진저장
+      </button>
     </div>
   );
 };
