@@ -48,7 +48,7 @@ pipeline {
     }
 
     environment {
-        TARGET_HOST_FRONTEND = "ubuntu@3.145.0.19"
+        TARGET_HOST_FRONTEND = "ubuntu@13.59.83.116"
         TARGET_HOST_BACKEND = "ubuntu@18.118.212.73"
 
     }
