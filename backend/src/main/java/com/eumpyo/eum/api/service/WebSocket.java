@@ -124,15 +124,15 @@ public class WebSocket {
     public void onClose(Session session) {
         log.info("session close : {}", session);
         String roomId = clients.get(session).get("roomId");
-        WebSocketRes webSocketRes = rooms.get(roomId);
-        if (webSocketRes.getUserNames().contains(clients.get(session).get("userName"))) {
+        WebSocketRes webSocketRes = rooms.getOrDefault(roomId, null);
+        if (webSocketRes != null && webSocketRes.getUserNames().contains(clients.get(session).get("userName"))) {
             webSocketRes.deleteUser(clients.get(session).get("userName"));
+            // 사용자가 방에 존재하지 않으면 삭제
+            if (webSocketRes.getUserNames().size() == 0){
+                rooms.remove(roomId);
+            }
         }
-//
-//        // 사용자가 방에 존재하지 않으면 삭제
-        if (webSocketRes.getUserNames().size() == 0){
-            rooms.remove(roomId);
-        }
+
 
         // 세션에서 사용자 삭제
         clients.remove(session);
