@@ -201,7 +201,7 @@ const MessageModal = ({
             }}
           >
             <div className="flex justify-center items-center">
-              <AiFillSound className="w-[35px]" />
+              <AiFillSound color="#77BC9E" size={20} className="mx-1" />
               {detailData?.result.content}
             </div>
           </div>
@@ -217,7 +217,7 @@ const MessageModal = ({
               <img
                 src="/map/centerTarget.png"
                 alt=""
-                className="h-[47%] w-[40%] m-auto"
+                className="h-[55%] w-[40%] m-auto"
               />
               <div>찾아가기</div>
             </div>

@@ -46,9 +46,9 @@ const Aging = () => {
   };
 
   // aging된 사진중 원하는 사진 골라서 removebg로 이동하기
-  const goRemovebg = () => {
+  const goRemovebg = async () => {
     dispatch(agingselecturl(selectedimage));
-    router.replace(`/addeventcamera/aging/removebg`);
+    await router.replace(`/addeventcamera/aging/removebg`);
   };
 
   return (

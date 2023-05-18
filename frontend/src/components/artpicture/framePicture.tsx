@@ -96,7 +96,7 @@ const framePicture = (): JSX.Element => {
       );
       dispatch(setFrameImg(imageUrl));
       console.log(imageUrl);
-      router.replace(`${path}/frameimg`);
+      await router.replace(`${path}/frameimg`);
     }
   };
 
