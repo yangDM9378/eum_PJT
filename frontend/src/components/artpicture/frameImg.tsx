@@ -6,6 +6,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Stage, Layer, Image, Group, Transformer } from "react-konva";
 import { usePathname } from "next/navigation";
 import FrameImgChild from "./frameImgChild";
+import Konva from "konva";
 interface StickerRes {
   id: number;
   x: number;
@@ -31,7 +32,7 @@ const FrameImg = () => {
 
   const openSocket = () => {
     if (ws) {
-      ws.current = new WebSocket("ws://localhost:8080/socket/room");
+      ws.current = new WebSocket(`${process.env.NEXT_PUBLIC_SOCKET}`);
       ws.current.onmessage = (message) => {
         const dataSet: WebSocketRes = JSON.parse(message.data);
         // console.log("소켓에서 받은 데이터입니다.", dataSet);
@@ -134,11 +135,12 @@ const FrameImg = () => {
   const [originImg, setOriginImg] = useState<CanvasImageSource | undefined>(
     undefined
   );
-  const stageRef = useRef(null);
+  const stageRef = useRef<Konva.Stage | null>(null);
 
   useEffect(() => {
     if (bgImg) {
       const img = new window.Image();
+      img.crossOrigin = "anonymous";
       img.src = bgImg;
       img.onload = () => {
         setOriginImg(img);
@@ -150,6 +152,7 @@ const FrameImg = () => {
   useEffect(() => {
     if (socketData) {
       const img = new window.Image();
+      img.crossOrigin = "anonymous";
       img.src = socketData.frameUrl;
       img.onload = () => {
         setOriginImg(img);
@@ -159,6 +162,7 @@ const FrameImg = () => {
       const newArr = socketIconArr.map((icon) => {
         // console.log(icon);
         const newIcon = new window.Image();
+        newIcon.crossOrigin = "anonymous";
         newIcon.src = `/icons/${icon.title}.png`;
         return { ...icon, src: newIcon };
       });
@@ -204,9 +208,11 @@ const FrameImg = () => {
   // 아이콘 업데이트 하는 함수
   const handleChange = (title: number) => {
     const newIcon = new window.Image();
+    newIcon.crossOrigin = "anonymous";
     newIcon.src = `/icons/${title}.png`;
     newIcon.onload = () => {
       const newKonvaImage = new window.Image();
+      newKonvaImage.crossOrigin = "anonymous";
       newKonvaImage.src = newIcon.src;
       newKonvaImage.onload = () => {
         const iconId = nextImageId; // 새로운 이미지 ID 할당
@@ -231,12 +237,19 @@ const FrameImg = () => {
     };
   };
 
+  //사진 저장
+  const saveeImg = async () => {
+    if (stageRef.current) {
+      const dataURL = await stageRef.current.toDataURL({ pixelRatio: 1 });
+    }
+  };
+
   return (
     <div className="h-[92vh] flex flex-col items-center justify-center">
       <div className="w-[90%] flex justify-end">
         <div
           onClick={roomCode}
-          className=" bg-brand-red p-2 rounded-lg text-white"
+          className="p-2 text-white rounded-lg bg-brand-red"
         >
           초대 코드
         </div>
@@ -318,6 +331,7 @@ const FrameImg = () => {
           );
         })}
       </div>
+      <button onClick={saveeImg}>사진저장</button>
     </div>
   );
 };
