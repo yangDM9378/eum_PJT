@@ -97,7 +97,7 @@ const EnterGroupModal = ({ isOpen, setIsOpen }: ModalProps) => {
         <p className="pt-[15%]">그룹 코드를 입력해 주세요.</p>
         <input
           type="text"
-          className=" mt-[5%] pt-[10%] bg-transparent border border-brand-baige-2"
+          className=" w-[80%] mt-[5%] py-[5%] bg-transparent border border-brand-baige-2"
           onChange={onchange}
         />
         <button
