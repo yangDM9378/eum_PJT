@@ -98,7 +98,7 @@
 <br/>
 
 <div style='display:flex;'>
-<img src="./img/main1.png" width="600"  height='400'/>
+<img src="./img/main1.png" width="600"  height='400' style='margin-right: 20px;'/>
 <img src="./img/main2.gif" width="200"  height='400'/>
 </div>
 
@@ -108,8 +108,10 @@
 
 👀 고유한 그룹코도를 가진 사용자들만이 그룹에 들어갈 수 있어요.
 
-<img src="./img/event2.gif" width="200" height='400'/>
+<div style='display:flex;'>
+<img src="./img/event2.gif" width="200" height='400'style='margin-right: 20px;'/>
 <img src="./img/event3.gif" width="200" height='400'/>
+</div>
 
 <br/>
 
@@ -118,7 +120,7 @@
 👀 모든 이벤트들은 지도에 있는 핀에서 확인할 수 있답니다
 
 <div style='display:flex;'>
-<img src="./img/map2.gif" width="200" height='400'/>
+<img src="./img/map2.gif" width="200" height='400'style='margin-right: 20px;'/>
 <img src="./img/search.gif" width="200" height='400'/>
 </div>
 
@@ -129,9 +131,9 @@
 👀사용자는 이미 등록되어 있는 이벤트 사진과 같은 포즈를 취함으로써 재미있는 추억을 공유할 수 있어요.
 
 <div style='display:flex;'>
-<img src="./img/pose5.jpg" width="200" height='400'/>
-<img src="./img/pose4.jpg" width="200" height='400'/>
-<img src="./img/pose3.jpg" width="200" height='400'/>
+<img src="./img/pose5.jpg" width="200" height='400'style='margin-right: 20px;'/>
+<img src="./img/pose4.jpg" width="200" height='400'style='margin-right: 20px;'/>
+<img src="./img/pose3.jpg" width="200" height='400'style='margin-right: 20px;'/>
 <img src="./img/pose1.jpg" width="200" height='400'/>
 </div>
 
@@ -142,7 +144,7 @@
 👀에이징효과로 부모님은 젊은 시절로, 자식들은 부모님과 같은세대의 자신의 모습을 볼 수 있답니다.
 
 <div style='display:flex;'>
-<img src="./img/eventgif.gif" width="200" height='400'/>
+<img src="./img/eventgif.gif" width="200" height='400'style='margin-right: 20px;'/>
 <img src="./img/event1.gif" width="200" height='400'/>
 </div>
 
@@ -153,7 +155,7 @@
 👀이렇게 함께 찍은 사진은 부모님과 자식이 함께 사진을 꾸며 고유한 사진을 저장할 수 있게 되죠
 
 <div style='display:flex;'>
-<img src="./img/socketdeco.gif" width="200" height='400'/>
+<img src="./img/socketdeco.gif" width="200" height='400'style='margin-right: 20px;'/>
 <img src="./img/socketdeco2.gif" width="200" height='400'/>
 </div>
 
@@ -174,7 +176,7 @@
 👀사용자들이 메시지를 쉽게 찾을 수 있도록 AR이 길을 안내해줘요.
 
 <div style='display:flex;'>
-<img src="./img/ar1.jpg" width="200" height='400'/>
+<img src="./img/ar1.jpg" width="200" height='400'style='margin-right: 20px;'/>
 <img src="./img/ar2.jpg" width="200" height='400'/>
 </div>
 
