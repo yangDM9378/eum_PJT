@@ -18,7 +18,7 @@ redux-toolkit : 1.9.5
 tanstack/react-query : 4.29.5
 
 ### BackEnd
-Spring Boot, JPA, QueryDSL, Spring Security Oauth2, MySQL, FastAPI, Android Studio, Media Pipe
+Back-End : Java 11 / Springboot 2.7.10 / Gradle 7.6.1 / QueryDSL 5.0.0 / WebSocket 2.7.10 / Python 3.7.9 / FastAPI 0.95.1
 
 ### Android
 Android 13 API 33
@@ -61,17 +61,21 @@ Docker, Jenkins, Nginx, AWS CloudFront, AWS S3, AWS Ec2
 ![service7](./img/main2.gif)
 ![service8](./img/main3.gif)
 #### 그룹
-![service3](./img/eventgif.gif)
-![service4](./img/event1.gif)
+![service5](./img/event2.gif)
+![service6](./img/event3.gif)
 #### 지도
+![service9](./img/map2.gif)
 ![service9](./img/search.gif)
 
 #### 따라하기 이벤트
+![service5](./img/pose5.jpg)
+![service5](./img/pose4.jpg)
+![service5](./img/pose3.jpg)
+![service5](./img/pose1.jpg)
 
 #### 함께찍기(에이징/디에이징) 이벤트
-
-![service5](./img/event2.gif)
-![service6](./img/event3.gif)
+![service3](./img/eventgif.gif)
+![service4](./img/event1.gif)
 
 #### 이벤트 사진 꾸미기
 ![service1](./img/socketdeco.gif)
