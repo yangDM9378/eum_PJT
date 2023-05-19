@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string-array name="cp">
+    <item>35.14891073|126.9330876|광주 지산동 오층석탑|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do;jsessionid=cA4AF0FsZFMtQNMEJdpPbF5dbsoyPi3EtiZRUAQIF2ParIGmxrSKPKUnn84ChWxr.cpawas_servlet_engine1?pageNo=1_1_2_0&amp;ccbaCpno=1122401100000|1</item>
+
+    <item>35.1651012|126.8518525|유촌동석조여래좌상|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do?pageNo=1_1_2_0&amp;ccbaCpno=3412400210000|2</item>
+
+    <item>35.1692658|126.997392|원효사 소장 만수사 범종|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=2112400150000&amp;pageNo=1_1_1_1|3</item>
+
+    <item>35.09877561|126.8258313|용두동지석묘|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do?pageNo=1_1_2_0&amp;ccbaCpno=3412400060000|4</item>
+
+    <item>35.2207082310709|126.817176116142|취병조형유허비|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do?s_kdcd=&amp;s_ctcd=24&amp;ccbaKdcd=21&amp;ccbaAsno=00180000&amp;ccbaCtcd=24&amp;ccbaCpno=2112400180000&amp;ccbaLcto=14&amp;culPageNo=1&amp;header=region&amp;pageNo=1_1_3_0&amp;returnUrl=%2Fheri%2Fcul%2FculSelectRegionList.do&amp;assetnamel=|5</item>
+
+    <item>35.1528764576507|126.673545857742|삼거동고인돌군|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do?pageNo=1_1_2_0&amp;ccbaCpno=3412400170000|6</item>
+
+    <item>35.74780608|128.5196942|용연사 극락전|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do?pageNo=1_1_2_0&amp;ccbaCpno=2112200410000|7</item>
+
+    <item>35.68903|128.526188|달성 용봉동 석불입상|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do?s_kdcd=&amp;s_ctcd=22&amp;ccbaKdcd=21&amp;ccbaAsno=00350000&amp;ccbaCtcd=22&amp;ccbaCpno=2112200350000&amp;ccbaLcto=18&amp;culPageNo=2&amp;;eader=region&amp;pageNo=1_1_3_0&amp;returnUrl=%2Fheri%2Fcul%2FculSelectRegionList.do&amp;assetnamel=|8</item>
+
+    <item>35.999058|128.6597|팔공산동봉석조약사여래입상|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do?pageNo=1_1_2_0&amp;ccbaCpno=2112200200000|9</item>
+
+    <item>35.991914|128.702764|대구 동화사 비로암 삼층석탑|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1122202470000&amp;pageNo=1_1_2_0|10</item>
+
+    <item>37.60872881|126.9166196|서울 인조별서 유기비|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do?pageNo=1_1_2_0&amp;ccbaCpno=1121114620000|11</item>
+
+    <item>37.579201|126.975569|경복궁 경회루|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1111102240000&amp;pageNo=1_1_2_0|12</item>
+
+    <item>37.590032|127.043238|서울 세종 영릉 신도비|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1121118050000&amp;pageNo=1_1_2_0|13</item>
+
+    <item>37.51550933|127.0577051|봉은사 선불당|poi|http://www.heritage.go.kr/heri/cul/culSelectDetail.do?pageNo=1_1_2_0&amp;ccbaCpno=2111100640000|14</item>
+
+    <item>35.2052455|126.8117768|ssafy|poi|https://www.ssafy.com/ksp/jsp/swp/swpMain.jsp|1111</item>
+  </string-array>
+
+  <string-array name="ssafy">
+    <item>35.205651|126.811523|215호|poi|https://recyclingtrashcans.github.io//vrview/2020/08/08/ssu_south.html</item>
+    <item>35.205589|126.811540|222호|poi|https://recyclingtrashcans.github.io//vrview/2020/08/08/ssu_south.html</item>
+    <item>35.205575|126.811552|214호|poi|https://recyclingtrashcans.github.io//vrview/2020/08/08/ssu_north2.html</item>
+    <item>35.205524|126.811539|216호|poi|https://recyclingtrashcans.github.io//vrview/2020/08/08/ssu_north1.html</item>
+    <item>35.205219|126.811651|221호|poi|https://recyclingtrashcans.github.io//vrview/2020/08/08/planetarium_se.html</item>
+    <item>35.205189|126.811523|취업 상담실|poi|https://recyclingtrashcans.github.io//vrview/2020/08/08/planetarium_se.html</item>
+    <item>35.205121|126.811595|211호|poi|https://recyclingtrashcans.github.io//vrview/2020/08/08/s1_north.html</item>
+    <item>35.205200|126.811593|212호|poi|https://recyclingtrashcans.github.io//vrview/2020/08/08/s1_north.html</item>
+    <item>35.205289|126.811573|213호|poi|https://recyclingtrashcans.github.io//vrview/2020/08/08/s1_north.html</item>
+    <item>35.2052455|126.811573|213호|poi|https://recyclingtrashcans.github.io//vrview/2020/08/08/s1_north.html</item>
+  </string-array>
+  <string-array name="park_ridge">
+    <item>36.862358|-119.793572|Entrance 1|poi|https://recyclingtrashcans.github.io/</item>
+    <item>36.862463|-119.793611|Exit|poi|https://recyclingtrashcans.github.io/</item>
+    <item>36.862909|-119.79378|Entrance 2|poi|https://recyclingtrashcans.github.io/</item>
+    <item>36.86249|-119.793228|Office|trashcan|https://recyclingtrashcans.github.io/</item>
+    <item>36.862388|-119.79308|Fitness|trashcan|https://recyclingtrashcans.github.io/</item>
+    <item>36.862404|-119.793008|Pool|trashcan|https://recyclingtrashcans.github.io/</item>
+    <item>36.861838|-119.793128|Trashcan|trashcan|https://recyclingtrashcans.github.io/</item>
+    <item>36.861642|-119.793181|Mailboxes|trashcan|https://recyclingtrashcans.github.io/</item>
+  </string-array>
+</resources>

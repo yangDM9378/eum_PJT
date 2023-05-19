@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <!--권한 획득-->
+    <!--    웹뷰 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+<!--    시스템 부팅 후 broadcast를 수신하도록 허용-->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+<!--    대략적인 위치 접근할 수 있도록 허용-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<!--    정확한 위치 접근할 수 있도록 허용-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<!--    앱이 알람을 게시하도록 허용-->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+<!--    백그라운드에서 위치 접근 / ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION 을 같이 선언해야함-->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+<!--    스크린 꺼짐 방지-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+<!--    시스템이 백그라운드에서 돌아가고 있음을 알림-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<!--    알림 정책에 접근-->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+    <!-- 5.0 버전 파일업로드 퍼미션 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="18"/>
+    <!-- 외부 저장소 사용 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!--    카메라-->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA2"/>
+<!--클립보드 허용-->
+
+    <uses-permission android:name="android.permission.READ_CLIPBOARD" />
+    <uses-permission android:name="android.permission.WRITE_CLIPBOARD" />
+    <uses-permission android:name="android.webkit.PermissionRequest" />
+
+    <uses-feature android:name="android.hardware.camera.ar" android:required="true"/>
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+
+    <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
+
+    <application
+        android:allowBackup="true"
+        android:windowSoftInputMode="adjustNothing"
+        android:screenOrientation="portrait"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Ieum"
+        android:foregroundServiceType="location"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
+
+        <!--
+             TODO: Before you run your application, you need a Google Maps API key.
+
+             To get one, follow the directions here:
+
+                https://developers.google.com/maps/documentation/android-sdk/get-api-key
+
+             Once you have your API key (it starts with "AIza"), define a new property in your
+             project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
+             "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-4728228463704876~7696936623"/>
+        <!--
+             TODO: Before you run your application, you need a Google Maps API key.
+
+             To get one, follow the directions here:
+
+                https://developers.google.com/maps/documentation/android-sdk/get-api-key
+
+             Once you have your API key (it starts with "AIza"), define a new property in your
+             project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
+             "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
+        -->
+        <activity
+            android:name="com.ieumpyo.ieum.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".map.MapGeoActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="false"/>
+
+        <receiver
+            android:name="com.ieumpyo.ieum.geofencing.GeofenceBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <meta-data android:name="com.google.ar.core" android:value="required" />
+
+        <meta-data
+            android:name="com.google.android.ar.API_KEY"
+            android:value="${MAPS_API_KEY}"/>
+
+    </application>
+
+    <!-- Indicates whether "Google Play Services for AR" (ARCore) is "required" or "optional". -->
+
+
+    <queries>
+        <package android:name="com.kakao.talk" />
+    </queries>
+</manifest>

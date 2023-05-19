@@ -1,0 +1,39 @@
+version: "3"
+services:
+  nginx:
+    # alpine 가장 작은 사이즈로 정말 필요한 것들만 담겨져 있는 이미지
+    image: nginx:1.23.4-alpine
+    # 컨테이너가 실행 중 중단됐을 때(여기서는 어떤 특정 서비스가 ready 상태가 아직 안 돼 중단된 경우) 컨테이너를 다시 알아서 재시작을 해준다.
+    # 기본 값은 no입니다.
+    # restart: "no"
+    # container_name: [사용할 컨테이너명]
+    container_name: nginx
+    # 컨테이너에 볼륨을 마운트 할 때에 사용 됩니다. host:container 방식으로 사용되고 마지막에 :ro 를 추가하여 볼륨을 읽기 전용으로 사용할 수 있습니다.
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    ports:
+      - "80:80"
+      - "443:443"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8080:8080"
+
+    
+
+
+    
